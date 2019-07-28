@@ -1,3 +1,4 @@
+import datetime
 import json
 import main
 
@@ -32,7 +33,7 @@ def get_link_and_last_update(message):
     if link is None or link == "":
         link = main.updater.bot.export_chat_invite_link(message['chat']['id'])
 
-    last_update = ""
+    last_update = datetime.datetime.now()
     return link, last_update
 
 
