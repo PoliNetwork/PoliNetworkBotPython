@@ -1,15 +1,16 @@
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 
 
-def start(update,context):
+def start(update, context):
     update.message.reply_text("Bot started")
 
 
-def check_message(update,context):
+def check_message(update, context):
     update.message.reply_text("Message received")
 
 
-updater = Updater(token=open("token").read(), use_context = True)
+token = open("token.txt").read()
+updater = Updater(token)
 start_handler = CommandHandler('start', start)
 message_handler = MessageHandler(Filters.all, check_message)
 dispatcher = updater.dispatcher
