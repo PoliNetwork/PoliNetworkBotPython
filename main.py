@@ -9,7 +9,7 @@ def start(update, context):
 
 def check_message(update, context):
     update.message.reply_text("Message received")
-    groups.TryAddGroup(update.message)
+    groups.try_add_group(update.message)
 
 
 token = open("token.txt").read()
