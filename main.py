@@ -1,5 +1,7 @@
 import logging
 import telegram
+from telegram.error import NetworkError, Unauthorized
+from time import sleep
 
 update_id = None
 
@@ -20,8 +22,13 @@ def main():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     while True:
-        echo(bot)
-
+        try:
+            echo(bot)
+        except NetworkError:
+            sleep(1)
+        except Unauthorized:
+            # The user has removed or blocked the bot.
+            update_id += 1
 
 def echo(bot):
     """Echo the message the user sent."""
