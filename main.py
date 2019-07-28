@@ -8,7 +8,7 @@ def start(update, context):
 
 
 def check_message(update, context):
-    update.message.reply_text("Message received")
+    #update.message.reply_text("Message received")
     groups.try_add_group(update.message)
 
 
