@@ -5,7 +5,7 @@ import main
 
 def find(id):
     for group in groups_list:
-        if group['Chat']['id'] == id:
+        if group['chat']['id'] == id:
             return True
     return False
 
@@ -24,7 +24,7 @@ def write_group_file(id, type, title, invite_link, last_update):
 
     groups_dict = {"Gruppi": groups_list}
     with open("data/groups.json", 'w', encoding="utf-8") as file:
-        file.write(json.dumps(groups_dict))
+        json.dump(groups_dict,file)
 
 
 def get_link_and_last_update(message):
@@ -32,9 +32,15 @@ def get_link_and_last_update(message):
     link = chat.invite_link
     if link is None or link == "":
         link = main.updater.bot.export_chat_invite_link(message['chat']['id'])
-
     last_update = datetime.datetime.now()
     return link, last_update
+
+
+def admin_is_present(admins):
+    for admin in admins:
+        if admin.user.username == "PoliCreator" or admin.user.username == "PoliCreator2":
+            return True
+    return False
 
 
 def try_add_group(message):
@@ -43,8 +49,12 @@ def try_add_group(message):
         print('Received a private message.')
         return
 
-    already_present = find(chat['id'])
-    if already_present is False:
+    admins = main.updater.bot.get_chat_administrators(chat.id)
+    if not admin_is_present(admins):
+        return
+
+    group_already_present = find(chat['id'])
+    if group_already_present is False:
         id = chat['id']
         type = chat['type']
         title = chat['title']
