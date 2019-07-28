@@ -1,5 +1,7 @@
 import json
 
+import main
+
 
 def find(id):
     for group in groups_list:
@@ -19,13 +21,16 @@ def write_group_file(id, type, title, invite_link, last_update):
         "LastUpdateInviteLinkTime": last_update
     }
     groups_list.append(group)
+
+    groups_dict = {"Gruppi":groups_list}
     with open("data/groups.json", 'w', encoding="utf-8") as file:
-        file.write(json.dumps(groups_list))
+        file.write(json.dumps(groups_dict))
 
 
-def get_link_and_last_update(chat):
-    # Todo: get link and last update
-    return "", ""
+def get_link_and_last_update(message):
+    link = main.updater.bot.export_chat_invite_link(message['chat']['id'])
+    last_update = ""
+    return link, last_update
 
 
 def try_add_group(message):
@@ -39,7 +44,7 @@ def try_add_group(message):
         id = chat['id']
         type = chat['type']
         title = chat['title']
-        (invite_link, last_update) = get_link_and_last_update(chat)
+        (invite_link, last_update) = get_link_and_last_update(message)
         write_group_file(id, type, title, invite_link, last_update)
 
 

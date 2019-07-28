@@ -9,7 +9,6 @@ def start(update, context):
 
 def check_message(update, context):
     #update.message.reply_text("Message received")
-    print(updater.bot.get_chat)
     groups.try_add_group(update.message)
 
 
