@@ -10,11 +10,10 @@ def find(id):
 
 
 def write_group_file():
-    # todo: write group file
-    f = open("data/groups.json", "w")
+    # todo: write group
     json_text = json.dumps(groups_list)
-    f.write(json_text)
-    f.close()
+    with open("data/groups.json", 'w') as the_file:
+        the_file.write(json_text)
 
 
 def try_add_group(message):
