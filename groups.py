@@ -3,7 +3,7 @@ import json
 
 def find(id):
     for group in groups_list:
-        if group['id'] == id:
+        if group['Chat']['id'] == id:
             return True
 
     return False
@@ -26,7 +26,7 @@ def try_add_group(message):
     print(chat)
     already_present = find(chat['id'])
     if already_present is False:
-        group = {'id': chat['id']}
+        group = {'Chat': chat}
         groups_list.append(group)
         write_group_file()
 
