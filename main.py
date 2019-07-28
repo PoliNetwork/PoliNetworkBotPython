@@ -1,6 +1,7 @@
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 
 import groups
+import reviews
 
 
 def start(update, context):
@@ -10,6 +11,7 @@ def start(update, context):
 def check_message(update, context):
     #update.message.reply_text("Message received")
     groups.try_add_group(update.message)
+    reviews.handle_review(update.message)
 
 
 token = open("token.txt").read()

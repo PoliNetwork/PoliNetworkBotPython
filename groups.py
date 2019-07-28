@@ -28,7 +28,11 @@ def write_group_file(id, type, title, invite_link, last_update):
 
 
 def get_link_and_last_update(message):
-    link = main.updater.bot.export_chat_invite_link(message['chat']['id'])
+    chat = main.updater.bot.get_chat(message.chat.id)
+    link = chat.invite_link
+    if link is None or link == "":
+        link = main.updater.bot.export_chat_invite_link(message['chat']['id'])
+
     last_update = ""
     return link, last_update
 
