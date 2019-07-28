@@ -1,5 +1,4 @@
 import json
-
 import main
 
 
@@ -22,7 +21,7 @@ def write_group_file(id, type, title, invite_link, last_update):
     }
     groups_list.append(group)
 
-    groups_dict = {"Gruppi":groups_list}
+    groups_dict = {"Gruppi": groups_list}
     with open("data/groups.json", 'w', encoding="utf-8") as file:
         file.write(json.dumps(groups_dict))
 

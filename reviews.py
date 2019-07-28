@@ -1,2 +1,3 @@
-def handle_review(message):
-    return None
+def add_review(update, context):
+    pass
+

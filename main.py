@@ -9,17 +9,16 @@ def start(update, context):
 
 
 def check_message(update, context):
-    #update.message.reply_text("Message received")
+    # update.message.reply_text("Message received")
     groups.try_add_group(update.message)
-    reviews.handle_review(update.message)
 
 
 token = open("token.txt").read()
 updater = Updater(token, use_context=True)
-start_handler = CommandHandler('start', start)
-message_handler = MessageHandler(Filters.all, check_message)
+
 dispatcher = updater.dispatcher
-dispatcher.add_handler(start_handler)
-dispatcher.add_handler(message_handler)
+dispatcher.add_handler(CommandHandler('start', start))
+dispatcher.add_handler(MessageHandler(Filters.all, check_message))
+dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
 
 updater.start_polling()
