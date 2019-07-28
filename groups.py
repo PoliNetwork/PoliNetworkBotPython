@@ -52,6 +52,11 @@ def try_add_group(message):
         write_group_file(id, type, title, invite_link, last_update)
 
 
+def send_group_json(message):
+    read = open("data/groups.json", encoding="utf-8").read()
+    main.updater.bot.send_document(message.chat.id, read)
+
+
 try:
     group_read = open("data/groups.json", encoding="utf-8")
     groups_list = json.load(group_read)['Gruppi']
