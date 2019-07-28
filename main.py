@@ -1,5 +1,7 @@
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 
+import groups
+
 
 def start(update, context):
     update.message.reply_text("Bot started")
@@ -7,6 +9,7 @@ def start(update, context):
 
 def check_message(update, context):
     update.message.reply_text("Message received")
+    groups.TryAddGroup(update.message)
 
 
 token = open("token.txt").read()
