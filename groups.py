@@ -32,6 +32,7 @@ def try_add_group(message):
 
 
 try:
-    groups_list = open("data/groups.json").read().json()
+    group_read = open("data/groups.json").read()
+    groups_list = json.loads(group_read)
 except:
     groups_list = []
