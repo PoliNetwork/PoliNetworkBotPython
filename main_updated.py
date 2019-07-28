@@ -9,7 +9,7 @@ def check_message(update,context):
     update.message.reply_text("Message received")
 
 
-updater = Updater(token='778444398:AAFwsOQS4IPnvAu_TUf2So6U0q6B04sAkb8', use_context = True)
+updater = Updater(token=open("token").read(), use_context = True)
 start_handler = CommandHandler('start', start)
 message_handler = MessageHandler(Filters.all, check_message)
 dispatcher = updater.dispatcher
