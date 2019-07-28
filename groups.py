@@ -10,7 +10,7 @@ def find(id):
 
 def write_group_file(id, type, title, invite_link, last_update):
     group = {
-        "Chat":{
+        "Chat": {
             "id": id,
             "type": type,
             "title": title,
@@ -19,8 +19,13 @@ def write_group_file(id, type, title, invite_link, last_update):
         "LastUpdateInviteLinkTime": last_update
     }
     groups_list.append(group)
-    with open("data/groups.json",'w',encoding="utf-8") as file:
+    with open("data/groups.json", 'w', encoding="utf-8") as file:
         file.write(json.dumps(groups_list))
+
+
+def get_link_and_last_update(chat):
+    # Todo: get link and last update
+    return "", ""
 
 
 def try_add_group(message):
@@ -34,14 +39,12 @@ def try_add_group(message):
         id = chat['id']
         type = chat['type']
         title = chat['title']
-        invite_link = "" #TODO: Add invite link and last_update
-        last_update = ""
+        (invite_link, last_update) = get_link_and_last_update(chat)
         write_group_file(id, type, title, invite_link, last_update)
 
 
 try:
-    group_read = open("data/groups.json",encoding="utf-8")
+    group_read = open("data/groups.json", encoding="utf-8")
     groups_list = json.load(group_read)['Gruppi']
 except:
     groups_list = []
-
