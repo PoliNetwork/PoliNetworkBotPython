@@ -10,7 +10,7 @@ def check_message(update, context):
 
 
 token = open("token.txt").read()
-updater = Updater(token)
+updater = Updater(token, use_context=True)
 start_handler = CommandHandler('start', start)
 message_handler = MessageHandler(Filters.all, check_message)
 dispatcher = updater.dispatcher
