@@ -34,7 +34,7 @@ def get_link_and_last_update(message):
     chat = bot.updater.bot.get_chat(message.chat.id)
     link = chat.invite_link
     if link is None or link == "":
-        link = bot.updater.bot.export_chat_invite_link(message['chat']['id'])
+        link = bot.updater.bot.export_chat_invite_link(message.chat.id)
 
     if link is None or link == "":
         return None, None
