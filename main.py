@@ -25,10 +25,7 @@ updater = Updater(token, use_context=True)
 dispatcher = updater.dispatcher
 dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
-
-group_handler = CommandHandler('getgroupjson', get_group_json)
-
-dispatcher.add_handler(group_handler)
+dispatcher.add_handler(CommandHandler('getgroupjson', get_group_json))
 dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
 updater.start_polling()
