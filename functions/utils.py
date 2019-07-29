@@ -6,7 +6,7 @@ import bot
 def escape(html):
     """Returns the given HTML with ampersands, quotes and carets encoded."""
     html = str(html)
-    return (html.encode('utf-8')).replace('&', '&amp;').replace('<', '&lt;') \
+    return html.replace('&', '&amp;').replace('<', '&lt;') \
         .replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
 
