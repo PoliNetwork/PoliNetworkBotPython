@@ -30,7 +30,7 @@ def send_in_private_or_in_group(text, group_id, user):
             nome = nome + " " + user["last_name"]
 
         nome = str(escape(nome))
-        message_to = "<a href='tg://user?id=" + user_id + "'>" + nome + "</a>"
+        message_to = "<a href='tg://user?id=" + str(user_id) + "'>" + nome + "</a>"
 
     text = "[Messaggio per " + message_to + "]\n" + text
 
