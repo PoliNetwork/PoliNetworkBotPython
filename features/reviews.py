@@ -1,5 +1,6 @@
 import json
 from json import JSONDecodeError
+import hashlib
 
 import main
 
@@ -23,7 +24,10 @@ def add_review(update, context):
     vote = text.split(" ")[1]
     description = " ".join(text.split(" ")[2:])
     group_id = str(chat['id'])
-    author_id = hash(str(chat['id']).join(salt))
+
+    to_hash = str(chat['id']).join(salt).encode('utf-8')
+    hash2 = hashlib.sha512(to_hash).hexdigest()
+    author_id = str(hash2)
 
     group_reviews = []
     if reviews_dict and reviews_dict.keys().__contains__(group_id):
