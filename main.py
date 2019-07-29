@@ -6,8 +6,9 @@ from functions import utils
 
 
 def start_handler(update, context):
-    update.message.reply_text("Ciao! Scrivi /help per la lista completa delle mie funzioni\n"
-                              "Visita anche il nostro sito https://polinetwork.github.io")
+    update.message.reply_text("Ciao! 👋\n"
+                              "\nScrivi /help per la lista completa delle mie funzioni 👀\n"
+                              "\nVisita anche il nostro sito https://polinetwork.github.io")
 
 
 def contact_handler(update, context):
@@ -16,11 +17,12 @@ def contact_handler(update, context):
 
 def help_handler(update, context):
     bot.updater.bot.send_message(update.message.chat.id,
-                                 "Lista di funzioni:\n"
-                                 "🔹 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
-                                 "🔹 FAQ (domande frequenti) https://polinetwork.github.io/it/faq/index.html\n"
-                                 "🔹 Bot ricerca aule libere @AulePolimiBot\n"
-                                 "🔹 Per contattarci /contact")
+                                 "<i>Lista di funzioni</i>:\n"
+                                 "\n📑 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
+                                 "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>FAQ (domande frequenti)</a>\n"
+                                 "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"
+                                 "\n✍ Per contattarci /contact",
+                                 parse_mode="HTML")
 
 
 def check_message(update, context):
