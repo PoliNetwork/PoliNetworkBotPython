@@ -2,7 +2,6 @@ from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import bot
 from features import groups, reviews, test
-from functions import utils
 
 
 def start_handler(update, context):
@@ -19,7 +18,8 @@ def help_handler(update, context):
     bot.updater.bot.send_message(update.message.chat.id,
                                  "<i>Lista di funzioni</i>:\n"
                                  "\n📑 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
-                                 "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>FAQ (domande frequenti)</a>\n"
+                                 "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>"
+                                 "FAQ (domande frequenti)</a>\n"
                                  "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"
                                  "\n✍ Per contattarci /contact",
                                  parse_mode="HTML")
