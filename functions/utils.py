@@ -97,12 +97,16 @@ def get_user_mention(user):
         return "<a href='tg://user?id=" + str(user.id) + "'>" + nome + "</a>"
 
 
-def send_file_in_private_or_warning_in_group(user, document, group_id):
+def send_file_in_private_or_warning_in_group(user, document, group_id, title):
     success = True
     user_id = user.id
 
+    if title is None or title == "":
+        title = "[No title]"
+
+    caption = escape("Review: " + title)
     try:
-        bot.updater.bot.send_document(user_id, document)
+        bot.updater.bot.send_document(chat_id=user_id, document=document, caption=caption)
     except Unauthorized as e:
         success = False
 

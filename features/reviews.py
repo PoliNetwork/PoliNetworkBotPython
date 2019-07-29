@@ -1,4 +1,6 @@
 import json
+import os
+import random
 from json import JSONDecodeError
 import hashlib
 
@@ -110,7 +112,24 @@ def help_handler(update, context):
 
 def get_reviews_html(update, context):
     # todo fill html with data
-    html = ""
+    html = "<html>" \
+           "<body>" \
+           "Ciao" \
+           "</body>" \
+           "</html>"
 
+    n = random.randint(1, 9999999)
+    filename = 'data/review' + str(n) + '.html'
+
+    with open(filename, 'w', encoding="utf-8") as file_to_write:
+        file_to_write.write(html)
+
+    html = open(filename, 'rb')
     # then send them
-    utils.send_file_in_private_or_warning_in_group(update.message.from_user, html, update.message.chat.id)
+    utils.send_file_in_private_or_warning_in_group(update.message.from_user, html,
+                                                   update.message.chat.id, update.message.chat.title)
+    html.close()
+    try:
+        os.remove(filename)
+    except Exception as e:
+        print(e)
