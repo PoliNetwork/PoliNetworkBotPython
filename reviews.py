@@ -1,11 +1,12 @@
 import json
+from json import JSONDecodeError
 
 import main
 
 try:
     file = open("data/reviews.json", encoding="utf-8")
     reviews_dict = json.load(file)
-except IOError:
+except (JSONDecodeError, IOError):
     reviews_dict = {}
 
 

@@ -1,5 +1,6 @@
 import datetime
 import json
+from json import JSONDecodeError
 
 import creators
 import main
@@ -63,12 +64,11 @@ def try_add_group(message):
 
 
 def send_group_json(message):
-    read = open("data/groups.json", encoding="utf-8").read()
-    main.updater.bot.send_document(message.chat.id, read)
+    main.updater.bot.send_document(chat_id=message.chat.id, document=open("data/groups.json", 'rb'))
 
 
 try:
     group_read = open("data/groups.json", encoding="utf-8")
     groups_list = json.load(group_read)['Gruppi']
-except IOError:
+except (JSONDecodeError, IOError):
     groups_list = []
