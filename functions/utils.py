@@ -1,5 +1,7 @@
 import datetime
 
+from telegram.error import Unauthorized
+
 import bot
 
 
@@ -16,7 +18,7 @@ def send_in_private_or_in_group(text, group_id, user):
 
     try:
         bot.updater.bot.send_message(user_id, text)
-    except:
+    except Unauthorized as e:
         success = False
 
     if success is True:
@@ -32,7 +34,7 @@ def send_in_private_or_in_group(text, group_id, user):
         nome = str(escape(nome))
         message_to = "<a href='tg://user?id=" + str(user_id) + "'>" + nome + "</a>"
 
-    text = "[Messaggio per " + message_to + "]\n" + text
+    text = "[Messaggio per " + message_to + "]\n\n" + text
 
     done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
 
