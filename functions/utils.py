@@ -1,3 +1,5 @@
+import datetime
+
 import bot
 
 
@@ -17,4 +19,6 @@ def send_in_private_or_in_group(text, group_id, user_id):
         success = False
 
     if success is False:
-        bot.updater.bot.send_message(group_id, text)
+        done2 = bot.updater.bot.send_message(group_id, text)
+
+        # to_delete.add(group_id, done2.message_id, datetime.datetime.now())
