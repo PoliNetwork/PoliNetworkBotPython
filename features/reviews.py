@@ -89,4 +89,8 @@ def get_review_json(update, context):
 
 def help_handler(update, context):
     # todo
-    update.message.reply_text("Spiegazione del sistema delle recensioni.")
+    update.message.reply_text("E' possibile recensire i corsi.\n"
+                              "1. Entra nel gruppo del tuo corso.\n"
+                              "2. Scrivi /recensione VOTO TESTO\n"
+                              "Dove VOTO è un numero da 0 a 100 e TESTO è il testo vero e proprio della recensione\n"
+                              "Esempio: /recensione 10 Corso pessimo! State alla larga!")
