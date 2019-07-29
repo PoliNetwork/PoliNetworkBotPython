@@ -1,7 +1,6 @@
-from telegram.ext import Updater, MessageHandler, CommandHandler, Filters, Dispatcher
+from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 
-import groups
-import reviews
+from features import groups, reviews
 
 
 def start(update, context):

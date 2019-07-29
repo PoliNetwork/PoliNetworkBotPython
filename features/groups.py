@@ -2,7 +2,7 @@ import datetime
 import json
 from json import JSONDecodeError
 
-import creators
+from config import creators
 import main
 
 
