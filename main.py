@@ -4,9 +4,13 @@ import bot
 from features import groups, reviews
 
 
-def start(update, context):
+def start_handler(update, context):
     update.message.reply_text("Ciao! Scrivi /help per la lista completa delle mie funzioni\n"
                               "Visita anche il nostro sito https://polinetwork.github.io")
+
+
+def contact_handler(update, context):
+    update.message.reply_text("Puoi scriverci alla pagina facebook https://m.me/PolitecnicoDiMilanoNetwork")
 
 
 def help_handler(update, context):
@@ -14,7 +18,8 @@ def help_handler(update, context):
                                  "Lista di funzioni:\n"
                                  "🔹 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
                                  "🔹 FAQ (domande frequenti) https://polinetwork.github.io/it/faq/index.html\n"
-                                 "🔹 Bot ricerca aule libere @AulePolimiBot")
+                                 "🔹 Bot ricerca aule libere @AulePolimiBot"
+                                 "🔹 Per contattarci /contact")
 
 
 def check_message(update, context):
@@ -23,8 +28,10 @@ def check_message(update, context):
 
 
 dispatcher = bot.updater.dispatcher
-dispatcher.add_handler(CommandHandler('start', start))
+dispatcher.add_handler(CommandHandler('start', start_handler))
+dispatcher.add_handler(CommandHandler('contact', contact_handler))
 dispatcher.add_handler(CommandHandler('help', help_handler))
+dispatcher.add_handler(CommandHandler('help_recensioni', reviews.help_handler))
 dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
 dispatcher.add_handler(CommandHandler('getreviewjson', reviews.get_review_json))

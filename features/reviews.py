@@ -56,3 +56,8 @@ def get_review_json(update, context):
     chat = message.chat
     if chat.id == 5651789:  # id of @ArmeF97
         bot.updater.bot.send_document(chat_id=chat.id, document=open("data/reviews.json", 'rb'))
+
+
+def help_handler(update, context):
+    # todo
+    update.message.reply_text("Spiegazione del sistema delle recensioni.")
