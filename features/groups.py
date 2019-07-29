@@ -2,8 +2,8 @@ import datetime
 import json
 from json import JSONDecodeError
 
+import bot
 from config import creators
-import main
 
 
 def find(id):
@@ -31,10 +31,10 @@ def write_group_file(id, type, title, invite_link, last_update):
 
 
 def get_link_and_last_update(message):
-    chat = main.updater.bot.get_chat(message.chat.id)
+    chat = bot.updater.bot.get_chat(message.chat.id)
     link = chat.invite_link
     if link is None or link == "":
-        link = main.updater.bot.export_chat_invite_link(message['chat']['id'])
+        link = bot.updater.bot.export_chat_invite_link(message['chat']['id'])
     last_update = str(datetime.datetime.now())
     return link, last_update
 
@@ -53,7 +53,7 @@ def try_add_group(message):
         print('Received a private message.')
         return
 
-    admins = main.updater.bot.get_chat_administrators(chat.id)
+    admins = bot.updater.bot.get_chat_administrators(chat.id)
     if not creator_is_present(admins):
         return
 
@@ -63,12 +63,15 @@ def try_add_group(message):
         write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update)
 
 
-def send_group_json(message):
-    main.updater.bot.send_document(chat_id=message.chat.id, document=open("data/groups.json", 'rb'))
-
-
 try:
     group_read = open("data/groups.json", encoding="utf-8")
     groups_list = json.load(group_read)['Gruppi']
 except (JSONDecodeError, IOError):
     groups_list = []
+
+
+def get_group_json(update, context):
+    message = update.message
+    chat = message.chat
+    if chat.id == 5651789:  # id of @ArmeF97
+        bot.updater.bot.send_document(chat_id=message.chat.id, document=open("data/groups.json", 'rb'))

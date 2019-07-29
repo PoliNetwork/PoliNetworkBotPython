@@ -2,7 +2,7 @@ import json
 from json import JSONDecodeError
 import hashlib
 
-import main
+import bot
 
 try:
     file = open("data/reviews.json", encoding="utf-8")
@@ -48,5 +48,12 @@ def add_review(update, context):
     with open("data/reviews.json", 'w', encoding="utf-8") as file:
         json.dump(reviews_dict, file)
 
-    main.updater.bot.deleteMessage(chat_id=update.message.chat_id,
+    bot.updater.bot.deleteMessage(chat_id=update.message.chat_id,
                                    message_id=update.message.message_id)
+
+
+def get_review_json(update, context):
+    message = update.message
+    chat = message.chat
+    if chat.id == 5651789:  # id of @ArmeF97
+        bot.updater.bot.send_document(chat_id=chat.id, document=open("data/reviews.json", 'rb'))

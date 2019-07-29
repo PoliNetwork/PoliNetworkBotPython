@@ -1,5 +1,6 @@
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 
+import bot
 from features import groups, reviews
 
 
@@ -12,20 +13,11 @@ def check_message(update, context):
     groups.try_add_group(update.message)
 
 
-def get_group_json(update, context):
-    message = update.message
-    chat = message.chat
-    if chat.id == 5651789:  # id of @ArmeF97
-        groups.send_group_json(message)
-
-
-token = open("token.txt").read()
-updater = Updater(token, use_context=True)
-
-dispatcher = updater.dispatcher
+dispatcher = bot.updater.dispatcher
 dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
-dispatcher.add_handler(CommandHandler('getgroupjson', get_group_json))
+dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
+dispatcher.add_handler(CommandHandler('getreviewjson', reviews.get_review_json))
 dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
-updater.start_polling()
+bot.updater.start_polling()
