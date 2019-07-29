@@ -49,7 +49,7 @@ def add_review(update, context):
         json.dump(reviews_dict, file)
 
     bot.updater.bot.deleteMessage(chat_id=update.message.chat_id,
-                                   message_id=update.message.message_id)
+                                  message_id=update.message.message_id)
 
 
 def get_review_json(update, context):

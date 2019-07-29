@@ -1,4 +1,4 @@
-from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
+from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import bot
 from features import groups, reviews
