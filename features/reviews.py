@@ -3,6 +3,7 @@ from json import JSONDecodeError
 import hashlib
 
 import bot
+from functions import utils
 
 try:
     file = open("data/reviews.json", encoding="utf-8")
@@ -24,6 +25,12 @@ def add_review(update, context):
     # Review's attributes + hash
 
     vote = text.split(" ")[1]
+
+    vote = int(vote)
+    if vote < 0 or vote > 100:
+        utils.send_in_private_or_in_group("Il voto dev'essere compreso tra 0 e 100", chat.id, message.from_user.id)
+        return
+
     description = " ".join(text.split(" ")[2:])
     group_id = str(chat['id'])
     to_hash = str(chat['id']).join(salt).encode('utf-8')
@@ -52,8 +59,9 @@ def add_review(update, context):
         if group['author_id'] == author_id:
             author_already_voted = True
     if author_already_voted:
-        bot.updater.bot.deleteMessage(chat_id=update.message.chat_id,
-                                      message_id=update.message.message_id)
+        bot.updater.bot.deleteMessage(chat_id=message.chat_id,
+                                      message_id=message.message_id)
+        utils.send_in_private_or_in_group("Hai già fatto una recensione!", chat.id, message.from_user.id)
         return
 
     # Create the json that will be appended to the list
