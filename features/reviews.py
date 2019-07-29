@@ -28,10 +28,22 @@ def add_review(update, context):
 
     # Review's attributes + hash
 
-    vote = text.split(" ")[1]
+    vote_valid = True
 
-    vote = int(vote)
-    if vote < 0 or vote > 100:
+    vote = ""
+    try:
+        vote = text.split(" ")[1]
+        if vote != "":
+            vote = int(vote)
+        else:
+            vote_valid = False
+    except:
+        vote_valid = False
+
+    if vote_valid and (vote < 0 or vote > 100):
+        vote_valid = False
+
+    if vote_valid is False:
         bot.updater.bot.deleteMessage(chat_id=update.message.chat_id,
                                       message_id=update.message.message_id)
         utils.send_in_private_or_in_group("Il voto dev'essere compreso tra 0 e 100", chat.id, message.from_user)
