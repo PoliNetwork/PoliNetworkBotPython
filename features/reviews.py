@@ -38,7 +38,7 @@ def add_review(update, context):
         description: ""
      }], [...], [...]
      Let's assume group_id as the key of the dict. While the jsons are the reviews that are in that group.
-     Pretty easy, isnt it?!
+     Pretty easy, isn't it?!
     '''
 
     group_reviews = []
@@ -53,7 +53,7 @@ def add_review(update, context):
             author_already_voted = True
     if author_already_voted:
         bot.updater.bot.deleteMessage(chat_id=update.message.chat_id,
-                                  message_id=update.message.message_id)
+                                      message_id=update.message.message_id)
         return
 
     # Create the json that will be appended to the list
