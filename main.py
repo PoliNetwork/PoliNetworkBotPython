@@ -2,6 +2,7 @@ from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import bot
 from features import groups, reviews, test
+from functions import utils
 
 
 def start_handler(update, context):
@@ -42,4 +43,6 @@ dispatcher.add_handler(CommandHandler('testmessage', test.test_message))
 
 dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
+thread = utils.DeleteMessageThread()
+thread.start()
 bot.updater.start_polling()
