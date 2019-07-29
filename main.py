@@ -45,4 +45,5 @@ dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
 thread = utils.DeleteMessageThread()
 thread.start()
+
 bot.updater.start_polling()

@@ -2,7 +2,7 @@ import datetime
 import json
 import time
 from json import JSONDecodeError
-from threading import Thread
+from threading import Thread, Lock
 
 from telegram.error import Unauthorized
 
@@ -22,8 +22,12 @@ def escape(html):
     return html.replace('&', '&amp;').replace('<', '&lt;') \
         .replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
+lock = Lock()
 
 def send_in_private_or_in_group(text, group_id, user):
+    global lock
+    global messages_list
+
     success = True
     user_id = user.id
 
@@ -54,10 +58,11 @@ def send_in_private_or_in_group(text, group_id, user):
         "message_id" : done2.message_id,
         "datetime" : str(datetime.datetime.now().timestamp())
     }
-
+    lock.acquire()
     messages_list.append(j5on)
     with open("data/to_delete.json", 'w', encoding="utf-8") as file:
         json.dump(messages_list, file)
+    lock.release()
 
 
 class DeleteMessageThread(Thread):
@@ -65,21 +70,18 @@ class DeleteMessageThread(Thread):
         Thread.__init__(self)
 
     def run(self):
+        global messages_list
+        global lock
         while True:
-            try:
-                file = open("data/to_delete.json", encoding="utf-8")
-                messages_list = json.load(file)
-            except (JSONDecodeError, IOError):
-                messages_list = []
-                return
-
+            lock.acquire()
             for message in messages_list:
                 difference = float(message['datetime']) - datetime.datetime.now().timestamp()
                 if ((abs(difference)/60) > 5):
                     messages_list.remove(message)
                     bot.updater.bot.deleteMessage(chat_id=message['group_id'],
-                                      message_id=message['message_id'])
+                                                  message_id=message['message_id'])
 
             with open("data/to_delete.json", 'w', encoding="utf-8") as file:
                 json.dump(messages_list, file)
+            lock.release()
             time.sleep(5)
