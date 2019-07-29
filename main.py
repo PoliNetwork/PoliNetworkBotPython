@@ -18,7 +18,7 @@ def help_handler(update, context):
                                  "Lista di funzioni:\n"
                                  "🔹 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
                                  "🔹 FAQ (domande frequenti) https://polinetwork.github.io/it/faq/index.html\n"
-                                 "🔹 Bot ricerca aule libere @AulePolimiBot"
+                                 "🔹 Bot ricerca aule libere @AulePolimiBot\n"
                                  "🔹 Per contattarci /contact")
 
 
