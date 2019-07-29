@@ -1,8 +1,17 @@
 import datetime
+import json
+from json import JSONDecodeError
 
 from telegram.error import Unauthorized
 
 import bot
+
+
+try:
+    file = open("data/to_delete.json", encoding="utf-8")
+    messages_list = json.load(file)
+except (JSONDecodeError, IOError):
+    messages_list = []
 
 
 def escape(html):
@@ -38,4 +47,12 @@ def send_in_private_or_in_group(text, group_id, user):
 
     done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
 
-    # to_delete.add(group_id, done2.message_id, datetime.datetime.now())
+    j5on = {
+        "group_id" : group_id,
+        "message_id" : done2.message_id,
+        "datetime" : str(datetime.datetime.now())
+    }
+
+    messages_list.append(j5on)
+    with open("data/to_delete.json", 'w', encoding="utf-8") as file:
+        json.dump(messages_list, file)
