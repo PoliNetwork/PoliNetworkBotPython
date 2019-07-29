@@ -22,7 +22,6 @@ def send_in_private_or_in_group(text, group_id, user):
     if success is True:
         return
 
-    message_to = "";
     if user.username is not None and user.username != "":
         message_to = "@" + user.username
     else:
