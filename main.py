@@ -1,7 +1,7 @@
 from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import bot
-from features import groups, reviews, test
+from features import groups, reviews, test, moderation
 from functions import utils
 
 
@@ -40,6 +40,7 @@ dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
 dispatcher.add_handler(CommandHandler('getreviewjson', reviews.get_review_json))
 dispatcher.add_handler(CommandHandler('testmessage', test.test_message))
+dispatcher.add_handler(CommandHandler('mute', moderation.mute))
 
 dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
