@@ -25,34 +25,9 @@ def escape(html):
 lock = Lock()
 
 
-def send_in_private_or_in_group(text, group_id, user):
+def add_message_to_delete(group_id, done2):
     global lock
     global messages_list
-
-    success = True
-    user_id = user.id
-
-    try:
-        bot.updater.bot.send_message(user_id, text)
-    except Unauthorized as e:
-        success = False
-
-    if success is True:
-        return
-
-    if user.username is not None and user.username != "":
-        message_to = "@" + user.username
-    else:
-        nome = user['first_name']
-        if user['last_name'] is not None and user['last_name'] != "":
-            nome = nome + " " + user["last_name"]
-
-        nome = str(escape(nome))
-        message_to = "<a href='tg://user?id=" + str(user_id) + "'>" + nome + "</a>"
-
-    text = "[Messaggio per " + message_to + "]\n\n" + text
-
-    done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
 
     j5on = {
         "group_id": group_id,
@@ -64,6 +39,26 @@ def send_in_private_or_in_group(text, group_id, user):
     with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
         json.dump(messages_list, file_to_write)
     lock.release()
+
+
+def send_in_private_or_in_group(text, group_id, user):
+    success = True
+    user_id = user.id
+
+    try:
+        bot.updater.bot.send_message(user_id, text)
+    except Unauthorized as e:
+        success = False
+
+    if success is True:
+        return
+
+    message_to = get_user_mention(user)
+
+    text = "[Messaggio per " + message_to + "]\n\n" + text
+
+    done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
+    add_message_to_delete(group_id, done2)
 
 
 class DeleteMessageThread(Thread):
@@ -88,3 +83,35 @@ class DeleteMessageThread(Thread):
             lock.release()
 
             time.sleep(5)
+
+
+def get_user_mention(user):
+    if user.username is not None and user.username != "":
+        return "@" + user.username
+    else:
+        nome = user['first_name']
+        if user['last_name'] is not None and user['last_name'] != "":
+            nome = nome + " " + user["last_name"]
+
+        nome = str(escape(nome))
+        return "<a href='tg://user?id=" + str(user.id) + "'>" + nome + "</a>"
+
+
+def send_file_in_private_or_warning_in_group(user, document, group_id):
+    success = True
+    user_id = user.id
+
+    try:
+        bot.updater.bot.send_document(user_id, document)
+    except Unauthorized as e:
+        success = False
+
+    if success is True:
+        return
+
+    message_to = get_user_mention(user)
+
+    text = message_to + ", devi prima scrivermi in privato per ricevere ciò che hai chiesto!"
+
+    done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
+    add_message_to_delete(group_id, done2)

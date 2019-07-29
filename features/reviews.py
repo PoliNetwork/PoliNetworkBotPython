@@ -106,3 +106,11 @@ def help_handler(update, context):
                               "2. Scrivi /recensione VOTO TESTO\n"
                               "Dove VOTO è un numero da 0 a 100 e TESTO è il testo vero e proprio della recensione\n"
                               "Esempio: /recensione 10 Corso pessimo! State alla larga!")
+
+
+def get_reviews_html(update, context):
+    # todo fill html with data
+    html = ""
+
+    # then send them
+    utils.send_file_in_private_or_warning_in_group(update.message.from_user, html, update.message.chat.id)

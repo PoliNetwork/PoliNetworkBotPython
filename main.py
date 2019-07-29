@@ -37,10 +37,12 @@ dispatcher.add_handler(CommandHandler('contact', contact_handler))
 dispatcher.add_handler(CommandHandler('help', help_handler))
 dispatcher.add_handler(CommandHandler('help_recensioni', reviews.help_handler))
 dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
+dispatcher.add_handler(CommandHandler('ottieni_recensioni', reviews.get_reviews_html))
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
 dispatcher.add_handler(CommandHandler('getreviewjson', reviews.get_review_json))
 dispatcher.add_handler(CommandHandler('testmessage', test.test_message))
 dispatcher.add_handler(CommandHandler('mute', moderation.mute))
+dispatcher.add_handler(CommandHandler('ban', moderation.ban))
 
 dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
