@@ -23,13 +23,13 @@ def get_group_json(update, context):
 token = open("token.txt").read()
 updater = Updater(token, use_context=True)
 
-dispatcher: Dispatcher = updater.dispatcher
+dispatcher = updater.dispatcher
 dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
 
-group_handler = CommandHandler('getGroupJson', get_group_json)
-dispatcher.add_handler(group_handler)
+group_handler = CommandHandler('getgroupjson', get_group_json)
 
+dispatcher.add_handler(group_handler)
 dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
 updater.start_polling()

@@ -5,7 +5,7 @@ import main
 
 def find(id):
     for group in groups_list:
-        if group['chat']['id'] == id:
+        if group['Chat']['id'] == id:
             return True
     return False
 
@@ -36,9 +36,10 @@ def get_link_and_last_update(message):
     return link, last_update
 
 
-def admin_is_present(admins):
+def creator_is_present(admins):
     for admin in admins:
         if admin.user.username == "PoliCreator" or admin.user.username == "PoliCreator2":
+            #if admin.status == "creator":
             return True
     return False
 
@@ -50,7 +51,7 @@ def try_add_group(message):
         return
 
     admins = main.updater.bot.get_chat_administrators(chat.id)
-    if not admin_is_present(admins):
+    if not creator_is_present(admins):
         return
 
     group_already_present = find(chat['id'])
