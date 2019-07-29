@@ -16,6 +16,8 @@ def add_review(update, context):
     message = update.message
     chat = message['chat']
     if chat['type'] == 'private':
+        bot.updater.bot.send_message(message.chat.id, "Le recensioni non possono essere fatte in privato."
+                                                      " Devi entrare nel gruppo del corso da recensire.")
         print('Received a private message.')
         return
 
