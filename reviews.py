@@ -1,23 +1,28 @@
 import json
 
-import groups
 import main
 
 try:
     file = open("data/reviews.json", encoding="utf-8")
     reviews_dict = json.load(file)
-except:
+except IOError:
     reviews_dict = {}
 
 
 def add_review(update, context):
-    message = update.message['text']
+    message = update.message
+    chat = message['chat']
+    if chat['type'] == 'private':
+        print('Received a private message.')
+        return
+
     salt = open("salt.txt", encoding="utf-8").read()
 
-    vote = message.split(" ")[1]
-    description = " ".join(message.split(" ")[2:])
-    group_id = str(update['_effective_chat']['id'])
-    author_id = hash(str(update['_effective_user']['id']).join(salt))
+    text = message.text
+    vote = text.split(" ")[1]
+    description = " ".join(text.split(" ")[2:])
+    group_id = str(chat['id'])
+    author_id = hash(str(chat['id']).join(salt))
 
     group_reviews = []
     if reviews_dict and reviews_dict.keys().__contains__(group_id):

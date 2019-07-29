@@ -1,5 +1,7 @@
 import datetime
 import json
+
+import creators
 import main
 
 
@@ -24,7 +26,7 @@ def write_group_file(id, type, title, invite_link, last_update):
 
     groups_dict = {"Gruppi": groups_list}
     with open("data/groups.json", 'w', encoding="utf-8") as file:
-        json.dump(groups_dict,file)
+        json.dump(groups_dict, file)
 
 
 def get_link_and_last_update(message):
@@ -38,8 +40,8 @@ def get_link_and_last_update(message):
 
 def creator_is_present(admins):
     for admin in admins:
-        if admin.user.username == "PoliCreator" or admin.user.username == "PoliCreator2":
-            #if admin.status == "creator":
+        if admin.user.username in creators.creators:
+            # if admin.status == "creator":
             return True
     return False
 
@@ -56,11 +58,8 @@ def try_add_group(message):
 
     group_already_present = find(chat['id'])
     if group_already_present is False:
-        id = chat['id']
-        type = chat['type']
-        title = chat['title']
         (invite_link, last_update) = get_link_and_last_update(message)
-        write_group_file(id, type, title, invite_link, last_update)
+        write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update)
 
 
 def send_group_json(message):
@@ -71,5 +70,5 @@ def send_group_json(message):
 try:
     group_read = open("data/groups.json", encoding="utf-8")
     groups_list = json.load(group_read)['Gruppi']
-except:
+except IOError:
     groups_list = []
