@@ -8,7 +8,6 @@ from telegram.error import Unauthorized
 
 import bot
 
-
 try:
     file = open("data/to_delete.json", encoding="utf-8")
     messages_list = json.load(file)
@@ -22,7 +21,9 @@ def escape(html):
     return html.replace('&', '&amp;').replace('<', '&lt;') \
         .replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
+
 lock = Lock()
+
 
 def send_in_private_or_in_group(text, group_id, user):
     global lock
@@ -54,14 +55,14 @@ def send_in_private_or_in_group(text, group_id, user):
     done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
 
     j5on = {
-        "group_id" : group_id,
-        "message_id" : done2.message_id,
-        "datetime" : str(datetime.datetime.now().timestamp())
+        "group_id": group_id,
+        "message_id": done2.message_id,
+        "datetime": str(datetime.datetime.now().timestamp())
     }
     lock.acquire()
     messages_list.append(j5on)
-    with open("data/to_delete.json", 'w', encoding="utf-8") as file:
-        json.dump(messages_list, file)
+    with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
+        json.dump(messages_list, file_to_write)
     lock.release()
 
 
@@ -73,15 +74,17 @@ class DeleteMessageThread(Thread):
         global messages_list
         global lock
         while True:
+
             lock.acquire()
             for message in messages_list:
                 difference = float(message['datetime']) - datetime.datetime.now().timestamp()
-                if ((abs(difference)/60) > 5):
+                if (abs(difference) / 60) > 5:
                     messages_list.remove(message)
                     bot.updater.bot.deleteMessage(chat_id=message['group_id'],
                                                   message_id=message['message_id'])
 
-            with open("data/to_delete.json", 'w', encoding="utf-8") as file:
-                json.dump(messages_list, file)
+            with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
+                json.dump(messages_list, file_to_write)
             lock.release()
+
             time.sleep(5)
