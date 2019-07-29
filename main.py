@@ -1,7 +1,7 @@
 from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import bot
-from features import groups, reviews
+from features import groups, reviews, test
 from functions import utils
 
 
@@ -38,19 +38,7 @@ dispatcher.add_handler(CommandHandler('help_recensioni', reviews.help_handler))
 dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
 dispatcher.add_handler(CommandHandler('getreviewjson', reviews.get_review_json))
-
-
-def test_message(update, context):
-    message = update.message
-
-    if message.chat.type == "private":
-        return
-
-    from_user = message['from_user']
-    utils.send_in_private_or_in_group("Ciao!", message.chat.id, from_user)
-
-
-dispatcher.add_handler(CommandHandler('testmessage', test_message))
+dispatcher.add_handler(CommandHandler('testmessage', test.test_message))
 
 dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 
