@@ -61,28 +61,36 @@ def send_in_private_or_in_group(text, group_id, user):
     add_message_to_delete(group_id, done2)
 
 
+def DeleteMessageThread2():
+    global messages_list
+    global lock
+
+    lock.acquire()
+
+    updated = 0
+    for message in messages_list:
+        difference = float(message['datetime']) - datetime.datetime.now().timestamp()
+        if (abs(difference) / 60) > 5:
+            messages_list.remove(message)
+            updated = updated + 1
+            bot.updater.bot.deleteMessage(chat_id=message['group_id'],
+                                          message_id=message['message_id'])
+    if updated > 0:  # array is changed and so we need to update the file
+        with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
+            json.dump(messages_list, file_to_write)
+
+    lock.release()
+
+    time.sleep(5)
+
+
 class DeleteMessageThread(Thread):
     def __init__(self):
         Thread.__init__(self)
 
     def run(self):
-        global messages_list
-        global lock
         while True:
-
-            lock.acquire()
-            for message in messages_list:
-                difference = float(message['datetime']) - datetime.datetime.now().timestamp()
-                if (abs(difference) / 60) > 5:
-                    messages_list.remove(message)
-                    bot.updater.bot.deleteMessage(chat_id=message['group_id'],
-                                                  message_id=message['message_id'])
-
-            with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
-                json.dump(messages_list, file_to_write)
-            lock.release()
-
-            time.sleep(5)
+            DeleteMessageThread2()
 
 
 def get_user_mention(user):
