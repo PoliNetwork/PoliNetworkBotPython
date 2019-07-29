@@ -30,7 +30,7 @@ def add_review(update, context):
 
     vote = int(vote)
     if vote < 0 or vote > 100:
-        utils.send_in_private_or_in_group("Il voto dev'essere compreso tra 0 e 100", chat.id, message.from_user.id)
+        utils.send_in_private_or_in_group("Il voto dev'essere compreso tra 0 e 100", chat.id, message.from_user)
         return
 
     description = " ".join(text.split(" ")[2:])
@@ -63,7 +63,7 @@ def add_review(update, context):
     if author_already_voted:
         bot.updater.bot.deleteMessage(chat_id=message.chat_id,
                                       message_id=message.message_id)
-        utils.send_in_private_or_in_group("Hai già fatto una recensione!", chat.id, message.from_user.id)
+        utils.send_in_private_or_in_group("Hai già fatto una recensione!", chat.id, message.from_user)
         return
 
     # Create the json that will be appended to the list

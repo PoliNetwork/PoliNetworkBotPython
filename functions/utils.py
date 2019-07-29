@@ -3,22 +3,21 @@ import datetime
 import bot
 
 
-def send_in_private_or_in_group(text, group_id, user_id):
+def send_in_private_or_in_group(text, group_id, user):
     success = True
+    user_id = user.id
 
     try:
-        done = bot.updater.bot.send_message(user_id, text)
+        bot.updater.bot.send_message(user_id, text)
     except:
         success = False
 
-    try:
-        get_id = done.chat.id
-        if get_id is None or get_id == "":
-            success = False
-    except:
-        success = False
+    if success is True:
+        return
 
-    if success is False:
-        done2 = bot.updater.bot.send_message(group_id, text)
+    if user.username is not None and user.username != "":
+        text = "[Messaggio per @" + user.username + "]\n" + text
 
-        # to_delete.add(group_id, done2.message_id, datetime.datetime.now())
+    done2 = bot.updater.bot.send_message(group_id, text)
+
+    # to_delete.add(group_id, done2.message_id, datetime.datetime.now())
