@@ -12,7 +12,9 @@ def start(update, context):
 def help_handler(update, context):
     bot.updater.bot.send_message(update.message.chat.id,
                                  "Lista di funzioni:\n"
-                                 "Ecc...")
+                                 "🔹 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
+                                 "🔹 FAQ (domande frequenti) https://polinetwork.github.io/it/faq/index.html\n"
+                                 "🔹 Bot ricerca aule libere @AulePolimiBot")
 
 
 def check_message(update, context):
