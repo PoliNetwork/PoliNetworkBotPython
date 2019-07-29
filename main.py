@@ -5,7 +5,8 @@ from features import groups, reviews
 
 
 def start(update, context):
-    update.message.reply_text("Ciao! Scrivi /help per la lista completa delle mie funzioni")
+    update.message.reply_text("Ciao! Scrivi /help per la lista completa delle mie funzioni\n"
+                              "Visita anche il nostro sito https://polinetwork.github.io")
 
 
 def help_handler(update, context):

@@ -42,11 +42,10 @@ def add_review(update, context):
     # Add to existing list of reviews the json built
     group_reviews.append(save)
     # Create a dict made up by group id and reviews linked to that group
-    dict = {group_id: group_reviews}
-    reviews_dict.update(dict)
+    reviews_dict.update({group_id: group_reviews})
     # Save everything and delete the message sent by user
-    with open("data/reviews.json", 'w', encoding="utf-8") as file:
-        json.dump(reviews_dict, file)
+    with open("data/reviews.json", 'w', encoding="utf-8") as file_to_write:
+        json.dump(reviews_dict, file_to_write)
 
     bot.updater.bot.deleteMessage(chat_id=update.message.chat_id,
                                   message_id=update.message.message_id)

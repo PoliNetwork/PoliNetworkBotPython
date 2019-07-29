@@ -6,18 +6,18 @@ import bot
 from config import creators
 
 
-def find(id):
+def find(id_to_find):
     for group in groups_list:
-        if group['Chat']['id'] == id:
+        if group['Chat']['id'] == id_to_find:
             return True
     return False
 
 
-def write_group_file(id, type, title, invite_link, last_update):
+def write_group_file(chat_id, chat_type, title, invite_link, last_update):
     group = {
         "Chat": {
-            "id": id,
-            "type": type,
+            "id": chat_id,
+            "type": chat_type,
             "title": title,
             "invite_link": invite_link
         },
