@@ -1,13 +1,12 @@
 import datetime
 import json
-from json import JSONDecodeError
 
-import bot
+import variable
 from config import creators
 
 
 def find(id_to_find):
-    for group in groups_list:
+    for group in variable.groups_list:
         if group['Chat']['id'] == id_to_find:
             return True
     return False
@@ -23,22 +22,22 @@ def write_group_file(chat_id, chat_type, title, invite_link, last_update):
         },
         "LastUpdateInviteLinkTime": last_update
     }
-    groups_list.append(group)
+    variable.groups_list.append(group)
 
-    groups_dict = {"Gruppi": groups_list}
+    groups_dict = {"Gruppi": variable.groups_list}
     with open("data/groups.json", 'w', encoding="utf-8") as file:
         json.dump(groups_dict, file)
 
 
 def get_link_and_last_update(message):
-    chat = bot.updater.bot.get_chat(message.chat.id)
+    chat = variable.updater.bot.get_chat(message.chat.id)
     link = chat.invite_link
     if link is None or link == "":
-        link = bot.updater.bot.export_chat_invite_link(message.chat.id)
+        link = variable.updater.bot.export_chat_invite_link(message.chat.id)
 
     if link is None or link == "":
         return None, None
-    
+
     last_update = str(datetime.datetime.now())
     return link, last_update
 
@@ -57,7 +56,7 @@ def try_add_group(message):
         print('Received a private message.')
         return
 
-    admins = bot.updater.bot.get_chat_administrators(chat.id)
+    admins = variable.updater.bot.get_chat_administrators(chat.id)
     if not creator_is_present(admins):
         return
 
@@ -67,15 +66,8 @@ def try_add_group(message):
         write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update)
 
 
-try:
-    group_read = open("data/groups.json", encoding="utf-8")
-    groups_list = json.load(group_read)['Gruppi']
-except (JSONDecodeError, IOError):
-    groups_list = []
-
-
 def get_group_json(update, context):
     message = update.message
     chat = message.chat
     if chat.id == 5651789:  # id of @ArmeF97
-        bot.updater.bot.send_document(chat_id=message.chat.id, document=open("data/groups.json", 'rb'))
+        variable.updater.bot.send_document(chat_id=message.chat.id, document=open("data/groups.json", 'rb'))

@@ -6,7 +6,7 @@ from threading import Thread, Lock
 
 from telegram.error import Unauthorized
 
-import bot
+import variable
 
 try:
     file = open("data/to_delete.json", encoding="utf-8")
@@ -46,7 +46,7 @@ def send_in_private_or_in_group(text, group_id, user):
     user_id = user.id
 
     try:
-        bot.updater.bot.send_message(user_id, text)
+        variable.updater.bot.send_message(user_id, text)
     except Unauthorized as e:
         success = False
 
@@ -57,7 +57,7 @@ def send_in_private_or_in_group(text, group_id, user):
 
     text = "[Messaggio per " + message_to + "]\n\n" + text
 
-    done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
+    done2 = variable.updater.bot.send_message(group_id, text, parse_mode="HTML")
     add_message_to_delete(group_id, done2)
 
 
@@ -73,8 +73,8 @@ def DeleteMessageThread2():
         if (abs(difference) / 60) > 5:
             messages_list.remove(message)
             updated = updated + 1
-            bot.updater.bot.deleteMessage(chat_id=message['group_id'],
-                                          message_id=message['message_id'])
+            variable.updater.bot.deleteMessage(chat_id=message['group_id'],
+                                               message_id=message['message_id'])
     if updated > 0:  # array is changed and so we need to update the file
         with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
             json.dump(messages_list, file_to_write)
@@ -114,7 +114,7 @@ def send_file_in_private_or_warning_in_group(user, document, group_id, title):
 
     caption = escape("Review: " + title)
     try:
-        bot.updater.bot.send_document(chat_id=user_id, document=document, caption=caption)
+        variable.updater.bot.send_document(chat_id=user_id, document=document, caption=caption)
     except Unauthorized as e:
         success = False
 
@@ -125,5 +125,5 @@ def send_file_in_private_or_warning_in_group(user, document, group_id, title):
 
     text = message_to + ", devi prima scrivermi in privato per ricevere ciò che hai chiesto!"
 
-    done2 = bot.updater.bot.send_message(group_id, text, parse_mode="HTML")
+    done2 = variable.updater.bot.send_message(group_id, text, parse_mode="HTML")
     add_message_to_delete(group_id, done2)

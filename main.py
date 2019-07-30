@@ -1,6 +1,6 @@
 from telegram.ext import MessageHandler, CommandHandler, Filters
 
-import bot
+import variable
 from features import groups, reviews, test, moderation
 from functions import utils
 
@@ -16,14 +16,14 @@ def contact_handler(update, context):
 
 
 def help_handler(update, context):
-    bot.updater.bot.send_message(update.message.chat.id,
+    variable.updater.bot.send_message(update.message.chat.id,
                                  "<i>Lista di funzioni</i>:\n"
                                  "\n📑 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
                                  "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>"
                                  "FAQ (domande frequenti)</a>\n"
                                  "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"
                                  "\n✍ Per contattarci /contact",
-                                 parse_mode="HTML")
+                                      parse_mode="HTML")
 
 
 def check_message(update, context):
@@ -31,7 +31,7 @@ def check_message(update, context):
     groups.try_add_group(update.message)
 
 
-dispatcher = bot.updater.dispatcher
+dispatcher = variable.updater.dispatcher
 dispatcher.add_handler(CommandHandler('start', start_handler))
 dispatcher.add_handler(CommandHandler('contact', contact_handler))
 dispatcher.add_handler(CommandHandler('help', help_handler))
@@ -49,4 +49,4 @@ dispatcher.add_handler(MessageHandler(Filters.all, check_message))
 thread = utils.DeleteMessageThread()
 thread.start()
 
-bot.updater.start_polling()
+variable.updater.start_polling()
