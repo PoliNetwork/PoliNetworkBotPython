@@ -11,9 +11,9 @@ from config import blacklist_words
 
 try:
     file = open("data/to_delete.json", encoding="utf-8")
-    messages_list = json.load(file)
+    messages_list_to_delete = json.load(file)
 except (JSONDecodeError, IOError):
-    messages_list = []
+    messages_list_to_delete = []
 
 
 def escape(html):
@@ -23,23 +23,23 @@ def escape(html):
         .replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
 
-lock = Lock()
+lock_to_delete = Lock()
 
 
 def add_message_to_delete(group_id, done2):
-    global lock
-    global messages_list
+    global lock_to_delete
+    global messages_list_to_delete
 
     j5on = {
         "group_id": group_id,
         "message_id": done2.message_id,
         "datetime": str(datetime.datetime.now().timestamp())
     }
-    lock.acquire()
-    messages_list.append(j5on)
+    lock_to_delete.acquire()
+    messages_list_to_delete.append(j5on)
     with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
-        json.dump(messages_list, file_to_write)
-    lock.release()
+        json.dump(messages_list_to_delete, file_to_write)
+    lock_to_delete.release()
 
 
 def send_in_private_or_in_group(text, group_id, user):
@@ -63,24 +63,24 @@ def send_in_private_or_in_group(text, group_id, user):
 
 
 def DeleteMessageThread2():
-    global messages_list
-    global lock
+    global messages_list_to_delete
+    global lock_to_delete
 
-    lock.acquire()
+    lock_to_delete.acquire()
 
     updated = 0
-    for message in messages_list:
+    for message in messages_list_to_delete:
         difference = float(message['datetime']) - datetime.datetime.now().timestamp()
         if (abs(difference) / 60) > 5:
-            messages_list.remove(message)
+            messages_list_to_delete.remove(message)
             updated = updated + 1
             variable.updater.bot.deleteMessage(chat_id=message['group_id'],
                                                message_id=message['message_id'])
     if updated > 0:  # array is changed and so we need to update the file
         with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
-            json.dump(messages_list, file_to_write)
+            json.dump(messages_list_to_delete, file_to_write)
 
-    lock.release()
+    lock_to_delete.release()
 
     time.sleep(5)
 
