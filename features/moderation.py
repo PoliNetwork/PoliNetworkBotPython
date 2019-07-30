@@ -54,6 +54,6 @@ def ban_all(update, context):
     receiver = message.reply_to_message.from_user['id']
 
     for group in variable.groups_list:
-        variable.updater.bot.restrict_chat_member(chat.id, receiver)
+        variable.updater.bot.restrict_chat_member(group['id'], receiver)
 
 
