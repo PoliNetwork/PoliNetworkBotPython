@@ -122,19 +122,7 @@ def help_handler(update, context):
                               "Esempio: /recensione 10 Corso pessimo! State alla larga!")
 
 
-def get_reviews_html(update, context):
-    if update.message.chat.type == "private":
-        variable.updater.bot.send_message(update.message.chat.id, "Questo comando funziona solo in un gruppo!")
-        return
-
-    review_list = []  # todo: get review list from group
-    review2 = {"vote": 50, "description": "test recensione & < > ' { } !"}
-    review_list.append(review2)
-
-    if len(review_list) < 1:
-        utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
-                                          update.message.chat.id, update.message.from_user)
-
+def get_reviews_html2(review_list, update):
     html1 = "<html><head><style>.carousel-control.left,.carousel-control.right  {background:none;width:25px;}" \
             ".carousel-control.left {left:-25px;}.carousel-control.right {right:-25px;}" \
             ".broun-block {    padding-bottom: 34px;}" \
@@ -174,7 +162,23 @@ def get_reviews_html(update, context):
         html2 = html2 + "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
         html2 = html2 + "</div>	</div>"
 
-    html = html1 + html2 + html3
+    return html1 + html2 + html3
+
+
+def get_reviews_html(update, context):
+    if update.message.chat.type == "private":
+        variable.updater.bot.send_message(update.message.chat.id, "Questo comando funziona solo in un gruppo!")
+        return
+
+    review_list = []  # todo: get review list from group
+    review2 = {"vote": 50, "description": "test recensione & < > ' { } !"}
+    review_list.append(review2)
+
+    if len(review_list) < 1:
+        utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
+                                          update.message.chat.id, update.message.from_user)
+
+    html = get_reviews_html2(review_list, update)
 
     n = random.randint(1, 9999999)
     filename = 'data/review' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
