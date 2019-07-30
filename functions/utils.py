@@ -7,6 +7,7 @@ from threading import Thread, Lock
 from telegram.error import Unauthorized
 
 import variable
+from config import blacklist_words
 
 try:
     file = open("data/to_delete.json", encoding="utf-8")
@@ -127,3 +128,11 @@ def send_file_in_private_or_warning_in_group(user, document, group_id, title):
 
     done2 = variable.updater.bot.send_message(group_id, text, parse_mode="HTML")
     add_message_to_delete(group_id, done2)
+
+
+def is_valid(text):
+    t = text.split(" ")
+    for word in t:
+        if (str(word)).lower() in blacklist_words.blacklist_words:
+            return False
+    return True

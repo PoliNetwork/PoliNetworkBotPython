@@ -50,6 +50,16 @@ def add_review(update, context):
         return
 
     description = " ".join(text.split(" ")[2:])
+
+    description_valid = utils.is_valid(description)
+    if description_valid is False:
+        variable.updater.bot.deleteMessage(chat_id=update.message.chat_id,
+                                           message_id=update.message.message_id)
+        utils.send_in_private_or_in_group("La recensione contiene parole non ammesse.\n"
+                                          "Ti invitiamo a leggere le regole, @PoliRules",
+                                          chat.id, message.from_user)
+        return
+
     group_id = str(chat['id'])
     to_hash = str(chat['id']).join(salt).encode('utf-8')
     hash2 = hashlib.sha512(to_hash).hexdigest()
