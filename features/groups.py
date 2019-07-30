@@ -22,11 +22,16 @@ def write_group_file(chat_id, chat_type, title, invite_link, last_update):
         },
         "LastUpdateInviteLinkTime": last_update
     }
+
+    variable.lock_group_list.acquire()
+
     variable.groups_list.append(group)
 
     groups_dict = {"Gruppi": variable.groups_list}
     with open("data/groups.json", 'w', encoding="utf-8") as file:
         json.dump(groups_dict, file)
+
+    variable.lock_group_list.release()
 
 
 def get_link_and_last_update(message):
