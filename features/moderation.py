@@ -5,7 +5,15 @@ from config import creators, time_unit_values
 from functions import utils
 
 
-def mute_ban(update, context):
+def is_a_number(s):
+    try:
+        return isinstance(int(s), int)
+    except ValueError as e:
+        return False
+
+
+
+def mutes_bans_handler(update, context):
     bot = variable.updater.bot
     message = update.message
     command = message['text'].split(" ")[0].replace("/","")
@@ -22,8 +30,7 @@ def mute_ban(update, context):
         utils.send_in_private_or_in_group("Comando vietato. Non sei admin.", chat_id, message.from_user)
         return
 
-
-    if message.reply_to_message == None:
+    if message.reply_to_message is None:
         utils.send_in_private_or_in_group("Devi rispondere al messaggio dell'utente che vuoi bannare per eseguire tale azione.", chat_id, message.from_user)
         return
 
@@ -32,13 +39,30 @@ def mute_ban(update, context):
     receiver = message.reply_to_message.from_user['id']
 
     if len(message.text.split(" ")) > 1:
-        time = float(datetime.datetime.now().timestamp()) + \
-               time_unit_values.convert_time_in_seconds(" ".join(message.text.split(" ")[1:]))
+        time_to_add = message.text.split(" ")[1]
+        unit_of_measure = message.text.split(" ")[2]
+        if is_a_number(time_to_add):
+            time = float(datetime.datetime.now().timestamp()) + \
+                   time_to_add*time_unit_values.convert_time_in_seconds(unit_of_measure)
+        else:
+            utils.send_in_private_or_in_group("Hai inserito un valore non numerico.", chat_id, message.from_user)
 
     if command in "mute":
-        bot.restrict_chat_member(chat_id, receiver, until_date = time)
-    else:
+        bot.restrict_chat_member(chat_id, receiver, until_date = time,
+                                 can_add_web_page_previews=False,
+                                 can_send_media_messages=False,
+                                 can_send_messages=False,
+                                 can_send_other_messages=False)
+    if command in "unmute":
+        bot.restrict_chat_member(chat_id, receiver,
+                                 can_add_web_page_previews=True,
+                                 can_send_media_messages=True,
+                                 can_send_messages=True,
+                                 can_send_other_messages=True)
+    if command in "ban":
         bot.kick_chat_member(chat_id, receiver, until_date = time)
+    if command in "unban":
+        bot.unban_chat_member(chat_id, receiver)
 
 
 def ban_all(update, context):

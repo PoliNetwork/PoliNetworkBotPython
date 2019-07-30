@@ -7,13 +7,11 @@ seconds = ["seconds", "s", "sec", "secondi"]
 
 
 def convert_time_in_seconds(s):
-    time = float(s.split(" ")[0])
-    unit = s.split(" ")[1]
-    if days.__contains__(unit):
-        return time * 24 * 60 * 60;
-    if hours.__contains__(unit):
-        return time * 60 * 60
-    if minutes.__contains__(unit):
-        return time * 60
+    if days.__contains__(s):
+        return 24 * 60 * 60;
+    if hours.__contains__(s):
+        return 60 * 60
+    if minutes.__contains__(s):
+        return 60
     else:
-        return time
+        return 1
