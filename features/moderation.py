@@ -24,7 +24,6 @@ def mute(update, context):
     if not (sender in admins):
         return
 
-
     if len(message.text.split(" ")) > 1:
         time = time_unit_values.convert_time_in_seconds(message.text.split(" ")[1:])
         bot.restrict_chat_member(chat_id, receiver, until_date=datetime.datetime.now().timestamp() + time)
