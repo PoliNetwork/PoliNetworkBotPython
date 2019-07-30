@@ -128,6 +128,8 @@ def get_reviews_html(update, context):
         return
 
     review_list = []  # todo: get review list from group
+    review2 = {"vote": 50, "description": "test recensione & < > ' { } !"}
+    review_list.append(review2)
 
     if len(review_list) < 1:
         utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
@@ -152,17 +154,21 @@ def get_reviews_html(update, context):
             ".person-text i {    color: #fff;    font-family: Georgia;    font-size: 13px;}" \
             ".rel {    position: relative;}" \
             "</style></head>" \
-            "<body><div class='container'>	<div class='row'>		<h2>Carousel Reviews</h2>" \
-            "</div></div><div class='carousel-reviews broun-block'>    <div class='container'>" \
-            "<div class='row'><div id='carousel-reviews' class='carousel slide' data-ride='carousel'>" \
-            "<div class='item active'>"
+            "<body><div class='container'>	<div class='row'>		<h2>"
+
+    html1 = html1 + "Recensioni: " + utils.escape(update.message.chat.title)
+
+    html1 = html1 + "</h2>" \
+                    "</div></div><div class='carousel-reviews broun-block'>    <div class='container'>" \
+                    "<div class='row'><div id='carousel-reviews' class='carousel slide' data-ride='carousel'>" \
+                    "<div class='item active'>"
 
     html3 = "				</div>            </div>        </div>    </div></div></body></html>"
 
     html2 = ""
     for review in review_list:
         html2 = html2 + "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
-        html2 = html2 + str(int(review['vote'])) + " ⭐"
+        html2 = html2 + str(int(review['vote'])) + "/100 ⭐"
         html2 = html2 + "</a><p>"
         html2 = html2 + utils.escape(review['description'])
         html2 = html2 + "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
