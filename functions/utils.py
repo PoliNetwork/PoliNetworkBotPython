@@ -77,8 +77,6 @@ def DeleteMessageThread2():
 
     variable.lock_to_delete.release()
 
-    time.sleep(5)
-
 
 class DeleteMessageThread(Thread):
     def __init__(self):
@@ -87,6 +85,7 @@ class DeleteMessageThread(Thread):
     def run(self):
         while True:
             DeleteMessageThread2()
+            time.sleep(5)
 
 
 def get_user_mention(user):
