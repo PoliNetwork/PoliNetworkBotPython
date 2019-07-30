@@ -6,6 +6,7 @@ from config import creators
 
 
 def find(id_to_find):
+    # lock not needed here
     for group in variable.groups_list:
         if group['Chat']['id'] == id_to_find:
             return True
