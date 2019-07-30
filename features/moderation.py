@@ -16,7 +16,7 @@ def mute(update, context):
 
     sender = message.from_user['id']
 
-    if message.reply_to_message is None:
+    if message.reply_to_message is None or message.reply_to_message is "":
         return
 
     receiver = message.reply_to_message.from_user['id']
