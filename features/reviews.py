@@ -170,6 +170,8 @@ def get_reviews_html(update, context):
         variable.updater.bot.send_message(update.message.chat.id, "Questo comando funziona solo in un gruppo!")
         return
 
+    variable.updater.bot.delete_message(update.message.chat.id, update.message.message_id)
+
     review_list = []  # todo: get review list from group
     review2 = {"vote": 50, "description": "test recensione & < > ' { } !"}
     review_list.append(review2)
