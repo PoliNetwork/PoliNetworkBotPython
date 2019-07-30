@@ -5,6 +5,7 @@ from json import JSONDecodeError
 import hashlib
 
 import variable
+from config import creators
 from functions import utils
 
 try:
@@ -119,7 +120,7 @@ def add_review(update, context):
 def get_review_json(update, context):
     message = update.message
     chat = message.chat
-    if chat.id == 5651789:  # id of @ArmeF97
+    if chat.id in creators.owners:
         variable.updater.bot.send_document(chat_id=chat.id, document=open("data/reviews.json", 'rb'))
 
 

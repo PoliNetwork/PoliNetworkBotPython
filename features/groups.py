@@ -76,5 +76,5 @@ def try_add_group(message):
 def get_group_json(update, context):
     message = update.message
     chat = message.chat
-    if chat.id == 5651789:  # id of @ArmeF97
+    if chat.id in creators.owners:
         variable.updater.bot.send_document(chat_id=message.chat.id, document=open("data/groups.json", 'rb'))
