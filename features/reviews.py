@@ -184,15 +184,19 @@ def get_reviews_html(update, context):
 
     variable.updater.bot.delete_message(update.message.chat.id, update.message.message_id)
 
-    review_list = []  # todo: get review list from group
-    review2 = {"vote": 50, "description": "test recensione & < > ' { } !"}
-    review_list.append(review2)
+    group_id = update.message.chat['id']
 
-    if len(review_list) < 1:
+    reviews_list = []
+
+    if reviews_dict.keys().__contains__(str(group_id)):
+        reviews_list = reviews_dict.get(str(group_id))
+
+
+    if len(reviews_list) < 1:
         utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
                                           update.message.chat.id, update.message.from_user)
 
-    html = get_reviews_html2(review_list, update)
+    html = get_reviews_html2(reviews_list, update)
 
     n = random.randint(1, 9999999)
     filename = 'data/review' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
