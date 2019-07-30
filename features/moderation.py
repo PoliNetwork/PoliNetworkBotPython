@@ -24,9 +24,13 @@ def mute(update, context):
     if not (sender in admins):
         return
 
-    time = time_unit_values.convert_time_in_seconds(message.text.split(" ")[1:])
 
-    bot.restrict_chat_member(chat_id, receiver, until_date=datetime.datetime.now().timestamp() + time)
+    if len(message.text.split(" ")) > 1:
+        time = time_unit_values.convert_time_in_seconds(message.text.split(" ")[1:])
+        bot.restrict_chat_member(chat_id, receiver, until_date=datetime.datetime.now().timestamp() + time)
+    else:
+        bot.restrict_chat_member(chat_id, receiver)
+
 
 def ban(update, context):
     # todo: ban user of replied message
