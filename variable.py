@@ -1,5 +1,6 @@
 import json
 from json import JSONDecodeError
+from threading import Lock
 
 from telegram.ext import Updater
 
@@ -11,3 +12,6 @@ try:
     groups_list = json.load(group_read)['Gruppi']
 except (JSONDecodeError, IOError):
     groups_list = []
+
+lock_to_delete = Lock()
+lock_group_list = Lock()

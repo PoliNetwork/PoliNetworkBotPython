@@ -2,7 +2,7 @@ import datetime
 import json
 import time
 from json import JSONDecodeError
-from threading import Thread, Lock
+from threading import Thread
 
 from telegram.error import Unauthorized
 
@@ -23,11 +23,7 @@ def escape(html):
         .replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
 
-lock_to_delete = Lock()
-
-
 def add_message_to_delete(group_id, done2):
-    global lock_to_delete
     global messages_list_to_delete
 
     j5on = {
@@ -35,11 +31,11 @@ def add_message_to_delete(group_id, done2):
         "message_id": done2.message_id,
         "datetime": str(datetime.datetime.now().timestamp())
     }
-    lock_to_delete.acquire()
+    variable.lock_to_delete.acquire()
     messages_list_to_delete.append(j5on)
     with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
         json.dump(messages_list_to_delete, file_to_write)
-    lock_to_delete.release()
+    variable.lock_to_delete.release()
 
 
 def send_in_private_or_in_group(text, group_id, user):
@@ -64,9 +60,8 @@ def send_in_private_or_in_group(text, group_id, user):
 
 def DeleteMessageThread2():
     global messages_list_to_delete
-    global lock_to_delete
 
-    lock_to_delete.acquire()
+    variable.lock_to_delete.acquire()
 
     updated = 0
     for message in messages_list_to_delete:
@@ -80,7 +75,7 @@ def DeleteMessageThread2():
         with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
             json.dump(messages_list_to_delete, file_to_write)
 
-    lock_to_delete.release()
+    variable.lock_to_delete.release()
 
     time.sleep(5)
 
