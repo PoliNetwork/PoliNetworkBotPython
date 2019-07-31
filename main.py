@@ -52,6 +52,7 @@ dispatcher.add_handler(CommandHandler('banAll', moderation.ban_all))
 
 # books and materials
 dispatcher.add_handler(CommandHandler('materiale', materials.material_handler))
+dispatcher.add_handler(CommandHandler('addMateriale', materials.add_material_handler))
 
 # all
 dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
