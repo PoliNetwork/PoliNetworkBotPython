@@ -25,6 +25,8 @@ def help_handler(update, context):
                                       "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>"
                                       "FAQ (domande frequenti)</a>\n"
                                       "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"
+                                      "\n👥 Gruppo di tutti gli studenti @PoliGruppo\n"
+                                      "\n🤔 Hai domande? Chiedile qui @InfoPolimi\n"
                                       "\n✍ Per contattarci /contact",
                                       parse_mode="HTML")
 
