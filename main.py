@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import variable
