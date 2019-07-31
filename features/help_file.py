@@ -19,6 +19,8 @@ def help_groups_handler(update, context):
                                       "\n👥 Gruppo di tutti gli studenti @PoliGruppo\n"
                                       "\n🤔 Hai domande? Chiedile qui @InfoPolimi\n"
                                       "\n📖 Libri @PoliBook\n"
+                                      "\n🔦 <a href='https://www.facebook.com/groups/138006146900748/'>"
+                                      "Oggetti smarriti</a>\n"
                                       "\nRicordiamo che sul nostro sito vi sono tutti i link"
                                       " ai gruppi con tanto ricerca, facci un salto!\n"
                                       "https://polinetwork.github.io/",
