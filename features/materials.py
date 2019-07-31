@@ -1,4 +1,5 @@
 from features import groups
+from functions import utils
 
 
 def material_handler(update, context):
@@ -10,13 +11,17 @@ def material_handler(update, context):
 
     found, group_found = groups.find(chat['id'])
     if found is False:
-        # todo inviare messaggio "Gruppo non trovato"
+        utils.send_in_private_or_in_group("Gruppo non trovato.",
+                                          group_id=chat.id,
+                                          user=message.from_user.id)
         return
 
     link_material = group_found['material']
 
     if link_material is None or link_material == "":
-        # todo inviare messaggio "Materiale non disponibile, contatta gli amministratori"
+        utils.send_in_private_or_in_group("Materiale non disponibile. Contatta gli amministratori.",
+                                          group_id=chat.id,
+                                          user=message.from_user.id)
         return
 
     # todo send link_material
@@ -33,7 +38,9 @@ def add_material_handler(update, context):
 
     found, group_found = groups.find(chat['id'])
     if found is False:
-        # todo inviare messaggio "Gruppo non trovato"
+        utils.send_in_private_or_in_group("Gruppo non trovato.",
+                                          group_id=chat.id,
+                                          user=message.from_user.id)
         return
 
     link_material = group_found['material']
@@ -42,4 +49,6 @@ def add_material_handler(update, context):
         # todo aggiungere il materiale
         return
 
-    # todo inviare un messaggio di errore che dice che il materiale è già presente.
+    utils.send_in_private_or_in_group("Materiale già presente.",
+                                      group_id=chat.id,
+                                      user=message.from_user.id)

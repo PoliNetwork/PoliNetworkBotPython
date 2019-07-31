@@ -1,3 +1,6 @@
+import datetime
+
+import variable
 from features import groups
 from functions import utils
 
@@ -12,8 +15,12 @@ def check_blacklist(message):
     is_valid = utils.is_valid(text)
 
     if is_valid is False:
-        # todo: mute for 15 minutes and delete message.
-        pass
+        user = message.from_user.id
+        variable.updater.bot.restrict_chat_member(chat.id,
+                                                  user,
+                                                  until_date=int(datetime.datetime.now().timestamp()) + 900)
+        variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
+        return
 
 
 def check_message(update, context):
