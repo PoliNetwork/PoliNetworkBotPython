@@ -9,8 +9,8 @@ def find(id_to_find):
     # lock not needed here
     for group in variable.groups_list:
         if group['Chat']['id'] == id_to_find:
-            return True
-    return False
+            return True, group
+    return False, None
 
 
 def write_group_file(chat_id, chat_type, title, invite_link, last_update):
@@ -67,7 +67,7 @@ def try_add_group(message):
     if not creator_is_present(admins):
         return
 
-    group_already_present = find(chat['id'])
+    group_already_present, group_found = find(chat['id'])
     if group_already_present is False:
         (invite_link, last_update) = get_link_and_last_update(message)
         write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update)

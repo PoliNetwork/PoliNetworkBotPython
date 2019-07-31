@@ -1,7 +1,7 @@
 from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import variable
-from features import groups, reviews, test, moderation
+from features import groups, reviews, test, moderation, all_messages, materials
 from functions import utils
 
 
@@ -26,28 +26,35 @@ def help_handler(update, context):
                                       parse_mode="HTML")
 
 
-def check_message(update, context):
-    # update.message.reply_text("Message received")
-    groups.try_add_group(update.message)
-
-
 dispatcher = variable.updater.dispatcher
+
+# main
 dispatcher.add_handler(CommandHandler('start', start_handler))
 dispatcher.add_handler(CommandHandler('contact', contact_handler))
 dispatcher.add_handler(CommandHandler('help', help_handler))
+
+# review
 dispatcher.add_handler(CommandHandler('help_recensioni', reviews.help_handler))
 dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
 dispatcher.add_handler(CommandHandler('ottieni_recensioni', reviews.get_reviews_html))
+
+# test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
 dispatcher.add_handler(CommandHandler('getreviewjson', reviews.get_review_json))
 dispatcher.add_handler(CommandHandler('testmessage', test.test_message))
+
+# moderation
 dispatcher.add_handler(CommandHandler('mute', moderation.mutes_bans_handler))
 dispatcher.add_handler(CommandHandler('unmute', moderation.mutes_bans_handler))
 dispatcher.add_handler(CommandHandler('ban', moderation.mutes_bans_handler))
 dispatcher.add_handler(CommandHandler('unban', moderation.mutes_bans_handler))
 dispatcher.add_handler(CommandHandler('banAll', moderation.ban_all))
 
-dispatcher.add_handler(MessageHandler(Filters.all, check_message))
+# books and materials
+dispatcher.add_handler(CommandHandler('materiale', materials.material_handler))
+
+# all
+dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
 
 thread = utils.DeleteMessageThread()
 thread.start()
