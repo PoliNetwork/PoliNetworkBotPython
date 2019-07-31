@@ -63,12 +63,14 @@ def try_add_group(message):
         print('Received a private message.')
         return
 
-    admins = variable.updater.bot.get_chat_administrators(chat.id)
-    if not creator_is_present(admins):
-        return
-
     group_already_present, group_found = find(chat['id'])
+
     if group_already_present is False:
+
+        admins = variable.updater.bot.get_chat_administrators(chat.id)
+        if not creator_is_present(admins):
+            return
+
         (invite_link, last_update) = get_link_and_last_update(message)
         write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update)
 
