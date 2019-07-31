@@ -1,5 +1,3 @@
-import datetime
-
 import variable
 from config import creators
 from features import groups
