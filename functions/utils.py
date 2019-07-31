@@ -68,7 +68,7 @@ def DeleteMessageThread2():
         difference = float(message['datetime']) - datetime.datetime.now().timestamp()
         if (abs(difference) / 60) > 5:
             messages_list_to_delete.remove(message)
-            updated = updated + 1
+            updated += 1
             variable.updater.bot.deleteMessage(chat_id=message['group_id'],
                                                message_id=message['message_id'])
     if updated > 0:  # array is changed and so we need to update the file

@@ -12,11 +12,10 @@ def is_a_number(s):
         return False
 
 
-
 def mutes_bans_handler(update, context):
     bot = variable.updater.bot
     message = update.message
-    command = message['text'].split(" ")[0].replace("/","")
+    command = message['text'].split(" ")[0].replace("/", "")
     admins = bot.get_chat_administrators(message['chat']['id'])
 
     chat_id = message.chat_id
@@ -31,7 +30,9 @@ def mutes_bans_handler(update, context):
         return
 
     if message.reply_to_message is None:
-        utils.send_in_private_or_in_group("Devi rispondere al messaggio dell'utente che vuoi bannare per eseguire tale azione.", chat_id, message.from_user)
+        utils.send_in_private_or_in_group("Devi rispondere al messaggio dell'utente "
+                                          "che vuoi bannare per eseguire tale azione.",
+                                          chat_id, message.from_user)
         return
 
     time = None
@@ -43,12 +44,12 @@ def mutes_bans_handler(update, context):
         unit_of_measure = message.text.split(" ")[2]
         if is_a_number(time_to_add):
             time = float(datetime.datetime.now().timestamp()) + \
-                   time_to_add*time_unit_values.convert_time_in_seconds(unit_of_measure)
+                   float(time_to_add) * time_unit_values.convert_time_in_seconds(unit_of_measure)
         else:
             utils.send_in_private_or_in_group("Hai inserito un valore non numerico.", chat_id, message.from_user)
 
     if command in "mute":
-        bot.restrict_chat_member(chat_id, receiver, until_date = time,
+        bot.restrict_chat_member(chat_id, receiver, until_date=time,
                                  can_add_web_page_previews=False,
                                  can_send_media_messages=False,
                                  can_send_messages=False,
@@ -60,7 +61,7 @@ def mutes_bans_handler(update, context):
                                  can_send_messages=True,
                                  can_send_other_messages=True)
     if command in "ban":
-        bot.kick_chat_member(chat_id, receiver, until_date = time)
+        bot.kick_chat_member(chat_id, receiver, until_date=time)
     if command in "unban":
         bot.unban_chat_member(chat_id, receiver)
 
@@ -68,16 +69,17 @@ def mutes_bans_handler(update, context):
 def ban_all(update, context):
     message = update.message
     chat = message.chat
-    if chat.id not in creators.owners:  # only owners can do this command
+    chat_id = chat.id
+    if chat_id not in creators.owners:  # only owners can do this command
         return
 
-    if message.reply_to_message == None:
-        utils.send_in_private_or_in_group("Devi rispondere al messaggio dell'utente che vuoi bannare per eseguire tale azione.", chat_id, message.from_user)
+    if message.reply_to_message is None:
+        utils.send_in_private_or_in_group(
+            "Devi rispondere al messaggio dell'utente che vuoi bannare per eseguire tale azione.", chat_id,
+            message.from_user)
         return
 
     receiver = message.reply_to_message.from_user['id']
 
     for group in variable.groups_list:
         variable.updater.bot.restrict_chat_member(group['id'], receiver)
-
-
