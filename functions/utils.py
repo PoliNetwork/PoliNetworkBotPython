@@ -125,8 +125,29 @@ def send_file_in_private_or_warning_in_group(user, document, group_id, title):
 
 
 def is_valid(text):
+    if text is None or text == "":
+        return True
+
     t = text.split(" ")
     for word in t:
         if (str(word)).lower() in blacklist_words.blacklist_words:
             return False
+    return True
+
+
+def mute_and_delete(message):
+    chat = message.chat
+    user = message.from_user.id
+    variable.updater.bot.restrict_chat_member(chat.id,
+                                              user,
+                                              until_date=int(datetime.datetime.now().timestamp()) + 900)
+    variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
+
+
+def is_spam(text):
+    if text is None or text == "":
+        return False
+
+    # todo: check for spam
+
     return True

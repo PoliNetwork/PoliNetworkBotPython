@@ -11,16 +11,11 @@ def check_blacklist(message):
 
     if chat.type == "private":
         return
-    text = message.text
 
-    is_valid = utils.is_valid(text)
+    is_valid = utils.is_valid(message.text)
 
     if is_valid is False:
-        user = message.from_user.id
-        variable.updater.bot.restrict_chat_member(chat.id,
-                                                  user,
-                                                  until_date=int(datetime.datetime.now().timestamp()) + 900)
-        variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
+        utils.mute_and_delete(message)
         return
 
 
@@ -46,6 +41,19 @@ def check_if_exit(message):
     return True  # we are not admins of this group, bot should exit
 
 
+def check_spam(message):
+    chat = message.chat
+
+    if chat.type == "private":
+        return
+
+    is_spam = utils.is_spam(message.text)
+
+    if is_spam is True:
+        utils.mute_and_delete(message)
+        return
+
+
 def check_message(update, context):
     message = update.message
 
@@ -56,3 +64,4 @@ def check_message(update, context):
 
     groups.try_add_group(message)
     check_blacklist(message)
+    check_spam(message)
