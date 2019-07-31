@@ -15,7 +15,8 @@ def is_a_number(s):
 def mutes_bans_handler(update, context):
     bot = variable.updater.bot
     message = update.message
-    command = message['text'].split(" ")[0].replace("/", "")
+    splitted_text = message.text.split(" ")
+    command = splitted_text[0].replace("/", "")
     admins = bot.get_chat_administrators(message['chat']['id'])
 
     chat_id = message.chat_id
@@ -39,9 +40,9 @@ def mutes_bans_handler(update, context):
 
     receiver = message.reply_to_message.from_user['id']
 
-    if len(message.text.split(" ")) > 1:
-        time_to_add = message.text.split(" ")[1]
-        unit_of_measure = message.text.split(" ")[2]
+    if len(splitted_text) > 1:
+        time_to_add = splitted_text[1]
+        unit_of_measure = splitted_text[2]
         if is_a_number(time_to_add):
             time = float(datetime.datetime.now().timestamp()) + \
                    float(time_to_add) * time_unit_values.convert_time_in_seconds(unit_of_measure)

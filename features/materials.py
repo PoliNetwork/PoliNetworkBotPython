@@ -7,7 +7,7 @@ def material_handler(update, context):
 
     if chat.type == "private":
         return
-    
+
     found, group_found = groups.find(chat['id'])
     if found is False:
         # todo inviare messaggio "Gruppo non trovato"
