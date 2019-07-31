@@ -4,6 +4,7 @@
 from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import variable
+from config import creators
 from features import groups, reviews, test, moderation, all_messages, materials
 from functions import utils
 
@@ -30,6 +31,8 @@ def help_handler(update, context):
                                       "\n✍ Per contattarci /contact",
                                       parse_mode="HTML")
 
+
+creators.me = variable.updater.bot.get_me().id
 
 dispatcher = variable.updater.dispatcher
 

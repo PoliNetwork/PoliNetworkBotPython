@@ -144,10 +144,38 @@ def mute_and_delete(message):
     variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
 
 
+def has_spam_links(text):
+    t = text.split(" ")
+    for word in t:
+        for banned_site in blacklist_words.blacklist_sites:
+            if word.find(banned_site) >= 0:
+                return True
+
+    return False
+
+
+def has_spam_mention(text):
+    # todo
+
+    return False  # for now, False
+
+
 def is_spam(text):
     if text is None or text == "":
         return False
 
-    # todo: check for spam
+    text = str(text).lower()
 
-    return True
+    has_link = text.find("http")
+    if has_link >= 0:
+        is_spam_link = has_spam_links(text)
+        if is_spam_link:
+            return True
+
+    has_mention = text.find("@")
+    if has_mention >= 0:
+        is_spam_mention = has_spam_mention(text)
+        if is_spam_mention:
+            return True
+
+    return False

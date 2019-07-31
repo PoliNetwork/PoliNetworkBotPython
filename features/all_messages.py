@@ -64,4 +64,6 @@ def check_message(update, context):
 
     groups.try_add_group(message)
     check_blacklist(message)
-    check_spam(message)
+
+    if not creators.allowed_spam.__contains__(message.from_user.id):
+        check_spam(message)
