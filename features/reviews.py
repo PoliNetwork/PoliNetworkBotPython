@@ -156,7 +156,7 @@ def get_reviews_html2(review_list, update):
             "</style></head>" \
             "<body><div class='container'>	<div class='row'>		<h2>"
 
-    html1 = html1 + "Recensioni: " + utils.escape(update.message.chat.title)
+    html1 += "Recensioni: " + utils.escape(update.message.chat.title)
 
     html1 += "</h2>" \
              "</div></div><div class='carousel-reviews broun-block'>    <div class='container'>" \
@@ -168,9 +168,9 @@ def get_reviews_html2(review_list, update):
     html2 = ""
     for review in review_list:
         html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
-        html2 = html2 + str(int(review['vote'])) + "/100 ⭐"
+        html2 += str(int(review['vote'])) + "/100 ⭐"
         html2 += "</a><p>"
-        html2 = html2 + utils.escape(review['description'])
+        html2 += utils.escape(review['description'])
         html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
         html2 += "</div>	</div>"
 
