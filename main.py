@@ -5,7 +5,7 @@ from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import variable
 from config import creators
-from features import groups, reviews, test, moderation, all_messages, materials
+from features import groups, reviews, test, moderation, all_messages, materials, help_file
 from functions import utils
 
 
@@ -19,19 +19,6 @@ def contact_handler(update, context):
     update.message.reply_text("Puoi scriverci alla pagina facebook https://m.me/PolitecnicoDiMilanoNetwork")
 
 
-def help_handler(update, context):
-    variable.updater.bot.send_message(update.message.chat.id,
-                                      "<i>Lista di funzioni</i>:\n"
-                                      "\n📑 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
-                                      "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>"
-                                      "FAQ (domande frequenti)</a>\n"
-                                      "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"
-                                      "\n👥 Gruppo di tutti gli studenti @PoliGruppo\n"
-                                      "\n🤔 Hai domande? Chiedile qui @InfoPolimi\n"
-                                      "\n✍ Per contattarci /contact",
-                                      parse_mode="HTML")
-
-
 creators.me = variable.updater.bot.get_me().id
 
 dispatcher = variable.updater.dispatcher
@@ -39,7 +26,10 @@ dispatcher = variable.updater.dispatcher
 # main
 dispatcher.add_handler(CommandHandler('start', start_handler))
 dispatcher.add_handler(CommandHandler('contact', contact_handler))
-dispatcher.add_handler(CommandHandler('help', help_handler))
+
+# help
+dispatcher.add_handler(CommandHandler('help', help_file.help_handler))
+dispatcher.add_handler(CommandHandler('groups', help_file.help_groups_handler))
 
 # review
 dispatcher.add_handler(CommandHandler('help_recensioni', reviews.help_handler))
