@@ -37,7 +37,6 @@ def material_handler(update, context):
 
 
 def add_material_handler(update, context):
-
     message = update.message
     chat = message.chat
 
@@ -61,9 +60,4 @@ def add_material_handler(update, context):
     utils.send_in_private_or_in_group("Materiale aggiunto",
                                       group_id=group_id,
                                       user=message.from_user)
-    variable.updater.bot.delete_message(group_id,message.message_id)
-
-
-
-
-
+    variable.updater.bot.delete_message(group_id, message.message_id)

@@ -25,5 +25,5 @@ def do_stress_test(update):
 
 
 def stress_test(update, context):
-    return # this function is disabled.
+    return  # this function is disabled.
     # do_stress_test(update)

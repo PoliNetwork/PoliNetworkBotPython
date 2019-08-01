@@ -4,7 +4,7 @@ import variable
 def help_handler(update, context):
     variable.updater.bot.send_message(update.message.chat.id,
                                       "<i>Lista di funzioni</i>:\n"
-                                      "\n📑 Sistema di recensioni dei corsi (per maggiori info /help_recensioni)\n"
+                                      "\n📑 Sistema di recensioni dei corsi (per maggiori info /help_review)\n"
                                       "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>"
                                       "FAQ (domande frequenti)</a>\n"
                                       "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"

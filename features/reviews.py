@@ -128,10 +128,10 @@ def help_handler(update, context):
     # todo
     update.message.reply_text("E' possibile recensire i corsi.\n"
                               "1. Entra nel gruppo del tuo corso.\n"
-                              "2. Scrivi /recensione VOTO TESTO\n"
+                              "2. Scrivi /review VOTO TESTO\n"
                               "Dove VOTO è un numero da 0 a 100 e TESTO è il testo vero e proprio della recensione\n"
-                              "\nEsempio: /recensione 10 Corso pessimo! State alla larga!\n"
-                              "\nLeggi le recensioni con il comando /ottieni_recensioni")
+                              "\nEsempio: /review 10 Corso pessimo! State alla larga!\n"
+                              "\nLeggi le recensioni con il comando /get_reviews")
 
 
 def get_reviews_html2(review_list, update):

@@ -32,9 +32,9 @@ dispatcher.add_handler(CommandHandler('help', help_file.help_handler))
 dispatcher.add_handler(CommandHandler('groups', help_file.help_groups_handler))
 
 # review
-dispatcher.add_handler(CommandHandler('help_recensioni', reviews.help_handler))
-dispatcher.add_handler(CommandHandler('recensione', reviews.add_review))
-dispatcher.add_handler(CommandHandler('ottieni_recensioni', reviews.get_reviews_html))
+dispatcher.add_handler(CommandHandler('help_review', reviews.help_handler))
+dispatcher.add_handler(CommandHandler('review', reviews.add_review))
+dispatcher.add_handler(CommandHandler('get_reviews', reviews.get_reviews_html))
 
 # test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
@@ -50,8 +50,8 @@ dispatcher.add_handler(CommandHandler('unban', moderation.mutes_bans_handler))
 dispatcher.add_handler(CommandHandler('banAll', moderation.ban_all))
 
 # books and materials
-dispatcher.add_handler(CommandHandler('materiale', materials.material_handler))
-dispatcher.add_handler(CommandHandler('addMateriale', materials.add_material_handler))
+dispatcher.add_handler(CommandHandler('material', materials.material_handler))
+dispatcher.add_handler(CommandHandler('add_material', materials.add_material_handler))
 
 # all
 dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
