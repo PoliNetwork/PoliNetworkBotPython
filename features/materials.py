@@ -20,12 +20,14 @@ def material_handler(update, context):
     if chat.type == "private":
         return
 
-    link_material = materials_dict.get(group_id)
+    link_material = []
+    if materials_dict.keys().__contains__(group_id):
+        link_material = materials_dict.get(group_id)
 
-    if link_material is None or link_material == "":
+    if not link_material:
         utils.send_in_private_or_in_group("Materiale non disponibile. Contatta gli amministratori.",
                                           group_id=chat.id,
-                                          user=message.from_user.id)
+                                          user=message.from_user)
         return
 
     message_to_send = "Materiale per il gruppo " + chat['title'] + "\n\n"
@@ -67,11 +69,13 @@ def add_remove_material(update, context):
     if not (sender in admins):
         utils.send_in_private_or_in_group("Comando vietato. Non sei admin.",
                                           group_id, message.from_user)
+        variable.updater.bot.delete_message(group_id, message.message_id)
         return
 
     if len(message.text.split(" ")) == 1:
         utils.send_in_private_or_in_group("Il comando da usare deve contenere un link!",
                                           group_id, message.from_user)
+        variable.updater.bot.delete_message(group_id, message.message_id)
         return
 
     command = message.text.split(" ")[0]
@@ -80,6 +84,7 @@ def add_remove_material(update, context):
     if not eval_link(link):
         utils.send_in_private_or_in_group("Link non valido",
                                           group_id, message.from_user)
+        variable.updater.bot.delete_message(group_id, message.message_id)
         return
 
     materials_in_group = []
