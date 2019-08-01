@@ -19,7 +19,7 @@ def stress_test(update, context):
     from_user = message.from_user
 
     i = 0
-    n = 1000000
+    n = 100000000
     while i <= n:
         if i == n:
             variable.updater.bot.send_message(from_user.id, "Completate " + str(n) + " iterazioni!")
