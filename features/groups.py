@@ -72,11 +72,14 @@ def try_add_group(message):
             return
 
         (invite_link, last_update) = get_link_and_last_update(message)
-        write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update)
 
-        if invite_link is not None and invite_link != "" and message.new_chat_members is not None and len(
-                message.new_chat_members) > 0 and creators.me in message.new_chat_members:
-            variable.updater.bot.send_message(chat.id, "Invite link: " + invite_link)
+        if invite_link is not None and invite_link != "":
+            write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update)
+
+            # check if we have to send invite link in chat
+            if message.new_chat_members is not None and len(message.new_chat_members) > 0 \
+                    and creators.me in message.new_chat_members:
+                variable.updater.bot.send_message(chat.id, "Invite link: " + invite_link)
 
 
 def get_group_json(update, context):
