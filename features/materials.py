@@ -2,7 +2,6 @@ import json
 import re
 
 import variable
-from features import groups
 from functions import utils
 
 try:
@@ -51,6 +50,7 @@ def eval_link(link):
     if re.match(regex, link) is None:
         return False
     return True
+
 
 def add_remove_material(update, context):
     message = update.message

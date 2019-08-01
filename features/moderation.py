@@ -55,16 +55,22 @@ def mutes_bans_handler(update, context):
                                  can_send_media_messages=False,
                                  can_send_messages=False,
                                  can_send_other_messages=False)
+        utils.send_in_private_or_in_group("Utente mutato con successo.", chat_id, message.from_user)
+
     if command in "unmute":
         bot.restrict_chat_member(chat_id, receiver,
                                  can_add_web_page_previews=True,
                                  can_send_media_messages=True,
                                  can_send_messages=True,
                                  can_send_other_messages=True)
+        utils.send_in_private_or_in_group("Utente smutato con successo.", chat_id, message.from_user)
+
     if command in "ban":
         bot.kick_chat_member(chat_id, receiver, until_date=time)
+        utils.send_in_private_or_in_group("Utente bannato con successo.", chat_id, message.from_user)
     if command in "unban":
         bot.unban_chat_member(chat_id, receiver)
+        utils.send_in_private_or_in_group("Utente sbannato con successo.", chat_id, message.from_user)
 
 
 def ban_all(update, context):
