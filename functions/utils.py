@@ -155,9 +155,12 @@ def has_spam_links(text):
 
 
 def has_spam_mention(text):
-    # todo
+    t = text.split(" ")
+    for word in t:
+        if word.startswith("@") and word not in blacklist_words.allowed_tags:
+            return True
 
-    return False  # for now, False
+    return False
 
 
 def is_spam(text):
