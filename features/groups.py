@@ -21,8 +21,7 @@ def write_group_file(chat_id, chat_type, title, invite_link, last_update):
             "title": title,
             "invite_link": invite_link
         },
-        "LastUpdateInviteLinkTime": last_update,
-        "Material": None
+        "LastUpdateInviteLinkTime": last_update
     }
 
     variable.lock_group_list.acquire()
