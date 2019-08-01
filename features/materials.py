@@ -1,4 +1,5 @@
 import json
+import re
 
 import variable
 from features import groups
@@ -36,6 +37,19 @@ def material_handler(update, context):
     variable.updater.bot.delete_message(group_id, message.message_id)
 
 
+def eval_link(link):
+    regex = re.compile(
+        r'^(?:http|ftp)s?://'  # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+        r'localhost|'  # localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+        r'(?::\d+)?'  # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+
+    if re.match(regex, link) is None:
+        return False
+    return True
+
 def add_remove_material(update, context):
     message = update.message
     chat = message.chat
@@ -62,6 +76,11 @@ def add_remove_material(update, context):
 
     command = message.text.split(" ")[0]
     link = message.text.split(" ")[1]
+
+    if not eval_link(link):
+        utils.send_in_private_or_in_group("Link non valido",
+                                          group_id, message.from_user)
+        return
 
     materials_in_group = []
     if not materials_dict.get(group_id) is None:
