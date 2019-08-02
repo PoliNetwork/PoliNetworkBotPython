@@ -158,9 +158,12 @@ def has_spam_mention(text):
     t = text.split(" ")
     for word in t:
         if word.startswith("@") and word not in blacklist_words.allowed_tags:
-            chat = variable.updater.bot.get_chat(word)
-            if chat.type != "private":
-                return True
+            try:
+                chat = variable.updater.bot.get_chat(word)
+                if chat.type != "private":
+                    return True
+            except Exception as e:
+                pass
 
     return False
 
