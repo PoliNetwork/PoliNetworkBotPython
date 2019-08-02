@@ -167,15 +167,21 @@ def get_reviews_html2(review_list, update):
     html3 = "				</div>            </div>        </div>    </div></div></body></html>"
 
     html2 = ""
+
+    sum = 0
+
     for review in review_list:
+        vote = int(review['vote'])
+        sum += vote
         html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
-        html2 += str(int(review['vote'])) + "/100 ⭐"
+        html2 += str(vote) + "/100 ⭐"
         html2 += "</a><p>"
         html2 += utils.escape(review['description'])
         html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
         html2 += "</div>	</div>"
 
-    return html1 + html2 + html3
+    avg = sum/len(review_list)
+    return html1 + "&nbsp;Media: " + str(avg) + html2 + html3
 
 
 def get_reviews_html(update, context):
