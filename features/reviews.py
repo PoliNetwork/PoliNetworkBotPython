@@ -179,8 +179,8 @@ def get_reviews_html2(review_list, update):
         html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
         html2 += "</div>	</div>"
 
-    avg = sum/len(review_list)
-    return html1 + "</h2>&nbsp;Media: " + str(avg) + html2 + html3
+    avg = sum / len(review_list)
+    return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
 
 def get_reviews_html(update, context):
