@@ -200,6 +200,7 @@ def get_reviews_html(update, context):
     if len(reviews_list) < 1:
         utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
                                           update.message.chat.id, update.message.from_user)
+        return
 
     html = get_reviews_html2(reviews_list, update)
 
