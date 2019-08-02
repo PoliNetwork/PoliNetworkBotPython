@@ -159,8 +159,7 @@ def get_reviews_html2(review_list, update):
 
     html1 += "Recensioni: " + utils.escape(update.message.chat.title)
 
-    html1 += "</h2>" \
-             "</div></div><div class='carousel-reviews broun-block'>    <div class='container'>" \
+    html1 += "</div></div><div class='carousel-reviews broun-block'>    <div class='container'>" \
              "<div class='row'><div id='carousel-reviews' class='carousel slide' data-ride='carousel'>" \
              "<div class='item active'>"
 
@@ -181,7 +180,7 @@ def get_reviews_html2(review_list, update):
         html2 += "</div>	</div>"
 
     avg = sum/len(review_list)
-    return html1 + "&nbsp;Media: " + str(avg) + html2 + html3
+    return html1 + "</h2>&nbsp;Media: " + str(avg) + html2 + html3
 
 
 def get_reviews_html(update, context):
