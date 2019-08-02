@@ -62,7 +62,7 @@ def add_review(update, context):
         return
 
     group_id = str(chat['id'])
-    to_hash = str(chat['id']).join(salt).encode('utf-8')
+    to_hash = str(message.from_user).join(salt).encode('utf-8')
     hash2 = hashlib.sha512(to_hash).hexdigest()
     author_id = str(hash2)
 
@@ -115,6 +115,7 @@ def add_review(update, context):
 
     variable.updater.bot.deleteMessage(chat_id=update.message.chat_id,
                                        message_id=update.message.message_id)
+    utils.send_in_private_or_in_group("Recensione ricevuta. Grazie!", chat.id, message.from_user)
 
 
 def get_review_json(update, context):
