@@ -9,6 +9,7 @@ def help_handler(update, context):
                                       "FAQ (domande frequenti)</a>\n"
                                       "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"
                                       "\n👥 Gruppo consigliati e utili /groups\n"
+                                      "\n⚠ Hai già letto le regole del network? @PoliRules\n"
                                       "\n✍ Per contattarci /contact",
                                       parse_mode="HTML")
 
