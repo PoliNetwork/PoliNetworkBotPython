@@ -30,7 +30,11 @@ def material_handler(update, context):
         return
 
     message_to_send = "Materiale per il gruppo " + chat['title'] + "\n\n"
-    message_to_send += "\n".join(link_material)
+    count = 1
+    for i in link_material:
+        message_to_send += str(count) + ".  " + i["link"] + "\n" + i["comment"] + "\n\n"
+        count = count + 1
+
     utils.send_in_private_or_in_group(message_to_send,
                                       group_id=group_id,
                                       user=message.from_user)
@@ -50,6 +54,14 @@ def eval_link(link):
     if re.match(regex, link) is None:
         return False
     return True
+
+
+def find_material(materials_in_group, link):
+    for i in materials_in_group:
+        if i["link"] == link:
+            return True, i
+
+    return False, None
 
 
 def add_remove_material(update, context):
@@ -92,8 +104,9 @@ def add_remove_material(update, context):
         materials_in_group = materials_dict.get(group_id)
 
     if "remove_material" in command:
-        if materials_in_group.__contains__(link):
-            materials_in_group.remove(link)
+        (found, i) = find_material(materials_in_group, link)
+        if found is True:
+            materials_in_group.remove(i)
             utils.send_in_private_or_in_group("Materiale rimosso",
                                               group_id=group_id,
                                               user=message.from_user)
@@ -102,7 +115,15 @@ def add_remove_material(update, context):
                                               group_id=group_id,
                                               user=message.from_user)
     else:
-        materials_in_group.append(link)
+
+        comment = ""
+        try:
+            comment = " ".join(message.text.split(" ")[2:])
+        except:
+            pass
+
+        to_insert = {"link": link, "comment": comment}
+        materials_in_group.append(to_insert)
         materials_dict.update({group_id: materials_in_group})
         utils.send_in_private_or_in_group("Materiale aggiunto",
                                           group_id=group_id,
