@@ -51,10 +51,9 @@ def get_link_and_last_update(message):
 
 def creator_is_present(admins):
     for admin in admins:
-        if admin.user.username in creators.creators:
-            # todo: re-enable this check
-            # if admin.status == "creator":
+        if admin.user.username in creators.creators and admin.status == "creator":
             return True
+
     return False
 
 
