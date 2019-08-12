@@ -6,6 +6,7 @@ from telegram.ext import Updater
 
 lock_to_delete = Lock()
 lock_group_list = Lock()
+lock_material_list = Lock()
 
 token = open("token.txt").read()
 updater = Updater(token, use_context=True)

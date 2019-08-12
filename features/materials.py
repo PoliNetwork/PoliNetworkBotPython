@@ -103,6 +103,9 @@ def add_remove_material(update, context):
     if not materials_dict.get(group_id) is None:
         materials_in_group = materials_dict.get(group_id)
 
+    something_done = False
+    variable.lock_material_list.acquire()
+
     if "remove_material" in command:
         (found, i) = find_material(materials_in_group, link)
         if found is True:
@@ -110,6 +113,7 @@ def add_remove_material(update, context):
             utils.send_in_private_or_in_group("Materiale rimosso",
                                               group_id=group_id,
                                               user=message.from_user)
+            something_done = True
         else:
             utils.send_in_private_or_in_group("Materiale non trovato",
                                               group_id=group_id,
@@ -128,7 +132,17 @@ def add_remove_material(update, context):
         utils.send_in_private_or_in_group("Materiale aggiunto",
                                           group_id=group_id,
                                           user=message.from_user)
+        something_done = True
 
-    with open("data/materials.json", 'w', encoding="utf-8") as file:
-        json.dump(materials_dict, file)
+    if something_done is True:
+        with open("data/materials.json", 'w', encoding="utf-8") as file:
+            json.dump(materials_dict, file)
+
+    variable.lock_material_list.release()
+
     variable.updater.bot.delete_message(group_id, message.message_id)
+
+
+def help_handler(update, context):
+    # todo
+    update.message.reply_text("Todo")
