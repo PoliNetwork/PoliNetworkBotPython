@@ -32,6 +32,14 @@ def check_if_exit(message):
     if is_present is False:
         return False
 
+    chat = message['chat']
+    group_already_present, group_found = groups.find(chat['id'])
+    if group_already_present is True:
+        if group_found["we_are_admin"] is False:
+            return True
+        elif group_found["we_are_admin"] is True:
+            return False
+
     admins = variable.updater.bot.get_chat_administrators(message.chat.id)
     if groups.creator_is_present(admins):
         return False
@@ -55,12 +63,16 @@ def check_spam(message):
 def check_message(update, context):
     message = update.message
 
-    to_exit = check_if_exit(message)
+    to_exit = groups.try_add_group(message)
     if to_exit is True:
-        variable.updater.bot.leave_chat(message.chat.id)
+        utils.leave_chat(message.chat)
         return
 
-    groups.try_add_group(message)
+    to_exit = check_if_exit(message)
+    if to_exit is True:
+        utils.leave_chat(message.chat)
+        return
+
     check_blacklist(message)
 
     if not creators.allowed_spam.__contains__(message.from_user.id):
