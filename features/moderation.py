@@ -108,7 +108,7 @@ def ban_all(update, context):
                 missed_list.append(group['Chat']['title'])
             except:
                 try:
-                    missed_list.append("[NAME NOT FOUND!]" + str(group['Chat']['id']))
+                    missed_list.append("[NAME NOT FOUND!] " + str(group['Chat']['id']))
                 except:
                     missed_list.append("[NAME NOT FOUND!] [ID NOT FOUND!]")
 
