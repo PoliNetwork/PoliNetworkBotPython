@@ -104,7 +104,13 @@ def ban_all(update, context):
         try:
             variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
         except:
-            missed_list.append(group['Chat']['title'])
+            try:
+                missed_list.append(group['Chat']['title'])
+            except:
+                try:
+                    missed_list.append("[NAME NOT FOUND!]" + str(group['Chat']['id']))
+                except:
+                    missed_list.append("[NAME NOT FOUND!] [ID NOT FOUND!]")
 
     text = "Fatto! Ho bannato " + str(receiver)
     if len(missed_list) > 0:
