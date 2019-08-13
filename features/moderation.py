@@ -107,8 +107,8 @@ def ban_all(update, context):
             missed_list.append(group['Chat']['title'])
 
     text = "Fatto! Ho bannato " + str(receiver)
-    if missed_list.count() > 0:
-        text = text + "\nTranne in " + str(missed_list.count()) + " gruppi.\n"
+    if len(missed_list) > 0:
+        text = text + "\nTranne in " + str(len(missed_list)) + " gruppi.\n"
         for missed in missed_list:
             text = text + "\n" + str(missed)
 
