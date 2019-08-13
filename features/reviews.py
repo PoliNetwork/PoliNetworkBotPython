@@ -122,7 +122,10 @@ def get_review_json(update, context):
     message = update.message
     chat = message.chat
     if chat.id in creators.owners:
-        variable.updater.bot.send_document(chat_id=chat.id, document=open("data/reviews.json", 'rb'))
+        try:
+            variable.updater.bot.send_document(chat_id=chat.id, document=open("data/reviews.json", 'rb'))
+        except:
+            pass
 
 
 def help_handler(update, context):
