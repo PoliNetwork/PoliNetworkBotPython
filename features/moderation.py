@@ -94,5 +94,7 @@ def ban_all(update, context):
             "Non riesco a capire chi vuoi bannare", chat_id, message.from_user)
         return
 
+    utils.send_in_private_or_in_group(
+        "Sto cercando di bannare " + str(receiver), chat_id, message.from_user)
     for group in variable.groups_list:
         variable.updater.bot.restrict_chat_member(group['id'], receiver)
