@@ -98,8 +98,15 @@ def ban_all(update, context):
 
     utils.send_in_private_or_in_group(
         "Sto cercando di bannare " + str(receiver), chat_id, message.from_user)
-    for group in variable.groups_list:
-        variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
 
-    utils.send_in_private_or_in_group(
-        "Fatto! Ho bannato " + str(receiver), chat_id, message.from_user)
+    missed = 0
+    for group in variable.groups_list:
+        try:
+            variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
+        except:
+            missed = missed + 1
+
+    text = "Fatto! Ho bannato " + str(receiver)
+    if missed > 0:
+        text = text + "\nTranne in " + str(missed) + "gruppi."
+    utils.send_in_private_or_in_group(text, chat_id, message.from_user)
