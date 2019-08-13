@@ -129,7 +129,6 @@ def get_review_json(update, context):
 
 
 def help_handler(update, context):
-    # todo
     update.message.reply_text("E' possibile recensire i corsi.\n"
                               "1. Entra nel gruppo del tuo corso.\n"
                               "2. Scrivi /review VOTO TESTO\n"

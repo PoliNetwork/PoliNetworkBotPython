@@ -144,7 +144,6 @@ def add_remove_material(update, context):
 
 
 def help_handler(update, context):
-    # todo
     update.message.reply_text("E' possibile ottenere i link ai materiali di un gruppo tramite il comando /material.\n"
                               "Gli admin possono aggiungere materiale con /add_material LINK DESCRIZIONE\n"
                               "E rimuoverlo con /remove_material LINK")
