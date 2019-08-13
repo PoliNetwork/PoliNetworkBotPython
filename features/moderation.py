@@ -80,13 +80,19 @@ def ban_all(update, context):
     if chat_id not in creators.owners:  # only owners can do this command
         return
 
-    if message.reply_to_message is None:
-        utils.send_in_private_or_in_group(
-            "Devi rispondere al messaggio dell'utente che vuoi bannare per eseguire tale azione.", chat_id,
-            message.from_user)
-        return
+    receiver = None
+    try:
+        if message.reply_to_message is None:
+            receiver = message.text.split(" ")[1]
+        else:
+            receiver = message.reply_to_message.from_user['id']
+    except:
+        pass
 
-    receiver = message.reply_to_message.from_user['id']
+    if receiver is None:
+        utils.send_in_private_or_in_group(
+            "Non riesco a capire chi vuoi bannare", chat_id, message.from_user)
+        return
 
     for group in variable.groups_list:
         variable.updater.bot.restrict_chat_member(group['id'], receiver)
