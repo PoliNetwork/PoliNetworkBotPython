@@ -86,6 +86,8 @@ def ban_all(update, context):
             receiver = message.text.split(" ")[1]
         else:
             receiver = message.reply_to_message.from_user['id']
+
+        receiver = int(receiver)
     except:
         pass
 
