@@ -100,3 +100,6 @@ def ban_all(update, context):
         "Sto cercando di bannare " + str(receiver), chat_id, message.from_user)
     for group in variable.groups_list:
         variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
+
+    utils.send_in_private_or_in_group(
+        "Fatto! Ho bannato " + str(receiver), chat_id, message.from_user)
