@@ -69,8 +69,12 @@ def DeleteMessageThread2():
         if (abs(difference) / 60) > 5:
             messages_list_to_delete.remove(message)
             updated += 1
-            variable.updater.bot.deleteMessage(chat_id=message['group_id'],
-                                               message_id=message['message_id'])
+            try:
+                variable.updater.bot.deleteMessage(chat_id=message['group_id'],
+                                                   message_id=message['message_id'])
+            except:
+                pass
+
     if updated > 0:  # array is changed and so we need to update the file
         with open("data/to_delete.json", 'w', encoding="utf-8") as file_to_write:
             json.dump(messages_list_to_delete, file_to_write)
