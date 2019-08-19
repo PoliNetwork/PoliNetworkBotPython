@@ -96,13 +96,19 @@ def try_add_group(message):
 
     try:
         if group_found["we_are_admin"] is False:
-            return True, 4
+            admins = variable.updater.bot.get_chat_administrators(chat.id)
+            if not creator_is_present(admins):
+                write_group_file(chat['id'], chat['type'], chat['title'], None, None, False)
+                return True, 4
+            else:
+                group_found["we_are_admin"] = True
+                return False, 5
         elif group_found["we_are_admin"] is True:
-            return False, 5
+            return False, 6
     except:
         pass
 
-    return None, 6  # todo: get admin list, update json and return true or false accordingly
+    return None, 7  # todo: get admin list, update json and return true or false accordingly
 
 
 def get_group_json(update, context):
