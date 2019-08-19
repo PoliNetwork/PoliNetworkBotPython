@@ -44,7 +44,7 @@ int main( int argc, char *argv[] )
 	
 	command("cd /home/ec2-user/pnb");
 	command("git pull origin master");
-	output = command("ps -ax | grep python3 | grep -Eo '^[^ ]+'");
+	output = command("ps -ax | grep python3");
 	cout<<output<<endl;
 	
 	stringstream test(output.c_str());
@@ -52,7 +52,36 @@ int main( int argc, char *argv[] )
 	
 	while(getline(test, segment, '\n'))
 	{
-		command("kill " + segment);
+		for (int i=0; i<segment.length(); i++)
+		{
+			if (segment.length() >0)
+			{	
+				if (segment[0] >= '0' && segment[0] <='9')
+				{
+					;
+				}
+				else
+				{
+					segment.erase(0,1);
+				}
+			}
+		}
+		
+		int pos = -1;
+		for (int i=0; i<segment.length(); i++)	
+		{
+			if (segment[i] == ' ')
+			{
+				pos = i;
+				break;
+			}
+		}
+		
+		if (pos>0)
+		{
+			segment = segment.substr(0,pos);
+			command("kill " + segment);
+		}		
 	}
 	
 	command("python3 main.py &", false);
