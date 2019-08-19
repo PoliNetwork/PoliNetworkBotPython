@@ -65,12 +65,12 @@ def check_message(update, context):
 
     to_exit = groups.try_add_group(message)
     if to_exit is True:
-        utils.leave_chat(message.chat)
+        utils.leave_chat(message.chat, 1)
         return
 
     to_exit = check_if_exit(message)
     if to_exit is True:
-        utils.leave_chat(message.chat)
+        utils.leave_chat(message.chat, 2)
         return
 
     check_blacklist(message)
