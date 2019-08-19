@@ -49,10 +49,20 @@ def get_link_and_last_update(message):
     return link, last_update
 
 
+def isNotBlank(myString):
+    if myString and myString.strip():
+        # myString is not None AND myString is not empty or blank
+        return True
+    # myString is None OR myString is empty or blank
+    return False
+
+
 def creator_is_present(admins):
     for admin in admins:
-        if admin.user.username in creators.creators and admin.status == "creator":
-            return True
+        if isNotBlank(admin.user.username):
+            a = str(admin.user.username).lower()
+            if a in creators.creators and admin.status == "creator":
+                return True
 
     return False
 
