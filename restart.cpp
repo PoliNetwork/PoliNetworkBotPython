@@ -45,6 +45,7 @@ int main( int argc, char *argv[] )
 	command("cd /home/ec2-user/pnb");
 	command("git pull origin master");
 	output = command("ps -ax | grep python3 | grep -Eo '^[^ ]+'");
+	cout<<output<<endl;
 	
 	stringstream test(output.c_str());
 	string segment;
