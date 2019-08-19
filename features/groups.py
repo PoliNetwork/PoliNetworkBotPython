@@ -71,7 +71,7 @@ def try_add_group(message):
     chat = message['chat']
     if chat['type'] == 'private':
         print('Received a private message.')
-        return
+        return None, None
 
     group_already_present, group_found = find(chat['id'])
 
@@ -80,7 +80,7 @@ def try_add_group(message):
         admins = variable.updater.bot.get_chat_administrators(chat.id)
         if not creator_is_present(admins):
             write_group_file(chat['id'], chat['type'], chat['title'], None, None, False)
-            return True
+            return True, 1
         else:
             (invite_link, last_update) = get_link_and_last_update(message)
 
@@ -92,17 +92,17 @@ def try_add_group(message):
                         and creators.me in message.new_chat_members:
                     variable.updater.bot.send_message(chat.id, "Invite link: " + invite_link)
 
-        return None  # todo: get admin list, update json and return true or false accordingly
+        return None, None  # todo: get admin list, update json and return true or false accordingly
 
     try:
         if group_found["we_are_admin"] is False:
-            return True
+            return True, 2
         elif group_found["we_are_admin"] is True:
-            return False
+            return False, 3
     except:
         pass
 
-    return None  # todo: get admin list, update json and return true or false accordingly
+    return None, None  # todo: get admin list, update json and return true or false accordingly
 
 
 def get_group_json(update, context):

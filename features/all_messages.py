@@ -63,14 +63,14 @@ def check_spam(message):
 def check_message(update, context):
     message = update.message
 
-    to_exit = groups.try_add_group(message)
+    to_exit, error_code = groups.try_add_group(message)
     if to_exit is True:
-        utils.leave_chat(message.chat, 1)
+        utils.leave_chat(message.chat, 1, error_code)
         return
 
     to_exit = check_if_exit(message)
     if to_exit is True:
-        utils.leave_chat(message.chat, 2)
+        utils.leave_chat(message.chat, 2, 0)
         return
 
     check_blacklist(message)
