@@ -209,27 +209,41 @@ def validate_link(link):
     return "tgme_page_title" in requests.get(link).text
 
 
+def detectIfToUpdate(p):
+    link2 = p['Chat']
+
+    if link2 is None:
+        return True
+
+    try:
+        link2 = link2['invite_link']
+    except:
+        return True
+
+    if link2 is None:
+        return True
+    elif len(link2) < 3:
+        return True
+    else:
+        pvt_link_format = "https://t.me/joinchat/"
+        pvt_link_format += link2.split("/")[len(link2.split("/")) - 1]
+
+        pbl_link_format = "https://t.me/"
+        pbl_link_format += link2.split("/")[len(link2.split("/")) - 1]
+
+        if validate_link(pvt_link_format) is False and validate_link(pbl_link_format) is False:
+            return True
+
+    return False
+
+
 def check2(message):
     # variable.lock_group_list.acquire()
 
     count = 0
     for p in variable.groups_list:
-        link2 = p['Chat']['invite_link']
-        to_update = False
 
-        if link2 is None:
-            to_update = True
-        elif len(link2) < 3:
-            to_update = True
-        else:
-            pvt_link_format = "https://t.me/joinchat/"
-            pvt_link_format += link2.split("/")[len(link2.split("/")) - 1]
-
-            pbl_link_format = "https://t.me/"
-            pbl_link_format += link2.split("/")[len(link2.split("/")) - 1]
-
-            if validate_link(pvt_link_format) is False and validate_link(pbl_link_format) is False:
-                to_update = True
+        to_update = detectIfToUpdate(p)
 
         if to_update:
             count += 1
