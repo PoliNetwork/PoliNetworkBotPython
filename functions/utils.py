@@ -9,6 +9,7 @@ from telegram.error import Unauthorized
 
 import variable
 from config import blacklist_words, creators
+from features import groups
 
 try:
     file = open("data/to_delete.json", encoding="utf-8")
@@ -237,20 +238,41 @@ def detectIfToUpdate(p):
     return False
 
 
-def check2(message):
-    # variable.lock_group_list.acquire()
+def update_link(id2):
+    for group in variable.groups_list:
+        if group['Chat']['id'] == id2:
+            try:
+                (invite_link, last_update) = groups.get_link_and_last_update(id2)
+                group['Chat']['invite_link'] = invite_link
+                group['LastUpdateInviteLinkTime'] = last_update
+            except:
+                pass
 
-    count = 0
+
+def check2(message):
+    list_to_update = []
+
     for p in variable.groups_list:
 
         to_update = detectIfToUpdate(p)
 
         if to_update:
-            count += 1
+            list_to_update.append(p['Chat']['id'])
 
-    # variable.lock_group_list.release()
+    variable.updater.bot.send_message(message.chat.id, str(len(list_to_update)))
 
-    variable.updater.bot.send_message(message.chat.id, str(count))
+    variable.lock_group_list.acquire()
+
+    for p in list_to_update:
+        update_link(p)
+
+    groups_dict = {"Gruppi": variable.groups_list}
+    with open("data/groups.json", 'w', encoding="utf-8") as file2:
+        json.dump(groups_dict, file2)
+
+    variable.lock_group_list.release()
+
+    variable.updater.bot.send_message(message.chat.id, "Done")
 
 
 def check(update, context):
