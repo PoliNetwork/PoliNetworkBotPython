@@ -259,7 +259,15 @@ def update_link(p):
             except:
                 pass
 
-            if title2 == title:
+            id_is_good = True
+            if id2 is None:
+                id_is_good = False
+            else:
+                id3 = str(id2)
+                if len(id3) < 1:
+                    id_is_good = False
+
+            if title2 == title or id_is_good:
                 try:
                     if invite_link is not None:
                         group['Chat']['invite_link'] = invite_link
