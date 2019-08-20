@@ -239,20 +239,37 @@ def detectIfToUpdate(p):
 
 
 def update_link(p):
-    id2 = p['Chat']['id']
+    id2 = None
+
     (invite_link, last_update) = None, None
+    title = None
+
+    try:
+        id2 = p['Chat']['id']
+        title = p['Chat']['title']
+    except:
+        pass
+
     for group in variable.groups_list:
-        if group['Chat']['id'] == id2 and group['Chat']['title'] == p['Chat']['title']:
+        if group['Chat']['id'] == id2:
+
+            title2 = None
             try:
-                if invite_link is not None:
-                    group['Chat']['invite_link'] = invite_link
-                    group['LastUpdateInviteLinkTime'] = last_update
-                else:
-                    (invite_link, last_update) = groups.get_link_and_last_update(id2)
-                    group['Chat']['invite_link'] = invite_link
-                    group['LastUpdateInviteLinkTime'] = last_update
+                title2 = group['Chat']['title']
             except:
                 pass
+
+            if title2 == title:
+                try:
+                    if invite_link is not None:
+                        group['Chat']['invite_link'] = invite_link
+                        group['LastUpdateInviteLinkTime'] = last_update
+                    else:
+                        (invite_link, last_update) = groups.get_link_and_last_update(id2)
+                        group['Chat']['invite_link'] = invite_link
+                        group['LastUpdateInviteLinkTime'] = last_update
+                except:
+                    pass
 
 
 def check2(message):
