@@ -239,12 +239,17 @@ def detectIfToUpdate(p):
 
 
 def update_link(id2):
+    (invite_link, last_update) = None, None
     for group in variable.groups_list:
         if group['Chat']['id'] == id2:
             try:
-                (invite_link, last_update) = groups.get_link_and_last_update(id2)
-                group['Chat']['invite_link'] = invite_link
-                group['LastUpdateInviteLinkTime'] = last_update
+                if invite_link is not None:
+                    group['Chat']['invite_link'] = invite_link
+                    group['LastUpdateInviteLinkTime'] = last_update
+                else:
+                    (invite_link, last_update) = groups.get_link_and_last_update(id2)
+                    group['Chat']['invite_link'] = invite_link
+                    group['LastUpdateInviteLinkTime'] = last_update
             except:
                 pass
 
