@@ -41,6 +41,7 @@ dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
 dispatcher.add_handler(CommandHandler('getreviewjson', reviews.get_review_json))
 dispatcher.add_handler(CommandHandler('testmessage', test.test_message))
 dispatcher.add_handler(CommandHandler('stress_test', test.stress_test))
+dispatcher.add_handler(CommandHandler('check', utils.check))
 
 # moderation
 dispatcher.add_handler(CommandHandler('mute', moderation.mutes_bans_handler))

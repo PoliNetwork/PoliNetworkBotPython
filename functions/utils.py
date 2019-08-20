@@ -4,10 +4,11 @@ import time
 from json import JSONDecodeError
 from threading import Thread
 
+import requests
 from telegram.error import Unauthorized
 
 import variable
-from config import blacklist_words
+from config import blacklist_words, creators
 
 try:
     file = open("data/to_delete.json", encoding="utf-8")
@@ -202,3 +203,47 @@ def leave_chat(chat, ec1, ec2):
     text += str(ec2)
     variable.updater.bot.send_message(chat.id, text)
     variable.updater.bot.leave_chat(chat.id)
+
+
+def validate_link(link):
+    return "tgme_page_title" in requests.get(link).text
+
+
+def check2(message):
+    # variable.lock_group_list.acquire()
+
+    count = 0
+    for p in variable.groups_list:
+        link2 = p['Chat']['invite_link']
+        to_update = False
+
+        if link2 is None:
+            to_update = True
+        elif len(link2) < 3:
+            to_update = True
+        else:
+            pvt_link_format = "https://t.me/joinchat/"
+            pvt_link_format += link2.split("/")[len(link2.split("/")) - 1]
+
+            pbl_link_format = "https://t.me/"
+            pbl_link_format += link2.split("/")[len(link2.split("/")) - 1]
+
+            if validate_link(pvt_link_format) is False and validate_link(pbl_link_format) is False:
+                to_update = True
+
+        if to_update:
+            count += 1
+
+    # variable.lock_group_list.release()
+
+    variable.updater.bot.send_message(message.chat.id, str(count))
+
+
+def check(update, context):
+    message = update.message
+    chat = message.chat
+    if chat.id in creators.owners:
+        try:
+            check2(message)
+        except:
+            pass
