@@ -238,10 +238,11 @@ def detectIfToUpdate(p):
     return False
 
 
-def update_link(id2):
+def update_link(p):
+    id2 = p['Chat']['id']
     (invite_link, last_update) = None, None
     for group in variable.groups_list:
-        if group['Chat']['id'] == id2:
+        if group['Chat']['id'] == id2 and group['Chat']['title'] == p['Chat']['title']:
             try:
                 if invite_link is not None:
                     group['Chat']['invite_link'] = invite_link
@@ -262,7 +263,7 @@ def check2(message):
         to_update = detectIfToUpdate(p)
 
         if to_update:
-            list_to_update.append(p['Chat']['id'])
+            list_to_update.append(p)
 
     variable.updater.bot.send_message(message.chat.id, str(len(list_to_update)))
 
