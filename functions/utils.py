@@ -245,5 +245,8 @@ def check(update, context):
     if chat.id in creators.owners:
         try:
             check2(message)
-        except:
-            pass
+        except Exception as inst:
+            try:
+                variable.updater.bot.send_message(chat.id, str(inst))
+            except:
+                pass
