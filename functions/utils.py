@@ -9,7 +9,6 @@ from telegram.error import Unauthorized
 
 import variable
 from config import blacklist_words, creators
-from features import groups
 
 try:
     file = open("data/to_delete.json", encoding="utf-8")
@@ -238,6 +237,23 @@ def detectIfToUpdate(p):
     return False
 
 
+def get_link_and_last_update(id2):
+    chat = variable.updater.bot.get_chat(id2)
+    link = chat.invite_link
+
+    if link is None or link == "":
+        try:
+            link = variable.updater.bot.export_chat_invite_link(id2)
+        except:
+            pass
+
+    if link is None or link == "":
+        return None, None
+
+    last_update = str(datetime.datetime.now())
+    return link, last_update
+
+
 def update_link(p):
     id2 = None
 
@@ -273,7 +289,7 @@ def update_link(p):
                         group['Chat']['invite_link'] = invite_link
                         group['LastUpdateInviteLinkTime'] = last_update
                     else:
-                        (invite_link, last_update) = groups.get_link_and_last_update(id2)
+                        (invite_link, last_update) = get_link_and_last_update(id2)
                         group['Chat']['invite_link'] = invite_link
                         group['LastUpdateInviteLinkTime'] = last_update
                 except:

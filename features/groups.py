@@ -3,6 +3,7 @@ import json
 
 import variable
 from config import creators
+from functions import utils
 
 
 def find(id_to_find):
@@ -34,23 +35,6 @@ def write_group_file(chat_id, chat_type, title, invite_link, last_update, we_are
         json.dump(groups_dict, file)
 
     variable.lock_group_list.release()
-
-
-def get_link_and_last_update(id2):
-    chat = variable.updater.bot.get_chat(id2)
-    link = chat.invite_link
-
-    if link is None or link == "":
-        try:
-            link = variable.updater.bot.export_chat_invite_link(id2)
-        except:
-            pass
-
-    if link is None or link == "":
-        return None, None
-
-    last_update = str(datetime.datetime.now())
-    return link, last_update
 
 
 def isNotBlank(myString):
@@ -86,7 +70,7 @@ def try_add_group(message):
             write_group_file(chat['id'], chat['type'], chat['title'], None, None, False)
             return True, 2
         else:
-            (invite_link, last_update) = get_link_and_last_update(message.chat.id)
+            (invite_link, last_update) = utils.get_link_and_last_update(message.chat.id)
 
             if invite_link is not None and invite_link != "":
                 write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update, True)

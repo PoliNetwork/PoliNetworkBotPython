@@ -1,3 +1,5 @@
+import datetime
+
 import variable
 from config import creators
 from features import groups
@@ -60,6 +62,37 @@ def check_spam(message):
         return
 
 
+def check_username(message):
+    from_user = None
+    try:
+        from_user = message.from_user
+    except:
+        return
+
+    username = None
+    try:
+        username = from_user.username
+    except:
+        pass
+
+    if username is None or len(username) < 2:
+        try:
+            variable.updater.bot.send_message(from_user.id, "Imposta un username dalle impostazioni di telegram\n\n"
+                                                            "Set an username from telegram settings")
+        except:
+            pass
+
+        try:
+            time = float(datetime.datetime.now().timestamp()) + 20  # 20 seconds
+            variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
+                                                      can_add_web_page_previews=False,
+                                                      can_send_media_messages=False,
+                                                      can_send_messages=False,
+                                                      can_send_other_messages=False)
+        except:
+            pass
+
+
 def check_message(update, context):
     message = update.message
 
@@ -73,6 +106,7 @@ def check_message(update, context):
         utils.leave_chat(message.chat, 2, 0)
         return
 
+    check_username(message)
     check_blacklist(message)
 
     if not creators.allowed_spam.__contains__(message.from_user.id):
