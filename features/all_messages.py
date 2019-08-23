@@ -83,7 +83,7 @@ def check_username(message):
             pass
 
         try:
-            time = float(datetime.datetime.now().timestamp()) + 20  # 20 seconds
+            time = float(datetime.datetime.now().timestamp()) + 35  # 35 seconds
             variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
                                                       can_add_web_page_previews=False,
                                                       can_send_media_messages=False,
