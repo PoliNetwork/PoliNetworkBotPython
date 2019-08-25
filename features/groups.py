@@ -106,4 +106,8 @@ def get_group_json(update, context):
         try:
             variable.updater.bot.send_document(chat_id=message.chat.id, document=open("data/groups.json", 'rb'))
         except:
+            try:
+                variable.updater.bot.send_message(chat.id, "Eccezione get_group_json")
+            except:
+                pass
             pass

@@ -332,4 +332,7 @@ def check(update, context):
             try:
                 variable.updater.bot.send_message(chat.id, str(inst))
             except:
-                pass
+                try:
+                    variable.updater.bot.send_message(chat.id, "Eccezione!")
+                except:
+                    pass
