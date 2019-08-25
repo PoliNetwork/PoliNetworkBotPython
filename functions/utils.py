@@ -308,18 +308,34 @@ def check2(message):
 
     variable.updater.bot.send_message(message.chat.id, str(len(list_to_update)))
 
-    variable.lock_group_list.acquire()
+    done = False
+    try:
+        variable.lock_group_list.acquire()
 
-    for p in list_to_update:
-        update_link(p)
+        for p in list_to_update:
+            try:
+                update_link(p)
+            except:
+                try:
+                    variable.updater.bot.send_message(message.chat.id, "Can't update " + str(p))
+                except:
+                    variable.updater.bot.send_message(message.chat.id, "Can't update a group")
 
-    groups_dict = {"Gruppi": variable.groups_list}
-    with open("data/groups.json", 'w', encoding="utf-8") as file2:
-        json.dump(groups_dict, file2)
+        groups_dict = {"Gruppi": variable.groups_list}
+        with open("data/groups.json", 'w', encoding="utf-8") as file2:
+            json.dump(groups_dict, file2)
+
+        done = True
+
+    except:
+        pass
 
     variable.lock_group_list.release()
 
-    variable.updater.bot.send_message(message.chat.id, "Done")
+    if done:
+        variable.updater.bot.send_message(message.chat.id, "Done")
+    else:
+        variable.updater.bot.send_message(message.chat.id, "Eccezione check!")
 
 
 def check(update, context):
@@ -336,3 +352,8 @@ def check(update, context):
                     variable.updater.bot.send_message(chat.id, "Eccezione!")
                 except:
                     pass
+        except:
+            try:
+                variable.updater.bot.send_message(chat.id, "Eccezione!")
+            except:
+                pass
