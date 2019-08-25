@@ -62,7 +62,7 @@ def check_spam(message):
         return
 
 
-def check_username(message):
+def check_username_and_name(message):
     from_user = None
     try:
         from_user = message.from_user
@@ -75,7 +75,40 @@ def check_username(message):
     except:
         pass
 
+    username_valid = True
     if username is None or len(username) < 2:
+        username_valid = False
+
+    firstname = None
+    try:
+        firstname = from_user.first_name
+    except:
+        pass
+
+    firstname_valid = True
+    if firstname is None or len(firstname) < 2:
+        firstname_valid = False
+
+    seconds = 35
+    if username_valid is False and firstname_valid is False:
+        try:
+            variable.updater.bot.send_message(from_user.id, "Imposta un username e un nome più lungo"
+                                                            " dalle impostazioni di telegram\n\n"
+                                                            "Set an username and a longer "
+                                                            "first name from telegram settings")
+        except:
+            pass
+
+        try:
+            time = float(datetime.datetime.now().timestamp()) + seconds
+            variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
+                                                      can_add_web_page_previews=False,
+                                                      can_send_media_messages=False,
+                                                      can_send_messages=False,
+                                                      can_send_other_messages=False)
+        except:
+            pass
+    elif username_valid is False:
         try:
             variable.updater.bot.send_message(from_user.id, "Imposta un username dalle impostazioni di telegram\n\n"
                                                             "Set an username from telegram settings")
@@ -83,7 +116,24 @@ def check_username(message):
             pass
 
         try:
-            time = float(datetime.datetime.now().timestamp()) + 35  # 35 seconds
+            time = float(datetime.datetime.now().timestamp()) + seconds
+            variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
+                                                      can_add_web_page_previews=False,
+                                                      can_send_media_messages=False,
+                                                      can_send_messages=False,
+                                                      can_send_other_messages=False)
+        except:
+            pass
+    elif firstname_valid is False:
+        try:
+            variable.updater.bot.send_message(from_user.id, "Imposta un nome più lungo "
+                                                            "dalle impostazioni di telegram\n\n"
+                                                            "Set a longer first name from telegram settings")
+        except:
+            pass
+
+        try:
+            time = float(datetime.datetime.now().timestamp()) + seconds
             variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
                                                       can_add_web_page_previews=False,
                                                       can_send_media_messages=False,
@@ -106,7 +156,7 @@ def check_message(update, context):
         utils.leave_chat(message.chat, 2, 0)
         return
 
-    check_username(message)
+    check_username_and_name(message)
     check_blacklist(message)
 
     if not creators.allowed_spam.__contains__(message.from_user.id):
