@@ -296,6 +296,14 @@ def update_link(p):
                     pass
 
 
+def check3(message, list_to_update):
+    for group in list_to_update:
+        try:
+            variable.updater.bot.send_message(message.chat.id, str(group))
+        except:
+            pass
+
+
 def check2(message):
     list_to_update = []
 
@@ -307,6 +315,9 @@ def check2(message):
             list_to_update.append(p)
 
     variable.updater.bot.send_message(message.chat.id, str(len(list_to_update)))
+
+    if len(list_to_update) < 5:
+        check3(message, list_to_update)
 
     done = False
     try:
