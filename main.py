@@ -5,7 +5,7 @@ from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import variable
 from config import creators
-from features import groups, reviews, test, moderation, all_messages, materials, help_file
+from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi
 from functions import utils
 
 
@@ -35,6 +35,9 @@ dispatcher.add_handler(CommandHandler('groups', help_file.help_groups_handler))
 dispatcher.add_handler(CommandHandler('help_review', reviews.help_handler))
 dispatcher.add_handler(CommandHandler('review', reviews.add_review))
 dispatcher.add_handler(CommandHandler('get_reviews', reviews.get_reviews_html))
+
+# PoliAnoniMi
+dispatcher.add_handler(CommandHandler('anon', anonimi.post_anonimi))
 
 # test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
