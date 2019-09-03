@@ -42,7 +42,7 @@ def post_anonimi(update, context):
 
     try:
         variable.updater.bot.send_message(chat_id=anonimi_config.group_id,
-                                          text="Approvare?",
+                                          text="Approvare?\n#id" + str(message.chat.id),
                                           reply_to_message_id=message2_id,
                                           reply_markup=reply_markup,
                                           parse_mode="HTML")
