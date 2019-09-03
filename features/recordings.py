@@ -4,7 +4,6 @@ from functions import utils
 
 
 def post_recordings2(update, description):
-
     message = update.message
 
     text2 = "Group: " + message.chat.title + "\n"
@@ -63,4 +62,16 @@ def post_recordings(update, context):
 
 
 def help_handler(update, context):
-    return None
+    message = update.message
+
+    if message.chat.type != "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+                                          message.chat.id, message.from_user)
+        return
+
+    variable.updater.bot.send_message(update.message.chat.id,
+                                      "Entra in un gruppo e rispondi con /postrecording [DESCRIZIONE]\n"
+                                      "Esempio: /postrecording Lezione 1 - Termodinamica\n"
+                                      "Il nome del gruppo sarà scritto in automatico.\n"
+                                      "L'audio sarà pubblicato sul canale @PoliRecordings",
+                                      parse_mode="HTML")

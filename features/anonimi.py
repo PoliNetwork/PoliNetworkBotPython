@@ -72,4 +72,15 @@ def handler_callback(update, data):
 
 
 def help_handler(update, context):
-    return None
+    message = update.message
+
+    if message.chat.type != "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+                                          message.chat.id, message.from_user)
+        return
+
+    variable.updater.bot.send_message(update.message.chat.id,
+                                      "Scrivi il messaggio che vuoi inviare.\n"
+                                      "Rispondi a quel messaggio con /anon per richiederne"
+                                      " la pubblicazione sul canale @PoliAnoniMi",
+                                      parse_mode="HTML")
