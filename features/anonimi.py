@@ -21,7 +21,7 @@ def post_anonimi(update, context):
         return
 
     forward_success, message2 = utils.forward_message(anonimi_config.group_id,
-                                                      message.reply_to_message)  # todo send message to group for approval
+                                                      message.reply_to_message)
     if forward_success is not True:
         variable.updater.bot.send_message(message.chat.id, "Errore nell'inoltro del messaggio per l'approvazione. "
                                                            "Contatta gli admin di @PoliNetwork")
@@ -46,7 +46,6 @@ def post_anonimi(update, context):
                                           reply_to_message_id=message2_id,
                                           reply_markup=reply_markup,
                                           parse_mode="HTML")
-        # todo send a second message, replying the first one, with a keyboard for accepting it
     except Exception as e:
         pass
     variable.updater.bot.send_message(message.chat.id, "Il messaggio è stato inoltrato e in attesa di approvazione")
