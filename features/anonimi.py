@@ -1,3 +1,5 @@
+import variable
+from config import anonimi_config
 from functions import utils
 
 
@@ -16,9 +18,14 @@ def post_anonimi(update, context):
                                           message.chat.id, message.from_user)
         return
 
-    # todo send message to group for approval
-    # todo send a second message, replying the first one, with a keyboard for accepting it
-    # todo send a message to the user "Il messaggio è stato inoltrato e in attesa di approvazione"
+    message2 = utils.forward_message(anonimi_config.group_id, message)  # todo send message to group for approval
+    keyboard_object = None
+    variable.updater.bot.send_message(
+        anonimi_config.group_id, "Approvare?",
+        None, None, False,
+        message2.id, keyboard_object,
+        None)  # todo send a second message, replying the first one, with a keyboard for accepting it
+    variable.updater.bot.send_message(message.chat.id, "Il messaggio è stato inoltrato e in attesa di approvazione")
 
     # todo:
     #  (not sure if here in this part of code)
