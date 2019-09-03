@@ -33,8 +33,10 @@ def post_anonimi(update, context):
     except:
         pass
 
-    keyboard = [[InlineKeyboardButton("Accetta", callback_data='anon ' + str(message2_id) + ' Y'),
-                 InlineKeyboardButton("Rifiuta", callback_data='anon ' + str(message2_id) + ' N')]]
+    keyboard = [[InlineKeyboardButton("Accetta", callback_data='anon ' + str(message2_id)
+                                                               + " " + str(message.chat.id) + " " + 'Y'),
+                 InlineKeyboardButton("Rifiuta", callback_data='anon ' + str(message2_id)
+                                                               + " " + str(message.chat.id) + " " + 'N')]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -49,15 +51,13 @@ def post_anonimi(update, context):
         pass
     variable.updater.bot.send_message(message.chat.id, "Il messaggio è stato inoltrato e in attesa di approvazione")
 
+
+def handler_callback(update, data):
     # todo:
-    #  (not sure if here in this part of code)
     #       if accept: post to channel and send the link to the original user
     #               "Il tuo messaggio è stato pubblicato, qui il link: [link]"
     #       if not accept: send to the original user
     #               "Il tuo messaggio è stato rifiutato.
     #               Controlla di aver rispettato le regole del network @PoliRules, e nel caso credi
     #               sia stato un errore, scrivici nella pagina facebook di PoliNetwork, grazie"
-
-
-def handler_callback(update, data):
     return None
