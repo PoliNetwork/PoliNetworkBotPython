@@ -4,8 +4,8 @@ from functions import utils
 def post_recordings(update, context):
     message = update.message
 
-    if message.chat.type != "private":
-        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+    if message.chat.type == "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo un gruppo del network",
                                           message.chat.id, message.from_user)
         return
 
@@ -14,3 +14,5 @@ def post_recordings(update, context):
                                           "il quale messaggio sarà poi inviato in @PoliRecordings",
                                           message.chat.id, message.from_user)
         return
+
+    pass
