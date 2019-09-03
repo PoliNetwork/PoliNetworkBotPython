@@ -1,4 +1,5 @@
 import variable
+from config import recordings_config
 from functions import utils
 
 
@@ -15,7 +16,7 @@ def post_recordings2(update, description):
     text2 += "#id" + str(id2) + "\n\n"
     text2 += "Description: " + description
 
-    forward_success, message2 = utils.forward_message("@PoliRecordings", message.reply_to_message)
+    forward_success, message2 = utils.forward_message(recordings_config.channel_id, message.reply_to_message)
     if forward_success is not True:
         utils.send_in_private_or_in_group("C'è stato un problema con l'inoltro dell'audio. Contatta gli "
                                           "amministratori di @PoliNetwork",
@@ -23,7 +24,7 @@ def post_recordings2(update, description):
         return
 
     variable.updater.bot.send_message("@PoliRecordings", text=text2, reply_to_message_id=message2.message_id)
-    utils.send_in_private_or_in_group("Audio correttamente inoltrato in @PoliRecordings",
+    utils.send_in_private_or_in_group("Audio correttamente inoltrato in " + str(recordings_config.channel_id),
                                       message.chat.id, message.from_user)
 
 
@@ -37,7 +38,7 @@ def post_recordings(update, context):
 
     if message.reply_to_message is None:
         utils.send_in_private_or_in_group("Questo comando funziona solo se rispondi ad un messaggio (di tipo audio), "
-                                          "il quale messaggio sarà poi inviato in @PoliRecordings",
+                                          "il quale messaggio sarà poi inviato in " + str(recordings_config.channel_id),
                                           message.chat.id, message.from_user)
         return
 
@@ -57,5 +58,5 @@ def post_recordings(update, context):
         return
     else:
         utils.send_in_private_or_in_group("Questo comando funziona solo se rispondi ad un messaggio (di tipo audio), "
-                                          "il quale messaggio sarà poi inviato in @PoliRecordings",
+                                          "il quale messaggio sarà poi inviato in " + str(recordings_config.channel_id),
                                           message.chat.id, message.from_user)
