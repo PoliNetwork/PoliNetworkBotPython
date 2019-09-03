@@ -53,11 +53,19 @@ def post_anonimi(update, context):
 
 
 def handler_callback(update, data):
-    # todo:
-    #       if accept: post to channel and send the link to the original user
-    #               "Il tuo messaggio è stato pubblicato, qui il link: [link]"
-    #       if not accept: send to the original user
-    #               "Il tuo messaggio è stato rifiutato.
-    #               Controlla di aver rispettato le regole del network @PoliRules, e nel caso credi
-    #               sia stato un errore, scrivici nella pagina facebook di PoliNetwork, grazie"
+    if data[3] == 'Y':
+        pass
+        # todo:
+        #  post to channel and send the link to the original user
+        #  "Il tuo messaggio è stato pubblicato, qui il link: [link]"
+    else:
+        pass
+        # todo:
+        #   send to the original user
+        #               "Il tuo messaggio è stato rifiutato.
+        #               Controlla di aver rispettato le regole del network @PoliRules, e nel caso credi
+        #               sia stato un errore, scrivici nella pagina facebook di PoliNetwork, grazie"
+
+    query = update.callback_query
+    query.edit_message_text(text="Selected option: {}".format(data[3]))
     return None
