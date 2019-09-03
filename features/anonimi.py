@@ -1,3 +1,5 @@
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
 import variable
 from config import anonimi_config
 from functions import utils
@@ -25,7 +27,10 @@ def post_anonimi(update, context):
                                                            "Contatta gli admin di @PoliNetwork")
         return
 
-    keyboard_object = None
+    keyboard = [[InlineKeyboardButton("Accetta", callback_data='1'),
+                 InlineKeyboardButton("Rifiuta", callback_data='2')]]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
     message2_id = None
     try:
         message2_id = message2.message_id
@@ -36,7 +41,7 @@ def post_anonimi(update, context):
         variable.updater.bot.send_message(chat_id=anonimi_config.group_id,
                                           text="Approvare?",
                                           reply_to_message_id=message2_id,
-                                          reply_markup=keyboard_object,
+                                          reply_markup=reply_markup,
                                           parse_mode="HTML")
         # todo send a second message, replying the first one, with a keyboard for accepting it
     except Exception as e:
