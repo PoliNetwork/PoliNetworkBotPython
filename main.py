@@ -5,7 +5,8 @@ from telegram.ext import MessageHandler, CommandHandler, Filters, CallbackQueryH
 
 import variable
 from config import creators
-from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, callback_query
+from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, callback_query, \
+    recordings
 from functions import utils
 
 
@@ -38,7 +39,9 @@ dispatcher.add_handler(CommandHandler('get_reviews', reviews.get_reviews_html))
 
 # PoliAnoniMi
 dispatcher.add_handler(CommandHandler('anon', anonimi.post_anonimi))
-dispatcher.add_handler(CallbackQueryHandler(callback_query.handler))
+
+# PoliRecordings
+dispatcher.add_handler(CommandHandler('postrecording', recordings.post_recordings))
 
 # test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
@@ -62,6 +65,7 @@ dispatcher.add_handler(CommandHandler('remove_material', materials.add_remove_ma
 
 # all
 dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
+dispatcher.add_handler(CallbackQueryHandler(callback_query.handler))
 
 thread = utils.DeleteMessageThread()
 thread.start()
