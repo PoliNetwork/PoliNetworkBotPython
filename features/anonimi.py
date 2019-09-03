@@ -27,15 +27,16 @@ def post_anonimi(update, context):
                                                            "Contatta gli admin di @PoliNetwork")
         return
 
-    keyboard = [[InlineKeyboardButton("Accetta", callback_data='1'),
-                 InlineKeyboardButton("Rifiuta", callback_data='2')]]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
     message2_id = None
     try:
         message2_id = message2.message_id
     except:
         pass
+
+    keyboard = [[InlineKeyboardButton("Accetta", callback_data='anon ' + str(message2_id) + ' Y'),
+                 InlineKeyboardButton("Rifiuta", callback_data='anon ' + str(message2_id) + ' N')]]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
     try:
         variable.updater.bot.send_message(chat_id=anonimi_config.group_id,
@@ -56,3 +57,7 @@ def post_anonimi(update, context):
     #               "Il tuo messaggio è stato rifiutato.
     #               Controlla di aver rispettato le regole del network @PoliRules, e nel caso credi
     #               sia stato un errore, scrivici nella pagina facebook di PoliNetwork, grazie"
+
+
+def handler_callback(update, data):
+    return None

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from telegram.ext import MessageHandler, CommandHandler, Filters
+from telegram.ext import MessageHandler, CommandHandler, Filters, CallbackQueryHandler
 
 import variable
 from config import creators
-from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi
+from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, callback_query
 from functions import utils
 
 
@@ -38,6 +38,7 @@ dispatcher.add_handler(CommandHandler('get_reviews', reviews.get_reviews_html))
 
 # PoliAnoniMi
 dispatcher.add_handler(CommandHandler('anon', anonimi.post_anonimi))
+dispatcher.add_handler(CallbackQueryHandler(callback_query.handler))
 
 # test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
