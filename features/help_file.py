@@ -3,7 +3,6 @@ from functions import utils
 
 
 def help_handler(update, context):
-
     message = update.message
 
     if message.chat.type != "private":
@@ -18,6 +17,8 @@ def help_handler(update, context):
                                       "\n🙋 <a href='https://polinetwork.github.io/it/faq/index.html'>"
                                       "FAQ (domande frequenti)</a>\n"
                                       "\n🏫 Bot ricerca aule libere @AulePolimiBot\n"
+                                      "\n🕶️ Sistema di pubblicazione anonima (per maggiori info /help_anon)\n"
+                                      "\n🎙️ Registrazione delle lezioni (per maggiori info /help_record)\n"
                                       "\n👥 Gruppo consigliati e utili /groups\n"
                                       "\n⚠ Hai già letto le regole del network? @PoliRules\n"
                                       "\n✍ Per contattarci /contact",

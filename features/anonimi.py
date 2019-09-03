@@ -69,3 +69,7 @@ def handler_callback(update, data):
     option = data[3]
     query.edit_message_text(text="Selected option: " + str(option) + "\n#id" + str(id2))
     return None
+
+
+def help_handler(update, context):
+    return None

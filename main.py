@@ -39,9 +39,11 @@ dispatcher.add_handler(CommandHandler('get_reviews', reviews.get_reviews_html))
 
 # PoliAnoniMi
 dispatcher.add_handler(CommandHandler('anon', anonimi.post_anonimi))
+dispatcher.add_handler(CommandHandler('help_anon', anonimi.help_handler))
 
 # PoliRecordings
 dispatcher.add_handler(CommandHandler('postrecording', recordings.post_recordings))
+dispatcher.add_handler(CommandHandler('help_record', recordings.help_handler))
 
 # test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))
