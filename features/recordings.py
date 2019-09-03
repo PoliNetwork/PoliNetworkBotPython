@@ -41,7 +41,8 @@ def post_recordings(update, context):
                                           message.chat.id, message.from_user)
         return
 
-    if message.reply_to_message.voice is not None or message.reply_to_message.audio is not None:
+    if message.reply_to_message.voice is not None or message.reply_to_message.audio is not None or message.reply_to_message.video is not None\
+            or message.reply_to_message.video_note is not None:
 
         text = message.text
 
