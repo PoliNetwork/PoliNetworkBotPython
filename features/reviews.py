@@ -129,6 +129,14 @@ def get_review_json(update, context):
 
 
 def help_handler(update, context):
+
+    message = update.message
+
+    if message.chat.type != "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+                                          message.chat.id, message.from_user)
+        return
+
     update.message.reply_text("E' possibile recensire i corsi.\n"
                               "1. Entra nel gruppo del tuo corso.\n"
                               "2. Scrivi /review VOTO TESTO\n"

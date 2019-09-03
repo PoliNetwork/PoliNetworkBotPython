@@ -1,7 +1,16 @@
 import variable
+from functions import utils
 
 
 def help_handler(update, context):
+
+    message = update.message
+
+    if message.chat.type != "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+                                          message.chat.id, message.from_user)
+        return
+
     variable.updater.bot.send_message(update.message.chat.id,
                                       "<i>Lista di funzioni</i>:\n"
                                       "\n📑 Sistema di recensioni dei corsi (per maggiori info /help_review)\n"
@@ -16,6 +25,13 @@ def help_handler(update, context):
 
 
 def help_groups_handler(update, context):
+    message = update.message
+
+    if message.chat.type != "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+                                          message.chat.id, message.from_user)
+        return
+
     variable.updater.bot.send_message(update.message.chat.id,
                                       "<i>Lista di gruppi consigliati</i>:\n"
                                       "\n👥 Gruppo di tutti gli studenti @PoliGruppo 👈\n"
