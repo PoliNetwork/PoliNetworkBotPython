@@ -368,3 +368,11 @@ def check(update, context):
                 variable.updater.bot.send_message(chat.id, "Eccezione!")
             except:
                 pass
+
+
+def forward_message(group_id, message):
+    try:
+        message_sent = variable.updater.bot.forward_message(group_id, message.chat.id, message.message_id)
+        return True, message_sent
+    except Exception as e:
+        return False, None
