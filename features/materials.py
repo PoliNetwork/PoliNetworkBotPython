@@ -33,7 +33,7 @@ def material_handler(update, context):
     count = 1
     for i in link_material:
         message_to_send += str(count) + ".  " + i["link"] + "\n" + i["comment"] + "\n\n"
-        count = count + 1
+        count += 1
 
     utils.send_in_private_or_in_group(message_to_send,
                                       group_id=group_id,

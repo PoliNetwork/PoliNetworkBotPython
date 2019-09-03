@@ -1,5 +1,7 @@
 token.txt
-salt.txt
+salt/salt.txt
 \.idea/
 data/
 __pycache__/
+data/*
+salt/salt_anonimi.txt

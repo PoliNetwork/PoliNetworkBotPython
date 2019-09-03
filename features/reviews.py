@@ -24,7 +24,7 @@ def add_review(update, context):
         print('Received a private message.')
         return
 
-    salt = open("salt.txt", encoding="utf-8").read()
+    salt = open("salt/salt.txt", encoding="utf-8").read()
     text = message.text
 
     # Review's attributes + hash

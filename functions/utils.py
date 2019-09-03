@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import json
 import time
 from json import JSONDecodeError
@@ -370,9 +371,64 @@ def check(update, context):
                 pass
 
 
+def forward_message_anon(group_id, message, user_id):
+
+    salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
+    to_hash = (str(user_id) + str(salt)).encode('utf-8')
+    hash2 = hashlib.sha512(to_hash).hexdigest()
+    author_id = (str(hash2)[:5]).upper()
+
+    author_line = "\n\nAuthor: #id_" + str(author_id)
+
+    try:
+
+        caption = ""
+        if message.caption is not None:
+            caption = message.caption
+
+        if message.text is not None:
+            message_sent = variable.updater.bot.send_message(chat_id=group_id, text=message.text+author_line)
+        elif message.photo:
+            message_sent = variable.updater.bot.send_photo(chat_id=group_id,
+                                                           photo=message.photo[0], caption=caption+author_line)
+        elif message.audio:
+            message_sent = variable.updater.bot.send_audio(chat_id=group_id,
+                                                           audio=message.audio.file_id, caption=caption+author_line)
+        elif message.voice is not None:
+            message_sent = variable.updater.bot.send_voice(chat_id=group_id,
+                                                           voice=message.voice.file_id, caption=caption+author_line)
+        elif message.video is not None:
+            message_sent = variable.updater.bot.send_video(chat_id=group_id,
+                                                           video=message.video.file_id, caption=caption+author_line)
+        elif message.video_note is not None:
+            message_sent = variable.updater.bot.send_video_note(chat_id=group_id,
+                                                                video_note=message.video_note.file_id,
+                                                                caption=caption+author_line)
+        elif message.document is not None:
+            message_sent = variable.updater.bot.send_document(chat_id=group_id,
+                                                              document=message.document.file_id,
+                                                              caption=caption+author_line)
+        elif message.sticker is not None:
+            message_sent = variable.updater.bot.send_sticker(chat_id=group_id,
+                                                             sticker=message.sticker.file_id,
+                                                             caption=caption+author_line)
+        elif message.location is not None:
+            message_sent = variable.updater.bot.send_location(chat_id=group_id,
+                                                              latitude=message.location.latitude,
+                                                              longitude=message.location.longitude,
+                                                              caption=caption+author_line)
+        else:
+            return False, None
+
+        return True, message_sent
+    except Exception as e:
+        return False, None
+
+
 def forward_message(group_id, message):
     try:
         message_sent = variable.updater.bot.forward_message(group_id, message.chat.id, message.message_id)
         return True, message_sent
-    except Exception as e:
+    except:
         return False, None
+    return None

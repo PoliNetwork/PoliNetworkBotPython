@@ -53,18 +53,19 @@ def post_anonimi(update, context):
 
 def handler_callback(update, data):
     if data[3] == 'Y':
-        pass
-        # todo:
-        #  post to channel and send the link to the original user
-        #  "Il tuo messaggio è stato pubblicato, qui il link: [link]"
+        group_id = anonimi_config.public_group_id
+        result, message = utils.forward_message_anon(group_id, update.callback_query.message.reply_to_message, data[2])
+        link = message.link
+        variable.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è "
+                                                                "stato pubblicato, qui il link " + str(link))
     else:
-        pass
-        # todo:
-        #   send to the original user
-        #               "Il tuo messaggio è stato rifiutato.
-        #               Controlla di aver rispettato le regole del network @PoliRules, e nel caso credi
-        #               sia stato un errore, scrivici nella pagina facebook di PoliNetwork, grazie"
+        variable.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è stato rifiutato. \nControlla di "
+                                                                "aver rispettato le regole del network @PoliRules, "
+                                                                "e nel caso credi sia stato un errore, scrivici nella "
+                                                                "pagina facebook di PoliNetwork, grazie")
 
     query = update.callback_query
-    query.edit_message_text(text="Selected option: {}".format(data[3]))
+    id2 = data[2]
+    option = data[3]
+    query.edit_message_text(text="Selected option: " + str(option) + "\n#id" + str(id2))
     return None
