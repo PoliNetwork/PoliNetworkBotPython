@@ -20,6 +20,8 @@ def post_anonimi(update, context):
                                           message.chat.id, message.from_user)
         return
 
+    is_a_reply, message_reply_id = utils.is_an_anon_message_link(message.text)
+
     forward_success, message2 = utils.forward_message(anonimi_config.group_id,
                                                       message.reply_to_message)
     if forward_success is not True:
@@ -37,12 +39,18 @@ def post_anonimi(update, context):
                                                                + " " + str(message.chat.id) + " " + 'Y'),
                  InlineKeyboardButton("Rifiuta", callback_data='anon ' + str(message2_id)
                                                                + " " + str(message.chat.id) + " " + 'N')]]
+    if is_a_reply:
+        keyboard = [[InlineKeyboardButton("Accetta", callback_data='anon ' + str(message2_id) + " " + str(message.chat.id) + " " + 'Y' + " " + message_reply_id),
+                     InlineKeyboardButton("Rifiuta", callback_data='anon ' + str(message2_id) + " " + str(message.chat.id) + " " + 'N' + " " + message_reply_id)]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     try:
+        reply_string = ""
+        if is_a_reply:
+            reply_string = f"[In risposta a t.me/PoliAnoniMI/{message_reply_id}]"
         variable.updater.bot.send_message(chat_id=anonimi_config.group_id,
-                                          text="Approvare?\n#id" + str(message.chat.id),
+                                          text=reply_string + "\n\nApprovare?\n#id" + str(message.chat.id),
                                           reply_to_message_id=message2_id,
                                           reply_markup=reply_markup,
                                           parse_mode="HTML")
@@ -52,9 +60,12 @@ def post_anonimi(update, context):
 
 
 def handler_callback(update, data):
+    reply = None
+    if len(data) == 5:
+        reply = int(data[4])
     if data[3] == 'Y':
         group_id = anonimi_config.public_group_id
-        result, message = utils.forward_message_anon(group_id, update.callback_query.message.reply_to_message, data[2])
+        result, message = utils.forward_message_anon(group_id, update.callback_query.message.reply_to_message, data[2], reply)
         link = message.link
         variable.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è "
                                                                 "stato pubblicato, qui il link " + str(link))
