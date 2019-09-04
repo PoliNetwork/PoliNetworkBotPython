@@ -127,7 +127,6 @@ def handler_callback(update, data):
     query = update.callback_query
     id2 = data[2]
     option = data[3]
-    identity = data[4]
 
     if len(data) == len_reply:
         reply_string = "\n[In risposta a t.me/PoliAnoniMi/" + str(reply) + "]"
