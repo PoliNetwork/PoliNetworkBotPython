@@ -1,7 +1,7 @@
 import json
 
 import variable
-from config import creators
+from config import creators, anonimi_config
 from functions import utils
 
 
@@ -63,6 +63,9 @@ def try_add_group(message):
     group_already_present, group_found = find(chat['id'])
 
     if group_already_present is False:
+        if chat['id'] == anonimi_config.group_id:
+            print("k")
+            return None, 3
 
         admins = variable.updater.bot.get_chat_administrators(chat.id)
         if not creator_is_present(admins):
