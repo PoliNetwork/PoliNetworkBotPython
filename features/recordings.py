@@ -41,14 +41,16 @@ def post_recordings(update, context):
                                           message.chat.id, message.from_user)
         return
 
-    if message.reply_to_message.voice is not None or message.reply_to_message.audio is not None or message.reply_to_message.video is not None\
+    if message.reply_to_message.voice is not None \
+            or message.reply_to_message.audio is not None\
+            or message.reply_to_message.video is not None\
             or message.reply_to_message.video_note is not None:
 
         text = message.text
 
         description = " ".join(text.split(" ")[1:])
 
-        if len(description) < 5:
+        if len(description) < 8:
             utils.send_in_private_or_in_group(
                 "La descrizione che hai dato è troppo corta!",
                 message.chat.id, message.from_user)

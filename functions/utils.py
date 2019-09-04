@@ -376,7 +376,7 @@ def forward_message_anon(group_id, message, user_id, reply):
     salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
     to_hash = (str(user_id) + str(salt)).encode('utf-8')
     hash2 = hashlib.sha512(to_hash).hexdigest()
-    author_id = (str(hash2)[:5]).upper()
+    author_id = (str(hash2)[:6]).upper()
 
     author_line = "\n\nAuthor: #id_" + str(author_id)
 
@@ -386,19 +386,24 @@ def forward_message_anon(group_id, message, user_id, reply):
             caption = message.caption
 
         if message.text is not None:
-            message_sent = variable.updater.bot.send_message(chat_id=group_id, text=message.text+author_line, reply_to_message_id=reply)
+            message_sent = variable.updater.bot.send_message(chat_id=group_id,
+                                                             text=message.text+author_line, reply_to_message_id=reply)
         elif message.photo:
             message_sent = variable.updater.bot.send_photo(chat_id=group_id,
-                                                           photo=message.photo[0], caption=caption+author_line, reply_to_message_id=reply)
+                                                           photo=message.photo[0],
+                                                           caption=caption+author_line, reply_to_message_id=reply)
         elif message.audio:
             message_sent = variable.updater.bot.send_audio(chat_id=group_id,
-                                                           audio=message.audio.file_id, caption=caption+author_line, reply_to_message_id=reply)
+                                                           audio=message.audio.file_id,
+                                                           caption=caption+author_line, reply_to_message_id=reply)
         elif message.voice is not None:
             message_sent = variable.updater.bot.send_voice(chat_id=group_id,
-                                                           voice=message.voice.file_id, caption=caption+author_line, reply_to_message_id=reply)
+                                                           voice=message.voice.file_id,
+                                                           caption=caption+author_line, reply_to_message_id=reply)
         elif message.video is not None:
             message_sent = variable.updater.bot.send_video(chat_id=group_id,
-                                                           video=message.video.file_id, caption=caption+author_line, reply_to_message_id=reply)
+                                                           video=message.video.file_id,
+                                                           caption=caption+author_line, reply_to_message_id=reply)
         elif message.video_note is not None:
             message_sent = variable.updater.bot.send_video_note(chat_id=group_id,
                                                                 video_note=message.video_note.file_id,
@@ -429,8 +434,8 @@ def forward_message(group_id, message):
         message_sent = variable.updater.bot.forward_message(group_id, message.chat.id, message.message_id)
         return True, message_sent
     except:
-        return False, None
-    return None
+        pass
+    return False, None
 
 
 def is_an_anon_message_link(text):
