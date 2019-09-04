@@ -22,17 +22,27 @@ def post_anonimi(update, context):
                                           message.chat.id, message.from_user)
         return
 
-    identity = data[1]
+    identity_valid = True
+    identity = None
     try:
-        identity = int(identity)
+        identity = data[1]
+        if len(str(identity)) < 1:
+            identity_valid = False
+        else:
+            identity = int(identity)
     except:
+        identity_valid = False
+
+    if identity_valid is False:
         variable.updater.bot.send_message(message.chat.id, "Devi indicare un'identità!\n"
                                                            "\n"
                                                            "Esempio:\n"
-                                                           "/anon 1 [eventuale link di risposta]")
+                                                           "/anon 1 [eventuale link di risposta]\n"
+                                                           "\n"
+                                                           "Maggiori info con /help_anon")
         return
 
-    is_a_reply, message_reply_id = utils.is_an_anon_message_link(message.text)
+    is_a_reply, message_reply_id = utils.is_an_anon_message_link(data)
 
     forward_success, message2 = utils.forward_message(anonimi_config.group_id,
                                                       message.reply_to_message)

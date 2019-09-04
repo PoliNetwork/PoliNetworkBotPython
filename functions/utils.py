@@ -371,6 +371,12 @@ def check(update, context):
                 pass
 
 
+def notify_owners(e):
+    e2 = str(e)
+    for owner2 in creators.owners:
+        variable.updater.bot.send_message(owner2, "Eccezione:\n\n" + e2)
+
+
 def forward_message_anon(group_id, message, user_id, reply, identity):
     identity = int(identity)
 
@@ -431,6 +437,7 @@ def forward_message_anon(group_id, message, user_id, reply, identity):
 
         return True, message_sent
     except Exception as e:
+        notify_owners(e)
         return False, None
 
 
@@ -445,9 +452,8 @@ def forward_message(group_id, message):
     return False, None
 
 
-def is_an_anon_message_link(text):
-    parts = text.split(" ")
-    if len(parts) <= 1:
+def is_an_anon_message_link(parts):
+    if len(parts) <= 2:
         return False, ""
-    if "t.me/PoliAnoniMi/" in parts[1]:
-        return True, parts[1].split("/")[-1]
+    if "t.me/PoliAnoniMi/" in parts[2]:
+        return True, parts[2].split("/")[-1]
