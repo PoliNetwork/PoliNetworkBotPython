@@ -65,6 +65,8 @@ def post_anonimi(update, context):
 
 def handler_callback(update, data):
     reply = None
+    link = ""
+
     if len(data) == 5:
         reply = int(data[4])
     if data[3] == 'Y':
@@ -91,7 +93,12 @@ def handler_callback(update, data):
     else:
         reply_string = ""
 
-    query.edit_message_text(text="Selected option: " + str(option) + "\n#id" + str(id2) + reply_string)
+    if data[3] == 'Y':
+        query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
+                                     str(id2) + reply_string + "\n" + str(link))
+    else:
+        query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
+                                     str(id2) + reply_string)
     return None
 
 
