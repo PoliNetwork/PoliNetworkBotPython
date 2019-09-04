@@ -150,5 +150,21 @@ def help_handler(update, context):
     variable.updater.bot.send_message(update.message.chat.id,
                                       "Scrivi il messaggio che vuoi inviare.\n"
                                       "Rispondi a quel messaggio con /anon per richiederne"
-                                      " la pubblicazione sul canale @PoliAnoniMi",
+                                      " la pubblicazione sul canale @PoliAnoniMi.\n"
+                                      "\n"
+                                      "Devi indicare un'identità con la quale vuoi postare, 0 per identità nascosta.\n"
+                                      "\n"
+                                      "Esempio:\n"
+                                      "/anon 1 [eventuale link del messaggio del canale a cui rispondere]\n"
+                                      "Per inviare un messaggio con la propria identità anonima 1\n"
+                                      "\n"
+                                      "/anon 0 [eventuale link]\n"
+                                      "Per inviare un messaggio con identità casuale.\n"
+                                      "\n"
+                                      "In entrambi i casi (sia che si usi 0 come identità o un altro numero)"
+                                      " nessun iscritto al canale sarà in grado di capire chi siete.\n"
+                                      "L'identità è stata introdotta per permettere a delle persone di"
+                                      " scrivere sotto uno pseudonimo fisso, se lo desiderano.\n"
+                                      "Buon divertimento con questa funzione del nostro bot, se dovesse "
+                                      "esserci qualsiasi problema, scriveteci alla pagina Facebook di PoliNetwork",
                                       parse_mode="HTML")
