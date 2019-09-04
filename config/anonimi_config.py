@@ -1,2 +1,2 @@
-group_id = -325434648
+group_id = 1387117826
 public_group_id = "@PoliAnoniMi"
