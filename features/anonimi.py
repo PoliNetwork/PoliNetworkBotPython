@@ -159,12 +159,15 @@ def help_handler(update, context):
                                       "Per inviare un messaggio con la propria identità anonima 1\n"
                                       "\n"
                                       "/anon 0 [eventuale link]\n"
-                                      "Per inviare un messaggio con identità casuale.\n"
+                                      "Per inviare un messaggio con identità nascosta.\n"
                                       "\n"
                                       "In entrambi i casi (sia che si usi 0 come identità o un altro numero)"
                                       " nessun iscritto al canale sarà in grado di capire chi siete.\n"
                                       "L'identità è stata introdotta per permettere a delle persone di"
                                       " scrivere sotto uno pseudonimo fisso, se lo desiderano.\n"
-                                      "Buon divertimento con questa funzione del nostro bot, se dovesse "
-                                      "esserci qualsiasi problema, scriveteci alla pagina Facebook di PoliNetwork",
+                                      "\n"
+                                      "Buon divertimento con questa funzione del nostro bot 😄!\n"
+                                      "\n"
+                                      "Se dovesse esserci qualsiasi problema, "
+                                      "scriveteci alla pagina Facebook di PoliNetwork",
                                       parse_mode="HTML")
