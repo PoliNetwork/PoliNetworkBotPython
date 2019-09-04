@@ -129,7 +129,6 @@ def get_review_json(update, context):
 
 
 def help_handler(update, context):
-
     message = update.message
 
     if message.chat.type != "private":

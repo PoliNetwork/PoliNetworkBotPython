@@ -52,7 +52,7 @@ def post_anonimi(update, context):
     try:
         reply_string = ""
         if is_a_reply:
-            reply_string = "[In risposta a t.me/PoliAnoniMi/"+str(message_reply_id) + "]"
+            reply_string = "[In risposta a t.me/PoliAnoniMi/" + str(message_reply_id) + "]"
         variable.updater.bot.send_message(chat_id=anonimi_config.group_id,
                                           text=reply_string + "\n\nApprovare?\n#id" + str(message.chat.id),
                                           reply_to_message_id=message2_id,

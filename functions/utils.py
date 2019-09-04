@@ -372,7 +372,6 @@ def check(update, context):
 
 
 def forward_message_anon(group_id, message, user_id, reply):
-
     salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
     to_hash = (str(user_id) + str(salt)).encode('utf-8')
     hash2 = hashlib.sha512(to_hash).hexdigest()
@@ -387,40 +386,41 @@ def forward_message_anon(group_id, message, user_id, reply):
 
         if message.text is not None:
             message_sent = variable.updater.bot.send_message(chat_id=group_id,
-                                                             text=message.text+author_line, reply_to_message_id=reply)
+                                                             text=message.text + author_line, reply_to_message_id=reply)
         elif message.photo:
             message_sent = variable.updater.bot.send_photo(chat_id=group_id,
                                                            photo=message.photo[0],
-                                                           caption=caption+author_line, reply_to_message_id=reply)
+                                                           caption=caption + author_line, reply_to_message_id=reply)
         elif message.audio:
             message_sent = variable.updater.bot.send_audio(chat_id=group_id,
                                                            audio=message.audio.file_id,
-                                                           caption=caption+author_line, reply_to_message_id=reply)
+                                                           caption=caption + author_line, reply_to_message_id=reply)
         elif message.voice is not None:
             message_sent = variable.updater.bot.send_voice(chat_id=group_id,
                                                            voice=message.voice.file_id,
-                                                           caption=caption+author_line, reply_to_message_id=reply)
+                                                           caption=caption + author_line, reply_to_message_id=reply)
         elif message.video is not None:
             message_sent = variable.updater.bot.send_video(chat_id=group_id,
                                                            video=message.video.file_id,
-                                                           caption=caption+author_line, reply_to_message_id=reply)
+                                                           caption=caption + author_line, reply_to_message_id=reply)
         elif message.video_note is not None:
             message_sent = variable.updater.bot.send_video_note(chat_id=group_id,
                                                                 video_note=message.video_note.file_id,
-                                                                caption=caption+author_line, reply_to_message_id=reply)
+                                                                caption=caption + author_line,
+                                                                reply_to_message_id=reply)
         elif message.document is not None:
             message_sent = variable.updater.bot.send_document(chat_id=group_id,
                                                               document=message.document.file_id,
-                                                              caption=caption+author_line, reply_to_message_id=reply)
+                                                              caption=caption + author_line, reply_to_message_id=reply)
         elif message.sticker is not None:
             message_sent = variable.updater.bot.send_sticker(chat_id=group_id,
                                                              sticker=message.sticker.file_id,
-                                                             caption=caption+author_line, reply_to_message_id=reply)
+                                                             caption=caption + author_line, reply_to_message_id=reply)
         elif message.location is not None:
             message_sent = variable.updater.bot.send_location(chat_id=group_id,
                                                               latitude=message.location.latitude,
                                                               longitude=message.location.longitude,
-                                                              caption=caption+author_line, reply_to_message_id=reply)
+                                                              caption=caption + author_line, reply_to_message_id=reply)
         else:
             return False, None
 
