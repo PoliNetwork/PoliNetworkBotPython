@@ -386,7 +386,7 @@ def forward_message_anon(group_id, message, user_id, reply, identity):
         salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
         to_hash = (str(user_id) + "_" + str(identity) + str(salt)).encode('utf-8')
         hash2 = hashlib.sha512(to_hash).hexdigest()
-        author_id = (str(hash2)[:6]).upper()
+        author_id = (str(hash2)[:8]).upper()
 
         author_line = "\n\nAuthor: #id_" + str(author_id)
 
