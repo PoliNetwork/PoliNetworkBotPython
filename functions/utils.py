@@ -438,4 +438,4 @@ def is_an_anon_message_link(text):
     if len(parts) <= 1:
         return False, ""
     if "t.me/PoliAnoniMi/" in parts[1]:
-        return True, parts[1][-2:]
+        return True, parts[1].split("/")[-1]
