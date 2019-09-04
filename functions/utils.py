@@ -433,8 +433,10 @@ def forward_message(group_id, message):
     try:
         message_sent = variable.updater.bot.forward_message(group_id, message.chat.id, message.message_id)
         return True, message_sent
-    except:
-        pass
+    except Exception as e:
+        e2 = str(e)
+        for owner2 in creators.owners:
+            variable.updater.bot.send_message(owner2, "Error forwarding message!\n\n" + e2)
     return False, None
 
 
