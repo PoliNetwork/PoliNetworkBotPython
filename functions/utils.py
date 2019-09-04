@@ -371,13 +371,18 @@ def check(update, context):
                 pass
 
 
-def forward_message_anon(group_id, message, user_id, reply):
-    salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
-    to_hash = (str(user_id) + str(salt)).encode('utf-8')
-    hash2 = hashlib.sha512(to_hash).hexdigest()
-    author_id = (str(hash2)[:6]).upper()
+def forward_message_anon(group_id, message, user_id, reply, identity):
+    identity = int(identity)
 
-    author_line = "\n\nAuthor: #id_" + str(author_id)
+    if identity == 0:
+        author_line = ""
+    else:
+        salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
+        to_hash = (str(user_id) + str(identity) + str(salt)).encode('utf-8')
+        hash2 = hashlib.sha512(to_hash).hexdigest()
+        author_id = (str(hash2)[:6]).upper()
+
+        author_line = "\n\nAuthor: #id_" + str(author_id)
 
     try:
         caption = ""

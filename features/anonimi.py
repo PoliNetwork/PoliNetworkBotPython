@@ -7,6 +7,8 @@ from functions import utils
 
 def post_anonimi(update, context):
     message = update.message
+    text = message.text
+    data = str(text).split(" ")
 
     if message.chat.type != "private":
         utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
@@ -18,6 +20,16 @@ def post_anonimi(update, context):
                                           "il quale messaggio sarà poi inviato "
                                           "per l'approvazione per la pubblicazione sul canale",
                                           message.chat.id, message.from_user)
+        return
+
+    identity = data[1]
+    try:
+        identity = int(identity)
+    except:
+        variable.updater.bot.send_message(message.chat.id, "Devi indicare un'identità!\n"
+                                                           "\n"
+                                                           "Esempio:\n"
+                                                           "/anon 1 [eventuale link di risposta]")
         return
 
     is_a_reply, message_reply_id = utils.is_an_anon_message_link(message.text)
@@ -33,19 +45,30 @@ def post_anonimi(update, context):
     try:
         message2_id = message2.message_id
     except:
-        pass
+        variable.updater.bot.send_message(message.chat.id, "Errore nell'inoltro del messaggio per l'approvazione. "
+                                                           "Contatta gli admin di @PoliNetwork")
+        return
 
-    keyboard = [[InlineKeyboardButton("Accetta", callback_data='anon ' + str(message2_id)
-                                                               + " " + str(message.chat.id) + " " + 'Y'),
-                 InlineKeyboardButton("Rifiuta", callback_data='anon ' + str(message2_id)
-                                                               + " " + str(message.chat.id) + " " + 'N')]]
+    message_reply_id2 = ""
     if is_a_reply:
-        keyboard = [[InlineKeyboardButton("Accetta",
-                                          callback_data='anon ' + str(message2_id) + " " +
-                                                        str(message.chat.id) + " " + 'Y' + " " + message_reply_id),
-                     InlineKeyboardButton("Rifiuta",
-                                          callback_data='anon ' + str(message2_id) + " " +
-                                                        str(message.chat.id) + " " + 'N' + " " + message_reply_id)]]
+        message_reply_id2 = " " + message_reply_id
+
+    keyboard = [
+        [
+            InlineKeyboardButton(text="Accetta", callback_data='anon'
+                                                               + " " + str(message2_id)
+                                                               + " " + str(message.chat.id)
+                                                               + " " + 'Y'
+                                                               + " " + str(identity)
+                                                               + message_reply_id2),
+            InlineKeyboardButton(text="Rifiuta", callback_data='anon'
+                                                               + " " + str(message2_id)
+                                                               + " " + str(message.chat.id)
+                                                               + " " + 'N'
+                                                               + " " + str(identity)
+                                                               + message_reply_id2),
+        ]
+    ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -67,14 +90,18 @@ def handler_callback(update, data):
     reply = None
     link = ""
 
-    if len(data) == 5:
-        reply = int(data[4])
+    len_reply = 6
+    identity = data[4]
+
+    if len(data) == len_reply:
+        reply = int(data[len_reply - 1])
     if data[3] == 'Y':
         group_id = anonimi_config.public_group_id
         result, message = utils.forward_message_anon(group_id,
                                                      update.callback_query.message.reply_to_message,
                                                      data[2],
-                                                     reply)
+                                                     reply,
+                                                     identity)
         link = message.link
         variable.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è "
                                                                 "stato pubblicato, qui il link " + str(link))
@@ -88,7 +115,7 @@ def handler_callback(update, data):
     id2 = data[2]
     option = data[3]
 
-    if len(data) == 5:
+    if len(data) == len_reply:
         reply_string = "\n[In risposta a t.me/PoliAnoniMi/" + str(reply) + "]"
     else:
         reply_string = ""
