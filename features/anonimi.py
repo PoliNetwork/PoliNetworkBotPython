@@ -86,8 +86,11 @@ def post_anonimi(update, context):
         reply_string = ""
         if is_a_reply:
             reply_string = "[In risposta a t.me/PoliAnoniMi/" + str(message_reply_id) + "]"
+
+        text2 = reply_string + "\n\nApprovare?\n#id" + str(message.chat.id) + "\nIdentità: " + str(identity)
+
         variable.updater.bot.send_message(chat_id=anonimi_config.group_id,
-                                          text=reply_string + "\n\nApprovare?\n#id" + str(message.chat.id),
+                                          text=text2,
                                           reply_to_message_id=message2_id,
                                           reply_markup=reply_markup,
                                           parse_mode="HTML")
@@ -124,6 +127,7 @@ def handler_callback(update, data):
     query = update.callback_query
     id2 = data[2]
     option = data[3]
+    identity = data[4]
 
     if len(data) == len_reply:
         reply_string = "\n[In risposta a t.me/PoliAnoniMi/" + str(reply) + "]"
@@ -132,10 +136,10 @@ def handler_callback(update, data):
 
     if data[3] == 'Y':
         query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
-                                     str(id2) + reply_string + "\n" + str(link))
+                                     str(id2) + reply_string + "\n" + str(link) + "\n" + "Identità: " + str(identity))
     else:
         query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
-                                     str(id2) + reply_string)
+                                     str(id2) + reply_string + "\n" + "Identità: " + str(identity))
     return None
 
 
