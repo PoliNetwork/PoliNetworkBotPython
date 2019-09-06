@@ -90,14 +90,11 @@ def check_username_and_name(message):
         firstname_valid = False
 
     seconds = 35
+    message_to_send = None
     if username_valid is False and firstname_valid is False:
-        try:
-            variable.updater.bot.send_message(from_user.id, "Imposta un username e un nome più lungo"
-                                                            " dalle impostazioni di telegram\n\n"
-                                                            "Set an username and a longer "
-                                                            "first name from telegram settings")
-        except:
-            pass
+
+        message_to_send = "Imposta un username e un nome più lungo dalle impostazioni di telegram\n\n" \
+                          "Set an username and a longer first name from telegram settings"
 
         try:
             time = float(datetime.datetime.now().timestamp()) + seconds
@@ -109,11 +106,9 @@ def check_username_and_name(message):
         except:
             pass
     elif username_valid is False:
-        try:
-            variable.updater.bot.send_message(from_user.id, "Imposta un username dalle impostazioni di telegram\n\n"
-                                                            "Set an username from telegram settings")
-        except:
-            pass
+
+        message_to_send = "Imposta un username dalle impostazioni di telegram\n\n" \
+                          "Set an username from telegram settings"
 
         try:
             time = float(datetime.datetime.now().timestamp()) + seconds
@@ -125,12 +120,10 @@ def check_username_and_name(message):
         except:
             pass
     elif firstname_valid is False:
-        try:
-            variable.updater.bot.send_message(from_user.id, "Imposta un nome più lungo "
-                                                            "dalle impostazioni di telegram\n\n"
-                                                            "Set a longer first name from telegram settings")
-        except:
-            pass
+
+        message_to_send = "Imposta un nome più lungo " \
+                          "dalle impostazioni di telegram\n\n" \
+                          "Set a longer first name from telegram settings"
 
         try:
             time = float(datetime.datetime.now().timestamp()) + seconds
@@ -139,6 +132,12 @@ def check_username_and_name(message):
                                                       can_send_media_messages=False,
                                                       can_send_messages=False,
                                                       can_send_other_messages=False)
+        except:
+            pass
+
+    if message_to_send is not None:
+        try:
+            utils.send_in_private_or_in_group(message_to_send, message.chat.id, from_user)
         except:
             pass
 
