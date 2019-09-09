@@ -1,7 +1,10 @@
 token.txt
 salt/salt.txt
 \.idea/
-data/
+data/groups.json
+data/materials.json
+data/reviews.json
+data/to_delete.json
 __pycache__/
 data/*
 salt/salt_anonimi.txt

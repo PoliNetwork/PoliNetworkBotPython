@@ -457,3 +457,19 @@ def is_an_anon_message_link(parts):
         return False, ""
     if "t.me/PoliAnoniMi/" in parts[2]:
         return True, parts[2].split("/")[-1]
+
+
+def check_date(date):
+    if date == "":
+        return False
+    if "/" not in date:
+        return False
+    f_year = date.split("/")[0]
+    s_year = date.split("/")[1]
+
+    if len(f_year) != 4 or len(s_year) != 4:
+        return False
+
+    if s_year <= f_year or (s_year-f_year) > 1:
+        return False
+    return True

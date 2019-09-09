@@ -10,9 +10,11 @@ from functions import utils
 
 try:
     file = open("data/reviews.json", encoding="utf-8")
-    reviews_dict = json.load(file)
+    groups_reviews = json.load(file)
 except (JSONDecodeError, IOError):
-    reviews_dict = {}
+    groups_reviews = {}
+
+# /add_review <anno> <prof> <voto> <descrizione>
 
 
 def add_review(update, context):
@@ -30,10 +32,22 @@ def add_review(update, context):
     # Review's attributes + hash
 
     vote_valid = True
-
     vote = ""
+    year = text.split(" ")[1]
+
+    if not utils.is_valid(year):
+        variable.updater.bot.deleteMessage(chat_id=update.message.chat_id,
+                                           message_id=update.message.message_id)
+        utils.send_in_private_or_in_group("La data deve essere in formato AAAA/AAAA"
+                                          "Ti invitiamo a mandare nuovamente la recensione.",
+                                          chat.id, message.from_user)
+        return
+
+    prof = text.split(" ")[2]
+    prof = prof.upper()
+
     try:
-        vote = text.split(" ")[1]
+        vote = text.split(" ")[3]
         if vote != "":
             vote = int(vote)
         else:
@@ -50,9 +64,9 @@ def add_review(update, context):
         utils.send_in_private_or_in_group("Il voto dev'essere compreso tra 0 e 100", chat.id, message.from_user)
         return
 
-    description = " ".join(text.split(" ")[2:])
-
+    description = " ".join(text.split(" ")[4:])
     description_valid = utils.is_valid(description)
+
     if description_valid is False:
         variable.updater.bot.deleteMessage(chat_id=update.message.chat_id,
                                            message_id=update.message.message_id)
@@ -67,25 +81,57 @@ def add_review(update, context):
     author_id = str(hash2)
 
     '''
-    So, the reviews_dict is made in the following way:
-    "group_id : [{
-        author: ""
-        vote: ""
-        description: ""
-     }], [...], [...]
+    So, the groups is made in the following way:
+     
+     GROUP_ID:
+        ANNO:
+            PROF:
+                AUTHOR:
+                VOTO:
+                DESCRIZIONE:
+                
+                AUTHOR:
+                VOTO:
+                DESCRIZIONE:
+                
+                AUTHOR:
+                VOTO:
+                DESCRIZIONE:
+        ANNO2:
+            PROF:
+                AUTHOR:
+                VOTO:
+                DESCRIZIONE:
+                
+                AUTHOR:
+                VOTO:
+                DESCRIZIONE:
+                
+                AUTHOR:
+                VOTO:
+                DESCRIZIONE:
      Let's assume group_id as the key of the dict. While the jsons are the reviews that are in that group.
      Pretty easy, isn't it?!
+    DICT = "A" : "B"
     '''
 
-    group_reviews = []
-    if reviews_dict and reviews_dict.keys().__contains__(group_id):
-        group_reviews = reviews_dict.get(group_id)
+    years_dict = {}
+    if groups_reviews and groups_reviews.keys().__contains__(group_id):
+        years_dict = groups_reviews.__getitem__(group_id)
+
+    prof_dict = {}
+    if years_dict and years_dict.__contains__(year):
+        prof_dict = years_dict.__getitem__(year)
+
+    prof_reviews_list = []
+    if prof_dict and prof_dict.__contains__(prof):
+        prof_reviews_list = prof_dict.__getitem__(prof)
 
     # Lets check if the author has already voted that group
 
     author_already_voted = False
-    for group in group_reviews:
-        if group['author_id'] == author_id:
+    for review in prof_reviews_list:
+        if review['author_id'] == author_id:
             author_already_voted = True
     if author_already_voted:
         variable.updater.bot.deleteMessage(chat_id=message.chat_id,
@@ -103,15 +149,14 @@ def add_review(update, context):
 
     # Add the json built to the existing list of reviews
 
-    group_reviews.append(save)
-
-    # Replace the original group_reviews with the new one and save everything on the file
-
-    reviews_dict.update({group_id: group_reviews})
+    prof_reviews_list.append(save)
+    prof_dict.update({prof: prof_reviews_list})
+    years_dict.update({year: prof_dict})
+    groups_reviews.update({group_id: years_dict})
 
     # Save everything and delete the message sent by user
     with open("data/reviews.json", 'w', encoding="utf-8") as file_to_write:
-        json.dump(reviews_dict, file_to_write)
+        json.dump(groups_reviews, file_to_write)
 
     variable.updater.bot.deleteMessage(chat_id=update.message.chat_id,
                                        message_id=update.message.message_id)
@@ -203,8 +248,8 @@ def get_reviews_html(update, context):
 
     reviews_list = []
 
-    if reviews_dict.keys().__contains__(str(group_id)):
-        reviews_list = reviews_dict.get(str(group_id))
+    if groups_reviews.keys().__contains__(str(group_id)):
+        reviews_list = groups_reviews.get(str(group_id))
 
     if len(reviews_list) < 1:
         utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
