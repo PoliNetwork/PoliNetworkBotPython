@@ -283,7 +283,7 @@ def get_reviews_by_prof(prof):
                 if proff == prof:
                     new_date = groups_reviews.get(group).get(date)
                     clone.update({group: new_date})
-    print(clone)
+    return clone
 
 
 def get_reviews_by_group_name(groupz):
@@ -296,3 +296,4 @@ def get_reviews_by_group_name(groupz):
     for group in groups_reviews:
         if group == str(group_id):
             clone.update({group_id : groups_reviews.get(group)})
+    return clone
