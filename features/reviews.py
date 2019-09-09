@@ -273,3 +273,26 @@ def get_reviews_html(update, context):
         os.remove(filename)
     except Exception as e:
         print(e)
+
+
+def get_reviews_by_prof(prof):
+    clone = {}
+    for group in groups_reviews:
+        for date in groups_reviews.get(group):
+            for proff in groups_reviews.get(group).get(date):
+                if proff == prof:
+                    new_date = groups_reviews.get(group).get(date)
+                    clone.update({group: new_date})
+    print(clone)
+
+
+def get_reviews_by_group_name(groupz):
+    groups = variable.groups_list
+    group_id = -1
+    for group in groups:
+        if group['Chat']['title'] == groupz:
+            group_id = group['Chat']['id']
+    clone = {}
+    for group in groups_reviews:
+        if group == str(group_id):
+            clone.update({group_id : groups_reviews.get(group)})
