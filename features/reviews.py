@@ -266,17 +266,6 @@ def get_reviews_html(update, context):
         print(e)
 
 
-def get_reviews_by_prof(prof):
-    clone = {}
-    for group in groups_reviews:
-        for date in groups_reviews.get(group):
-            for proff in groups_reviews.get(group).get(date):
-                if proff == prof:
-                    new_date = groups_reviews.get(group)
-                    clone.update({group: new_date})
-    return clone
-
-
 def get_group_id_by_name(groupz):
     groups = variable.groups_list
     group_id = -1
@@ -284,6 +273,22 @@ def get_group_id_by_name(groupz):
         if group['Chat']['title'] == groupz:
             group_id = group['Chat']['id']
     return group_id
+
+# by prof
+
+
+def get_reviews_by_prof(prof):
+    clone = {}
+    for group in groups_reviews:
+        for date in groups_reviews.get(group):
+            for proff in groups_reviews.get(group).get(date):
+                if proff == prof:
+                    prof_j = {prof : groups_reviews.get(group).get(date).get(prof)}
+                    new_date = {date: prof_j}
+                    clone.update({group: new_date})
+    return clone
+
+# by group name
 
 
 def get_reviews_by_group_name(groupz):
@@ -294,6 +299,8 @@ def get_reviews_by_group_name(groupz):
             clone.update({group_id : groups_reviews.get(group)})
     return clone
 
+# by group name and prof
+
 
 def get_reviews_by_group_and_prof(group, prof):
     group_id = get_group_id_by_name(group)
@@ -303,6 +310,8 @@ def get_reviews_by_group_and_prof(group, prof):
             clone.pop(groupx)
     return clone
 
+# by group name, prof and year
+
 
 def get_reviews_by_gpy(group, prof, year):
     reviews_by_pg = get_reviews_by_group_and_prof(group, prof)
@@ -311,5 +320,31 @@ def get_reviews_by_gpy(group, prof, year):
         for date in reviews_by_pg.get(group):
             if date == year:
                 new_date = {date : reviews_by_pg.get(group).get(date)}
+                json.update({group : new_date})
+    return json
+
+
+# by group name and year
+
+def get_reviews_by_gy(group, year):
+    reviews_by_g = get_reviews_by_group_name(group)
+    json = {}
+    for group in reviews_by_g:
+        for date in reviews_by_g.get(group):
+            if date == year:
+                new_date = {date : reviews_by_g.get(group).get(date)}
+                json.update({group : new_date})
+    return json
+
+
+# by prof name and year
+
+def get_reviews_by_py(prof, year):
+    reviews_by_prof = get_reviews_by_prof(prof)
+    json = {}
+    for group in reviews_by_prof:
+        for date in reviews_by_prof.get(group):
+            if date == year:
+                new_date = {date : reviews_by_prof.get(group).get(date)}
                 json.update({group : new_date})
     return json
