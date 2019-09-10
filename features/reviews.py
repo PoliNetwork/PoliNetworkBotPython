@@ -231,8 +231,18 @@ def get_reviews_html2(review_list, update):
     return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
 
+def remove_spaces(text):
+    while True:
+        if text.startswith(" "):
+            text = text[1:]
+        else:
+            break
+
+    return text
+
+
 def get_reviews_private_from_text(text, update):
-    text = text[12:]  # remove "/get_reviews"
+    text = text[13:]  # remove "/get_reviews"
 
     if len(text) < 2:
         variable.updater.bot.send_message(update.message.chat.id,
@@ -240,7 +250,7 @@ def get_reviews_private_from_text(text, update):
                                           "Scopri di più con /help_review")
         return None
 
-    data = text.split("--")
+    data = text.split("&&")
 
     prof_b = False
     year_b = False
@@ -251,6 +261,7 @@ def get_reviews_private_from_text(text, update):
     group_v = None
 
     for data2 in data:
+        data2 = remove_spaces(data2)
         data3 = data2.split(" ")
         if data3[0] == "teacher":
             prof_b = True
