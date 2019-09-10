@@ -312,5 +312,4 @@ def get_reviews_by_gpy(group, prof, year):
             if date == year:
                 new_date = {date : reviews_by_pg.get(group).get(date)}
                 json.update({group : new_date})
-
-
+    return json
