@@ -233,6 +233,13 @@ def get_reviews_html2(review_list, update):
 
 def get_reviews_private_from_text(text, update):
     text = text[12:]  # remove "/get_reviews"
+
+    if len(text) < 2:
+        variable.updater.bot.send_message(update.message.chat.id,
+                                          "Devi aggiungere qualche filtro in chat privata! "
+                                          "Scopri di più con /help_review")
+        return None
+
     data = text.split("--")
 
     prof_b = False
