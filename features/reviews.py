@@ -46,6 +46,14 @@ def add_review(update, context):
     prof = text.split(" ")[2]
     prof = prof.upper()
 
+    if not prof.isalpha():
+        variable.updater.bot.deleteMessage(chat_id=update.message.chat_id,
+                                           message_id=update.message.message_id)
+        utils.send_in_private_or_in_group("Nome del professore non accettabile."
+                                          "Ti invitiamo a mandare nuovamente la recensione.",
+                                          chat.id, message.from_user)
+        return
+
     try:
         vote = text.split(" ")[3]
         if vote != "":
@@ -81,8 +89,6 @@ def add_review(update, context):
     author_id = str(hash2)
 
     '''
-    So, the groups is made in the following way:
-     
      GROUP_ID:
         ANNO:
             PROF:
@@ -97,21 +103,6 @@ def add_review(update, context):
                 AUTHOR:
                 VOTO:
                 DESCRIZIONE:
-        ANNO2:
-            PROF:
-                AUTHOR:
-                VOTO:
-                DESCRIZIONE:
-                
-                AUTHOR:
-                VOTO:
-                DESCRIZIONE:
-                
-                AUTHOR:
-                VOTO:
-                DESCRIZIONE:
-     Let's assume group_id as the key of the dict. While the jsons are the reviews that are in that group.
-     Pretty easy, isn't it?!
     DICT = "A" : "B"
     '''
 
@@ -285,15 +276,33 @@ def get_reviews_by_prof(prof):
                     clone.update({group: new_date})
     return clone
 
+# todo: move to utils
 
-def get_reviews_by_group_name(groupz):
+
+def get_group_id_by_name(groupz):
     groups = variable.groups_list
     group_id = -1
     for group in groups:
         if group['Chat']['title'] == groupz:
             group_id = group['Chat']['id']
+    return group_id
+
+
+def get_reviews_by_group_name(groupz):
+    group_id = get_group_id_by_name(groupz)
     clone = {}
     for group in groups_reviews:
         if group == str(group_id):
             clone.update({group_id : groups_reviews.get(group)})
     return clone
+
+
+def get_reviews_by_group_and_prof(group, prof):
+    group_id = get_group_id_by_name(group)
+    clone = get_reviews_by_prof(prof)
+    for groupx in get_reviews_by_prof(prof):
+        if groupx != group_id:
+            clone.__delitem__(groupx)
+    return clone
+
+
