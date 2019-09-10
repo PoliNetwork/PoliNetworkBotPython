@@ -272,11 +272,9 @@ def get_reviews_by_prof(prof):
         for date in groups_reviews.get(group):
             for proff in groups_reviews.get(group).get(date):
                 if proff == prof:
-                    new_date = groups_reviews.get(group).get(date)
+                    new_date = groups_reviews.get(group)
                     clone.update({group: new_date})
     return clone
-
-# todo: move to utils
 
 
 def get_group_id_by_name(groupz):
@@ -301,8 +299,18 @@ def get_reviews_by_group_and_prof(group, prof):
     group_id = get_group_id_by_name(group)
     clone = get_reviews_by_prof(prof)
     for groupx in get_reviews_by_prof(prof):
-        if groupx != group_id:
-            clone.__delitem__(groupx)
+        if str(groupx) != str(group_id):
+            clone.pop(groupx)
     return clone
+
+
+def get_reviews_by_gpy(group, prof, year):
+    reviews_by_pg = get_reviews_by_group_and_prof(group, prof)
+    json = {}
+    for group in reviews_by_pg:
+        for date in reviews_by_pg.get(group):
+            if date == year:
+                new_date = {date : reviews_by_pg.get(group).get(date)}
+                json.update({group : new_date})
 
 
