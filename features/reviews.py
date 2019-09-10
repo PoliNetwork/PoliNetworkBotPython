@@ -14,16 +14,19 @@ try:
 except (JSONDecodeError, IOError):
     groups_reviews = {}
 
+
+def add_review_private(update):
+    variable.updater.bot.send_message(update.message.chat.id, "Le recensioni non possono essere fatte in privato."
+                                                              " Devi entrare nel gruppo del corso da recensire.")
+    print('Received a private message.')
+
+
 # /add_review <anno> <prof> <voto> <descrizione>
-
-
 def add_review(update, context):
     message = update.message
     chat = message['chat']
     if chat['type'] == 'private':
-        variable.updater.bot.send_message(message.chat.id, "Le recensioni non possono essere fatte in privato."
-                                                           " Devi entrare nel gruppo del corso da recensire.")
-        print('Received a private message.')
+        add_review_private(update)
         return
 
     salt = open("salt/salt.txt", encoding="utf-8").read()
@@ -228,9 +231,13 @@ def get_reviews_html2(review_list, update):
     return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
 
+def get_reviews_html_private(update):
+    variable.updater.bot.send_message(update.message.chat.id, "Questo comando funziona solo in un gruppo!")
+
+
 def get_reviews_html(update, context):
     if update.message.chat.type == "private":
-        variable.updater.bot.send_message(update.message.chat.id, "Questo comando funziona solo in un gruppo!")
+        get_reviews_html_private(update)
         return
 
     variable.updater.bot.delete_message(update.message.chat.id, update.message.message_id)
@@ -274,6 +281,7 @@ def get_group_id_by_name(groupz):
             group_id = group['Chat']['id']
     return group_id
 
+
 # by prof
 
 
@@ -283,10 +291,11 @@ def get_reviews_by_prof(prof):
         for date in groups_reviews.get(group):
             for proff in groups_reviews.get(group).get(date):
                 if proff == prof:
-                    prof_j = {prof : groups_reviews.get(group).get(date).get(prof)}
+                    prof_j = {prof: groups_reviews.get(group).get(date).get(prof)}
                     new_date = {date: prof_j}
                     clone.update({group: new_date})
     return clone
+
 
 # by group name
 
@@ -296,8 +305,9 @@ def get_reviews_by_group_name(groupz):
     clone = {}
     for group in groups_reviews:
         if group == str(group_id):
-            clone.update({group_id : groups_reviews.get(group)})
+            clone.update({group_id: groups_reviews.get(group)})
     return clone
+
 
 # by group name and prof
 
@@ -310,6 +320,7 @@ def get_reviews_by_group_and_prof(group, prof):
             clone.pop(groupx)
     return clone
 
+
 # by group name, prof and year
 
 
@@ -319,8 +330,8 @@ def get_reviews_by_gpy(group, prof, year):
     for group in reviews_by_pg:
         for date in reviews_by_pg.get(group):
             if date == year:
-                new_date = {date : reviews_by_pg.get(group).get(date)}
-                json.update({group : new_date})
+                new_date = {date: reviews_by_pg.get(group).get(date)}
+                json.update({group: new_date})
     return json
 
 
@@ -332,8 +343,8 @@ def get_reviews_by_gy(group, year):
     for group in reviews_by_g:
         for date in reviews_by_g.get(group):
             if date == year:
-                new_date = {date : reviews_by_g.get(group).get(date)}
-                json.update({group : new_date})
+                new_date = {date: reviews_by_g.get(group).get(date)}
+                json.update({group: new_date})
     return json
 
 
@@ -345,6 +356,6 @@ def get_reviews_by_py(prof, year):
     for group in reviews_by_prof:
         for date in reviews_by_prof.get(group):
             if date == year:
-                new_date = {date : reviews_by_prof.get(group).get(date)}
-                json.update({group : new_date})
+                new_date = {date: reviews_by_prof.get(group).get(date)}
+                json.update({group: new_date})
     return json
