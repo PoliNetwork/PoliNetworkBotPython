@@ -231,7 +231,7 @@ def get_reviews_html2(review_list, update):
     return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
 
-def get_reviews_private_from_text(text):
+def get_reviews_private_from_text(text, update):
     text = text[12:]  # remove "/get_reviews"
     data = text.split("--")
 
@@ -255,6 +255,8 @@ def get_reviews_private_from_text(text):
             group_b = True
             group_v = data3[1]
 
+    # todo: migliorare group_v e prof_v di modo che le funzioni qui sotto funzionino
+
     if prof_b and year_b and group_b:
         return get_reviews_by_gpy(group_v, prof_v, year_v)
     elif prof_b and year_b:
@@ -268,10 +270,11 @@ def get_reviews_private_from_text(text):
     elif prof_b:
         return get_reviews_by_prof(prof_v)
     elif year_b:
-        # todo: error!
+        variable.updater.bot.send_message(update.message.chat.id, "Non è possibile indicare solo l'anno!")
         return None
 
-    # todo: error!
+    variable.updater.bot.send_message(update.message.chat.id, "Errore sconosciuto nella richiesta delle recensioni! "
+                                                              "Contattare gli amministratori di @PoliNetwork!")
     return None
 
 
@@ -282,7 +285,7 @@ def get_reviews_html_private(update):
     reviews_list = []
 
     try:
-        reviews_list = get_reviews_private_from_text(text)
+        reviews_list = get_reviews_private_from_text(text, update)
     except:
         pass
 
@@ -290,7 +293,10 @@ def get_reviews_html_private(update):
 
 
 def send_html_reviews(reviews_list, update):
-    if reviews_list is None or len(reviews_list) < 1:
+    if reviews_list is None:
+        return
+
+    if len(reviews_list) < 1:
         utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
                                           update.message.chat.id, update.message.from_user)
         return
