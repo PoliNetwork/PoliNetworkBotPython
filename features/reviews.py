@@ -265,13 +265,13 @@ def get_reviews_private_from_text(text, update):
         data3 = data2.split(" ")
         if data3[0] == "teacher":
             prof_b = True
-            prof_v = data3[1]
+            prof_v = data3[1:]
         elif data3[0] == "year":
             year_b = True
             year_v = data3[1]
         elif data3[0] == "group":
             group_b = True
-            group_v = data3[1]
+            group_v = data3[1:]
 
     # todo: migliorare group_v e prof_v di modo che le funzioni qui sotto funzionino
 
