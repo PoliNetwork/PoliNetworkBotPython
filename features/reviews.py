@@ -250,7 +250,10 @@ def get_reviews_private_from_text(text, update):
                                           "Scopri di più con /help_review")
         return None
 
-    data = text.split("&&")
+    if "&&" in text:
+        data = text.split("&&")
+    else:
+        data = [text]
 
     prof_b = False
     year_b = False
