@@ -231,25 +231,66 @@ def get_reviews_html2(review_list, update):
     return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
 
+def get_reviews_private_from_text(text):
+    text = text[12:]  # remove "/get_reviews"
+    data = text.split("--")
+
+    prof_b = False
+    year_b = False
+    group_b = False
+
+    prof_v = None
+    year_v = None
+    group_v = None
+
+    for data2 in data:
+        data3 = data2.split(" ")
+        if data3[0] == "teacher":
+            prof_b = True
+            prof_v = data3[1]
+        elif data3[0] == "year":
+            year_b = True
+            year_v = data3[1]
+        elif data3[0] == "group":
+            group_b = True
+            group_v = data3[1]
+
+    if prof_b and year_b and group_b:
+        return get_reviews_by_gpy(group_v, prof_v, year_v)
+    elif prof_b and year_b:
+        return get_reviews_by_py(prof_v, year_v)
+    elif group_b and year_b:
+        return get_reviews_by_gy(group_v, year_v)
+    elif group_b and prof_b:
+        return get_reviews_by_group_and_prof(group_v, prof_v)
+    elif group_b:
+        return get_reviews_by_group_name(group_v)
+    elif prof_b:
+        return get_reviews_by_prof(prof_v)
+    elif year_b:
+        # todo: error!
+        return None
+
+    # todo: error!
+    return None
+
+
 def get_reviews_html_private(update):
-    variable.updater.bot.send_message(update.message.chat.id, "Questo comando funziona solo in un gruppo!")
-
-
-def get_reviews_html(update, context):
-    if update.message.chat.type == "private":
-        get_reviews_html_private(update)
-        return
-
-    variable.updater.bot.delete_message(update.message.chat.id, update.message.message_id)
-
-    group_id = update.message.chat['id']
+    # variable.updater.bot.send_message(update.message.chat.id, "Questo comando funziona solo in un gruppo!")
+    text = update.message.text
 
     reviews_list = []
 
-    if groups_reviews.keys().__contains__(str(group_id)):
-        reviews_list = groups_reviews.get(str(group_id))
+    try:
+        reviews_list = get_reviews_private_from_text(text)
+    except:
+        pass
 
-    if len(reviews_list) < 1:
+    send_html_reviews(reviews_list, update)
+
+
+def send_html_reviews(reviews_list, update):
+    if reviews_list is None or len(reviews_list) < 1:
         utils.send_in_private_or_in_group("Spiacente, non c'è ancora nessuna recensione!",
                                           update.message.chat.id, update.message.from_user)
         return
@@ -270,7 +311,24 @@ def get_reviews_html(update, context):
     try:
         os.remove(filename)
     except Exception as e:
-        print(e)
+        utils.notify_owners(e)
+
+
+def get_reviews_html(update, context):
+    if update.message.chat.type == "private":
+        get_reviews_html_private(update)
+        return
+
+    variable.updater.bot.delete_message(update.message.chat.id, update.message.message_id)
+
+    group_id = update.message.chat['id']
+
+    reviews_list = []
+
+    if groups_reviews.keys().__contains__(str(group_id)):
+        reviews_list = groups_reviews.get(str(group_id))
+
+    send_html_reviews(reviews_list, update)
 
 
 def get_group_id_by_name(groupz):
