@@ -325,7 +325,7 @@ def send_html_reviews(reviews_list, update):
         return
 
     html = get_reviews_html2(reviews_list, update)
-    #ASD
+    # ASD
 
     n = random.randint(1, 9999999)
     filename = 'data/review' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
@@ -450,7 +450,5 @@ def get_reviews_by_py(prof, year):
 
 
 def remove_last_char_space(string):
-    for c in string:
-        if c == ' ':
-            return string[:len(string)-1]
-    return string
+    if string.endswith(" "):
+        return string[:-1]
