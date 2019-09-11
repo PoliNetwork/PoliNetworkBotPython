@@ -452,3 +452,5 @@ def get_reviews_by_py(prof, year):
 def remove_last_char_space(string):
     if string.endswith(" "):
         return string[:-1]
+    else:
+        return string
