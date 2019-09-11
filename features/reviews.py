@@ -414,26 +414,26 @@ def get_reviews_by_group_and_prof(group, prof):
 
 def get_reviews_by_gpy(group, prof, year):
     reviews_by_pg = get_reviews_by_group_and_prof(group, prof)
-    json = {}
+    json_dict = {}
     for group in reviews_by_pg:
         for date in reviews_by_pg.get(group):
             if date == year:
                 new_date = {date: reviews_by_pg.get(group).get(date)}
-                json.update({group: new_date})
-    return json
+                json_dict.update({group: new_date})
+    return json_dict
 
 
 # by group name and year
 
 def get_reviews_by_gy(group, year):
     reviews_by_g = get_reviews_by_group_name(group)
-    json = {}
+    json_dict = {}
     for group in reviews_by_g:
         for date in reviews_by_g.get(group):
             if date == year:
                 new_date = {date: reviews_by_g.get(group).get(date)}
-                json.update({group: new_date})
-    return json
+                json_dict.update({group: new_date})
+    return json_dict
 
 
 # by prof name and year
