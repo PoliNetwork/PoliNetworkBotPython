@@ -218,15 +218,17 @@ def get_reviews_html2(review_list, update):
     sum_votes = 0
 
     for review in review_list:
-        vote = int(review['vote'])
-        sum_votes += vote
-        html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
-        html2 += str(vote) + "/100 ⭐"
-        html2 += "</a><p>"
-        html2 += utils.escape(review['description'])
-        html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
-        html2 += "</div>	</div>"
-
+        for year in review_list.get(review):
+            for prof in review_list.get(review)[year]:
+                for single_review in review_list.get(review)[year][prof]:
+                    vote = int(single_review['vote'])
+                    sum_votes += vote
+                    html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
+                    html2 += str(vote) + "/100 ⭐"
+                    html2 += "</a><p>"
+                    html2 += utils.escape(single_review['description'])
+                    html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
+                    html2 += "</div>	</div>"
     avg = sum_votes / len(review_list)
     return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
@@ -268,13 +270,13 @@ def get_reviews_private_from_text(text, update):
         data3 = data2.split(" ")
         if data3[0] == "teacher":
             prof_b = True
-            prof_v = data3[1:]
+            prof_v = remove_last_char_space(" ".join(data3[1:]))
         elif data3[0] == "year":
             year_b = True
             year_v = data3[1]
         elif data3[0] == "group":
             group_b = True
-            group_v = data3[1:]
+            group_v = remove_last_char_space(" ".join(data3[1:]))
 
     # todo: migliorare group_v e prof_v di modo che le funzioni qui sotto funzionino
 
@@ -323,6 +325,7 @@ def send_html_reviews(reviews_list, update):
         return
 
     html = get_reviews_html2(reviews_list, update)
+    #ASD
 
     n = random.randint(1, 9999999)
     filename = 'data/review' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
@@ -444,3 +447,10 @@ def get_reviews_by_py(prof, year):
                 new_date = {date: reviews_by_prof.get(group).get(date)}
                 json.update({group: new_date})
     return json
+
+
+def remove_last_char_space(string):
+    for c in string:
+        if c == ' ':
+            return string[:len(string)-1]
+    return string
