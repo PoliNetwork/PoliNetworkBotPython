@@ -175,12 +175,25 @@ def help_handler(update, context):
                                           message.chat.id, message.from_user)
         return
 
+    # /review 2018/2019 PROFTEST 100 TEST DI RECENSIONE
     update.message.reply_text("E' possibile recensire i corsi.\n"
                               "1. Entra nel gruppo del tuo corso.\n"
-                              "2. Scrivi /review VOTO TESTO\n"
+                              "2. Scrivi /review ANNO PROF VOTO TESTO\n"
                               "Dove VOTO è un numero da 0 a 100 e TESTO è il testo vero e proprio della recensione\n"
-                              "\nEsempio: /review 10 Corso pessimo! State alla larga!\n"
-                              "\nLeggi le recensioni con il comando /get_reviews")
+                              "Dove ANNO è un l'anno accademico in cui è stato frequentato il corso (es. 2018/2019)\n"
+                              "Dove PROF è il cognome del prof che ha tenuto il corso (una sola parola valida, "
+                              "se ci sono cognomi strani scriverli tutto attaccato)\n"
+                              "\nEsempio: /review 2018/2019 ROSSI 10 Corso pessimo! State alla larga!\n"
+                              "\nLeggi le recensioni con il comando /get_reviews\n"
+                              "Il comando funziona sia in un gruppo "
+                              "(e in quel caso si avranno tutte le recensioni di quel corso) oppure in privato. "
+                              "Se si decide di usarlo in privato bisogna dargli dei filtri di ricerca\n"
+                              "/get_reviews teacher PROF && year 2018/2019 && group MECCANICA\n"
+                              "Si possono mettere anche meno filtri di questi,"
+                              " ma il resto lo lasciamo scoprire a voi 😉\n"
+                              "Se ci fosse qualsiasi tipo di problema,"
+                              " contattate gli amministratori di @PoliNetwork. Grazie!"
+                              )
 
 
 def get_reviews_html2(review_list, update):
