@@ -89,42 +89,31 @@ def check_username_and_name(message):
     if firstname is None or len(firstname) < 2:
         firstname_valid = False
 
-    seconds = 35
+    seconds = 40
+
     message_to_send = None
     if username_valid is False and firstname_valid is False:
-
         message_to_send = "Imposta un username e un nome più lungo dalle impostazioni di telegram\n\n" \
                           "Set an username and a longer first name from telegram settings"
-
-        try:
-            time = float(datetime.datetime.now().timestamp()) + seconds
-            variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
-                                                      can_add_web_page_previews=False,
-                                                      can_send_media_messages=False,
-                                                      can_send_messages=False,
-                                                      can_send_other_messages=False)
-        except:
-            pass
     elif username_valid is False:
-
         message_to_send = "Imposta un username dalle impostazioni di telegram\n\n" \
                           "Set an username from telegram settings"
-
-        try:
-            time = float(datetime.datetime.now().timestamp()) + seconds
-            variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
-                                                      can_add_web_page_previews=False,
-                                                      can_send_media_messages=False,
-                                                      can_send_messages=False,
-                                                      can_send_other_messages=False)
-        except:
-            pass
     elif firstname_valid is False:
-
         message_to_send = "Imposta un nome più lungo " \
                           "dalle impostazioni di telegram\n\n" \
                           "Set a longer first name from telegram settings"
 
+    if message_to_send is not None:
+        try:
+            utils.send_in_private_or_in_group(message_to_send, message.chat.id, from_user)
+        except Exception as e:
+            utils.notify_owners(e)
+
+        try:
+            variable.updater.bot.delete_message(message.chat.id, message.message_id)
+        except Exception as e:
+            utils.notify_owners(e)
+
         try:
             time = float(datetime.datetime.now().timestamp()) + seconds
             variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
@@ -132,18 +121,8 @@ def check_username_and_name(message):
                                                       can_send_media_messages=False,
                                                       can_send_messages=False,
                                                       can_send_other_messages=False)
-        except:
-            pass
-
-    if message_to_send is not None:
-        try:
-            utils.send_in_private_or_in_group(message_to_send, message.chat.id, from_user)
-            try:
-                variable.updater.bot.delete_message(message.chat.id, message.message_id)
-            except Exception as e:
-                utils.notify_owners(e)
-        except:
-            pass
+        except Exception as e:
+            utils.notify_owners(e)
 
 
 def check_message(update, context):
