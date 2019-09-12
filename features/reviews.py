@@ -217,18 +217,27 @@ def get_reviews_html2(review_list, update):
 
     sum_votes = 0
 
-    for review in review_list:
-        for year in review_list.get(review):
-            for prof in review_list.get(review)[year]:
-                for single_review in review_list.get(review)[year][prof]:
-                    vote = int(single_review['vote'])
-                    sum_votes += vote
-                    html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
-                    html2 += str(vote) + "/100 ⭐"
-                    html2 += "</a><p>"
-                    html2 += utils.escape(single_review['description'])
-                    html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
-                    html2 += "</div>	</div>"
+    for year in review_list:
+        sum_year = 0
+        html2 += "<h2>Anno: " + str(year) + "</h2>"
+        for prof in review_list.get(year):
+            sum_prof = 0
+            html2 += "<h2>Prof: " + str(prof) + "</h2>"
+            for single_review in review_list.get(year)[prof]:
+                vote = int(single_review['vote'])
+                sum_votes += vote
+                sum_prof += vote
+                html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
+                html2 += str(vote) + "/100 ⭐"
+                html2 += "</a><p>"
+                html2 += utils.escape(single_review['description'])
+                html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
+                html2 += "</div>	</div>"
+            avg_prof = sum_prof / len(review_list.get(year)[prof])
+            html2 += "<h3>Media prof: " + str(avg_prof) + "</h3><br />"
+            sum_year += avg_prof
+        avg_year = sum_year / len(review_list.get(year))
+        html2 += "<h3>Media anno: " + str(avg_year) + "</h3><br /><br />"
     avg = sum_votes / len(review_list)
     return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
@@ -324,7 +333,11 @@ def send_html_reviews(reviews_list, update):
                                           update.message.chat.id, update.message.from_user)
         return
 
-    html = get_reviews_html2(reviews_list, update)
+    try:
+        html = get_reviews_html2(reviews_list, update)
+    except Exception as e:
+        utils.notify_owners(e)
+        return
     # ASD
 
     n = random.randint(1, 9999999)
