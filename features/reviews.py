@@ -215,7 +215,7 @@ def get_reviews_html2(review_list, update):
             "    text-decoration: underline;}" \
             ".person-text i {    color: #fff;    font-family: Georgia;    font-size: 13px;}" \
             ".rel {    position: relative;}" \
-            "</style></head>" \
+            "</style><meta charset='UTF-8'></head>" \
             "<body><div class='container'>	<div class='row'>		<h1>"
 
     html1 += "Recensioni: " + utils.escape(update.message.chat.title)
