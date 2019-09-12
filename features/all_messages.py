@@ -138,6 +138,10 @@ def check_username_and_name(message):
     if message_to_send is not None:
         try:
             utils.send_in_private_or_in_group(message_to_send, message.chat.id, from_user)
+            try:
+                variable.updater.bot.delete_message(message.chat.id, message.message_id)
+            except Exception as e:
+                utils.notify_owners(e)
         except:
             pass
 
