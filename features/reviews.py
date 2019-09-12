@@ -203,13 +203,13 @@ def get_reviews_html2(review_list, update):
             ".person-text i {    color: #fff;    font-family: Georgia;    font-size: 13px;}" \
             ".rel {    position: relative;}" \
             "</style></head>" \
-            "<body><div class='container'>	<div class='row'>		<h2>"
+            "<body><div class='container'>	<div class='row'>		<h1>"
 
     html1 += "Recensioni: " + utils.escape(update.message.chat.title)
 
-    html1 += "</div></div><div class='carousel-reviews broun-block'>    <div class='container'>" \
-             "<div class='row'><div id='carousel-reviews' class='carousel slide' data-ride='carousel'>" \
-             "<div class='item active'>"
+    html4 = "</div></div><div class='carousel-reviews broun-block'>    <div class='container'>" \
+            "<div class='row'><div id='carousel-reviews' class='carousel slide' data-ride='carousel'>" \
+            "<div class='item active'>"
 
     html3 = "				</div>            </div>        </div>    </div></div></body></html>"
 
@@ -222,24 +222,29 @@ def get_reviews_html2(review_list, update):
         for prof in review_list.get(year):
             sum_prof = 0
             html2 += "<h2>Prof: " + str(prof) + "</h2>"
+            html2 += "<ul>"
             for single_review in review_list.get(year)[prof]:
                 vote = int(single_review['vote'])
                 sum_prof += vote
-                html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
+                html2 += "<li>"
+                html2 += "<div class='col-md-4 col-sm-6'><div><a title='' href='#'>"
                 html2 += str(vote) + "/100 ⭐"
                 html2 += "</a><p>"
                 html2 += utils.escape(single_review['description'])
                 html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
                 html2 += "</div>	</div>"
+                html2 += "</li>"
+            html2 += "</ul>"
             avg_prof = sum_prof / len(review_list.get(year)[prof])
             html2 += "<h3>Media prof: " + str(avg_prof) + "</h3><br />"
             sum_year += avg_prof
         avg_year = sum_year / len(review_list.get(year))
-        html2 += "<h3>Media anno: " + str(avg_year) + "</h3><br /><br />"
+        html2 += "<h3>Media anno: " + str(avg_year) + "</h3><br /><hr /><br />"
         sum_votes += avg_year
     avg = sum_votes / len(review_list)
-    
-    return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
+
+    avg = ("{0:.2f}".format(round(avg, 2)))
+    return html1 + "<br />Media: " + str(avg) + "/100</h1>" + html4 + html2 + html3
 
 
 def remove_spaces(text):
