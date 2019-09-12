@@ -216,7 +216,6 @@ def get_reviews_html2(review_list, update):
     html2 = ""
 
     sum_votes = 0
-
     for year in review_list:
         sum_year = 0
         html2 += "<h2>Anno: " + str(year) + "</h2>"
@@ -225,7 +224,6 @@ def get_reviews_html2(review_list, update):
             html2 += "<h2>Prof: " + str(prof) + "</h2>"
             for single_review in review_list.get(year)[prof]:
                 vote = int(single_review['vote'])
-                sum_votes += vote
                 sum_prof += vote
                 html2 += "<div class='col-md-4 col-sm-6'><div class='block-text rel zmin'><a title='' href='#'>"
                 html2 += str(vote) + "/100 ⭐"
@@ -238,7 +236,9 @@ def get_reviews_html2(review_list, update):
             sum_year += avg_prof
         avg_year = sum_year / len(review_list.get(year))
         html2 += "<h3>Media anno: " + str(avg_year) + "</h3><br /><br />"
+        sum_votes += avg_year
     avg = sum_votes / len(review_list)
+    
     return html1 + "</h2>&nbsp;Media: " + str(avg) + "/100" + html2 + html3
 
 
