@@ -4,4 +4,4 @@ blacklist_sites = ["facebook.com", "t.me", "whatsapp.com",
 allowed_tags = ["@poligruppo", "@infopolimi", "@polirules",
                 "@polinetwork", "@polibook", "@polimispotted",
                 "@polimimemes", "@poliextra", "@polileonardo",
-                "@polibovisa"]  # remember to save in lower() string
+                "@polibovisa", "@polianonimi", "@polirecordings"]  # remember to save in lower() string
