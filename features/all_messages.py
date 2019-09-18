@@ -125,6 +125,14 @@ def check_username_and_name(message):
             utils.notify_owners(e)
 
 
+def check_if_is_exit_message_of_user(message):
+
+    if message.left_chat_member is not None:
+        variable.updater.bot.delete_message(message.chat.id, message.message_id)
+
+    pass
+
+
 def check_message(update, context):
     message = update.message
 
@@ -143,3 +151,8 @@ def check_message(update, context):
 
     if not creators.allowed_spam.__contains__(message.from_user.id):
         check_spam(message)
+
+    try:
+        check_if_is_exit_message_of_user(message)
+    except Exception as e:
+        utils.notify_owners(e)

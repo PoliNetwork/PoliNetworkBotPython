@@ -8,6 +8,12 @@ def help_handler(update, context):
     if message.chat.type != "private":
         utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
                                           message.chat.id, message.from_user)
+
+        try:
+            variable.updater.bot.delete_message(message.chat.id, message.message_id)
+        except Exception as e:
+            utils.notify_owners(e)
+
         return
 
     variable.updater.bot.send_message(update.message.chat.id,

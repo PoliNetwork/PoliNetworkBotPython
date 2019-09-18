@@ -36,10 +36,13 @@ def material_handler(update, context):
         count += 1
 
     utils.send_in_private_or_in_group(message_to_send,
-                                      group_id=group_id,
+                                      group_id=chat.id,
                                       user=message.from_user)
 
-    variable.updater.bot.delete_message(group_id, message.message_id)
+    try:
+        variable.updater.bot.delete_message(chat.id, message.message_id)
+    except Exception as e:
+        utils.notify_owners(e)
 
 
 def eval_link(link):
