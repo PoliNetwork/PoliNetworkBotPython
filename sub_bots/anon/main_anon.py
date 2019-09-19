@@ -148,7 +148,16 @@ def forward_message_anon(group_id, message, user_id, reply, identity):
     if identity == 0:
         author_line = ""
     else:
-        salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
+        salt = None
+        try:
+            salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
+        except:
+            pass
+
+        if salt is None:
+            notify_owners("Salt non caricato correttamente! (anon)")
+            return False, None
+
         to_hash = (str(user_id) + "_" + str(identity) + str(salt)).encode('utf-8')
         hash2 = hashlib.sha512(to_hash).hexdigest()
         author_id = (str(hash2)[:8]).upper()
