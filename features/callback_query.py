@@ -1,7 +1,7 @@
 from features import anonimi
 
 
-def handler(update, context):
+def handler_callback(update, context):
     query = update.callback_query
 
     data = str(query.data).split(" ")
