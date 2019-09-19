@@ -1,8 +1,8 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 import variable
-from config import anonimi_config
 from functions import utils
+from sub_bots.anon import config_anon
 
 
 def post_anonimi(update, context):
@@ -44,7 +44,7 @@ def post_anonimi(update, context):
 
     is_a_reply, message_reply_id = utils.is_an_anon_message_link(data)
 
-    forward_success, message2 = utils.forward_message(anonimi_config.group_id,
+    forward_success, message2 = utils.forward_message(config_anon.group_id,
                                                       message.reply_to_message)
     if forward_success is not True:
         variable.updater.bot.send_message(message.chat.id, "Errore nell'inoltro del messaggio per l'approvazione. "
@@ -89,7 +89,7 @@ def post_anonimi(update, context):
 
         text2 = reply_string + "\n\nApprovare?\n#id" + str(message.chat.id) + "\nIdentità: " + str(identity)
 
-        variable.updater.bot.send_message(chat_id=anonimi_config.group_id,
+        variable.updater.bot.send_message(chat_id=config_anon.group_id,
                                           text=text2,
                                           reply_to_message_id=message2_id,
                                           reply_markup=reply_markup,
@@ -109,7 +109,7 @@ def handler_callback(update, data):
     if len(data) == len_reply:
         reply = int(data[len_reply - 1])
     if data[3] == 'Y':
-        group_id = anonimi_config.public_group_id
+        group_id = config_anon.public_group_id
         result, message = utils.forward_message_anon(group_id,
                                                      update.callback_query.message.reply_to_message,
                                                      data[2],

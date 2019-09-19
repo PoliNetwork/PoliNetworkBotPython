@@ -1,8 +1,9 @@
 import json
 
 import variable
-from config import creators, anonimi_config
+from config import creators
 from functions import utils
+from sub_bots.anon import config_anon
 
 
 def find(id_to_find):
@@ -60,7 +61,7 @@ def try_add_group(message):
         print('Received a private message.')
         return None, 1
 
-    if chat['id'] == anonimi_config.group_id:
+    if chat['id'] == config_anon.group_id:
         print("k")
         return None, 8
 
