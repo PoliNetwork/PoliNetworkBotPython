@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from telegram.ext import MessageHandler, CommandHandler, Filters, CallbackQueryHandler
+from telegram.ext import MessageHandler, CommandHandler, Filters
 
 import variable
 from config import creators
-from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, callback_query, \
-    recordings
+from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, recordings
 from functions import utils
 
 
@@ -38,7 +37,7 @@ dispatcher.add_handler(CommandHandler('review', reviews.add_review))
 dispatcher.add_handler(CommandHandler('get_reviews', reviews.get_reviews_html))
 
 # PoliAnoniMi
-dispatcher.add_handler(CommandHandler('anon', anonimi.post_anonimi))
+dispatcher.add_handler(CommandHandler('anon', anonimi.help_handler))
 dispatcher.add_handler(CommandHandler('help_anon', anonimi.help_handler))
 
 # PoliRecordings
@@ -67,7 +66,6 @@ dispatcher.add_handler(CommandHandler('remove_material', materials.add_remove_ma
 
 # all
 dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
-dispatcher.add_handler(CallbackQueryHandler(callback_query.handler_callback))
 
 thread = utils.DeleteMessageThread()
 thread.start()
