@@ -67,7 +67,7 @@ dispatcher.add_handler(CommandHandler('remove_material', materials.add_remove_ma
 
 # all
 dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
-dispatcher.add_handler(CallbackQueryHandler(callback_query.handler))
+dispatcher.add_handler(CallbackQueryHandler(callback_query.handler_callback))
 
 thread = utils.DeleteMessageThread()
 thread.start()
