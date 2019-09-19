@@ -377,68 +377,6 @@ def notify_owners(e):
         variable.updater.bot.send_message(owner2, "Eccezione:\n\n" + e2)
 
 
-def forward_message_anon(group_id, message, user_id, reply, identity):
-    identity = int(identity)
-
-    if identity == 0:
-        author_line = ""
-    else:
-        salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
-        to_hash = (str(user_id) + "_" + str(identity) + str(salt)).encode('utf-8')
-        hash2 = hashlib.sha512(to_hash).hexdigest()
-        author_id = (str(hash2)[:8]).upper()
-
-        author_line = "\n\nAuthor: #id_" + str(author_id)
-
-    try:
-        caption = ""
-        if message.caption is not None:
-            caption = message.caption
-
-        if message.text is not None:
-            message_sent = variable.updater.bot.send_message(chat_id=group_id,
-                                                             text=message.text + author_line, reply_to_message_id=reply)
-        elif message.photo:
-            message_sent = variable.updater.bot.send_photo(chat_id=group_id,
-                                                           photo=message.photo[0],
-                                                           caption=caption + author_line, reply_to_message_id=reply)
-        elif message.audio:
-            message_sent = variable.updater.bot.send_audio(chat_id=group_id,
-                                                           audio=message.audio.file_id,
-                                                           caption=caption + author_line, reply_to_message_id=reply)
-        elif message.voice is not None:
-            message_sent = variable.updater.bot.send_voice(chat_id=group_id,
-                                                           voice=message.voice.file_id,
-                                                           caption=caption + author_line, reply_to_message_id=reply)
-        elif message.video is not None:
-            message_sent = variable.updater.bot.send_video(chat_id=group_id,
-                                                           video=message.video.file_id,
-                                                           caption=caption + author_line, reply_to_message_id=reply)
-        elif message.video_note is not None:
-            message_sent = variable.updater.bot.send_video_note(chat_id=group_id,
-                                                                video_note=message.video_note.file_id,
-                                                                caption=caption + author_line,
-                                                                reply_to_message_id=reply)
-        elif message.document is not None:
-            message_sent = variable.updater.bot.send_document(chat_id=group_id,
-                                                              document=message.document.file_id,
-                                                              caption=caption + author_line, reply_to_message_id=reply)
-        elif message.sticker is not None:
-            message_sent = variable.updater.bot.send_sticker(chat_id=group_id,
-                                                             sticker=message.sticker.file_id,
-                                                             caption=caption + author_line, reply_to_message_id=reply)
-        elif message.location is not None:
-            message_sent = variable.updater.bot.send_location(chat_id=group_id,
-                                                              latitude=message.location.latitude,
-                                                              longitude=message.location.longitude,
-                                                              caption=caption + author_line, reply_to_message_id=reply)
-        else:
-            return False, None
-
-        return True, message_sent
-    except Exception as e:
-        notify_owners(e)
-        return False, None
 
 
 def forward_message(group_id, message):
@@ -452,11 +390,7 @@ def forward_message(group_id, message):
     return False, None
 
 
-def is_an_anon_message_link(parts):
-    if len(parts) <= 2:
-        return False, ""
-    if "t.me/PoliAnoniMi/" in parts[2]:
-        return True, parts[2].split("/")[-1]
+
 
 
 def check_date(date):

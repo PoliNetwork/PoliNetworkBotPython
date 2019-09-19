@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import hashlib
+
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
-from functions import utils
+from config import creators
 from sub_bots.anon import config_anon, variable_anon
 
 
@@ -17,21 +19,44 @@ def contact_handler(update, context):
     update.message.reply_text("Puoi scriverci alla pagina facebook https://m.me/PolitecnicoDiMilanoNetwork")
 
 
+def send_in_private_or_in_group(text, chat_id, from_user):
+    pass
+
+
+def is_an_anon_message_link(parts):
+    if len(parts) <= 2:
+        return False, ""
+    if "t.me/PoliAnoniMi/" in parts[2]:
+        return True, parts[2].split("/")[-1]
+
+
+def forward_message(group_id, message):
+    try:
+        message_sent = variable_anon.updater.bot.forward_message(group_id, message.chat.id, message.message_id)
+        return True, message_sent
+    except Exception as e:
+        e2 = str(e)
+        for owner2 in creators.owners:
+            variable_anon.updater.bot.send_message(owner2, "Error forwarding message!\n\n" + e2)
+    return False, None
+
+
+
 def post_anonimi(update, context):
     message = update.message
     text = message.text
     data = str(text).split(" ")
 
     if message.chat.type != "private":
-        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
-                                          message.chat.id, message.from_user)
+        send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+                                    message.chat.id, message.from_user)
         return
 
     if message.reply_to_message is None:
-        utils.send_in_private_or_in_group("Questo comando funziona solo se rispondi ad un messaggio, "
-                                          "il quale messaggio sarà poi inviato "
-                                          "per l'approvazione per la pubblicazione sul canale",
-                                          message.chat.id, message.from_user)
+        send_in_private_or_in_group("Questo comando funziona solo se rispondi ad un messaggio, "
+                                    "il quale messaggio sarà poi inviato "
+                                    "per l'approvazione per la pubblicazione sul canale",
+                                    message.chat.id, message.from_user)
         return
 
     identity_valid = True
@@ -54,9 +79,9 @@ def post_anonimi(update, context):
                                                                 "Maggiori info con /help_anon")
         return
 
-    is_a_reply, message_reply_id = utils.is_an_anon_message_link(data)
+    is_a_reply, message_reply_id = is_an_anon_message_link(data)
 
-    forward_success, message2 = utils.forward_message(config_anon.group_id,
+    forward_success, message2 = forward_message(config_anon.group_id,
                                                       message.reply_to_message)
     if forward_success is not True:
         variable_anon.updater.bot.send_message(message.chat.id, "Errore nell'inoltro del messaggio per l'approvazione. "
@@ -112,6 +137,84 @@ def post_anonimi(update, context):
                                            "Il messaggio è stato inoltrato e in attesa di approvazione")
 
 
+def notify_owners(e):
+    e2 = str(e)
+    for owner2 in creators.owners:
+        variable_anon.updater.bot.send_message(owner2, "Eccezione:\n\n" + e2)
+
+
+def forward_message_anon(group_id, message, user_id, reply, identity):
+    identity = int(identity)
+
+    if identity == 0:
+        author_line = ""
+    else:
+        salt = open("salt/salt_anonimi.txt", encoding="utf-8").read()
+        to_hash = (str(user_id) + "_" + str(identity) + str(salt)).encode('utf-8')
+        hash2 = hashlib.sha512(to_hash).hexdigest()
+        author_id = (str(hash2)[:8]).upper()
+
+        author_line = "\n\nAuthor: #id_" + str(author_id)
+
+    try:
+        caption = ""
+        if message.caption is not None:
+            caption = message.caption
+
+        if message.text is not None:
+            message_sent = variable_anon.updater.bot.send_message(chat_id=group_id,
+                                                                  text=message.text + author_line,
+                                                                  reply_to_message_id=reply)
+        elif message.photo:
+            message_sent = variable_anon.updater.bot.send_photo(chat_id=group_id,
+                                                                photo=message.photo[0],
+                                                                caption=caption + author_line,
+                                                                reply_to_message_id=reply)
+        elif message.audio:
+            message_sent = variable_anon.updater.bot.send_audio(chat_id=group_id,
+                                                                audio=message.audio.file_id,
+                                                                caption=caption + author_line,
+                                                                reply_to_message_id=reply)
+        elif message.voice is not None:
+            message_sent = variable_anon.updater.bot.send_voice(chat_id=group_id,
+                                                                voice=message.voice.file_id,
+                                                                caption=caption + author_line,
+                                                                reply_to_message_id=reply)
+        elif message.video is not None:
+            message_sent = variable_anon.updater.bot.send_video(chat_id=group_id,
+                                                                video=message.video.file_id,
+                                                                caption=caption + author_line,
+                                                                reply_to_message_id=reply)
+        elif message.video_note is not None:
+            message_sent = variable_anon.updater.bot.send_video_note(chat_id=group_id,
+                                                                     video_note=message.video_note.file_id,
+                                                                     caption=caption + author_line,
+                                                                     reply_to_message_id=reply)
+        elif message.document is not None:
+            message_sent = variable_anon.updater.bot.send_document(chat_id=group_id,
+                                                                   document=message.document.file_id,
+                                                                   caption=caption + author_line,
+                                                                   reply_to_message_id=reply)
+        elif message.sticker is not None:
+            message_sent = variable_anon.updater.bot.send_sticker(chat_id=group_id,
+                                                                  sticker=message.sticker.file_id,
+                                                                  caption=caption + author_line,
+                                                                  reply_to_message_id=reply)
+        elif message.location is not None:
+            message_sent = variable_anon.updater.bot.send_location(chat_id=group_id,
+                                                                   latitude=message.location.latitude,
+                                                                   longitude=message.location.longitude,
+                                                                   caption=caption + author_line,
+                                                                   reply_to_message_id=reply)
+        else:
+            return False, None
+
+        return True, message_sent
+    except Exception as e:
+        notify_owners(e)
+        return False, None
+
+
 def handler_callback(update, data):
     reply = None
     link = ""
@@ -123,11 +226,11 @@ def handler_callback(update, data):
         reply = int(data[len_reply - 1])
     if data[3] == 'Y':
         group_id = config_anon.public_group_id
-        result, message = utils.forward_message_anon(group_id,
-                                                     update.callback_query.message.reply_to_message,
-                                                     data[2],
-                                                     reply,
-                                                     identity)
+        result, message = forward_message_anon(group_id,
+                                               update.callback_query.message.reply_to_message,
+                                               data[2],
+                                               reply,
+                                               identity)
         link = message.link
         variable_anon.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è "
                                                                      "stato pubblicato, qui il link " + str(link))
@@ -160,8 +263,8 @@ def help_handler(update, context):
     message = update.message
 
     if message.chat.type != "private":
-        utils.send_in_private_or_in_group("Questo comando funziona solo in chat privata",
-                                          message.chat.id, message.from_user)
+        send_in_private_or_in_group("Questo comando funziona solo in chat privata",
+                                    message.chat.id, message.from_user)
         return
 
     variable_anon.updater.bot.send_message(update.message.chat.id,
@@ -169,7 +272,8 @@ def help_handler(update, context):
                                            "Rispondi a quel messaggio con /anon per richiederne"
                                            " la pubblicazione sul canale @PoliAnoniMi.\n"
                                            "\n"
-                                           "Devi indicare un'identità con la quale vuoi postare, 0 per identità nascosta.\n"
+                                           "Devi indicare un'identità con la quale"
+                                           " vuoi postare, 0 per identità nascosta.\n"
                                            "\n"
                                            "Esempio:\n"
                                            "/anon 1 [eventuale link del messaggio del canale a cui rispondere]\n"
@@ -200,12 +304,9 @@ dispatcher.add_handler(CommandHandler('contact', contact_handler))
 
 # PoliAnoniMi
 dispatcher.add_handler(CommandHandler('anon', post_anonimi))
-dispatcher.add_handler(CommandHandler('help_anon', help_handler))
+dispatcher.add_handler(CommandHandler('help', help_handler))
 
 # all
 dispatcher.add_handler(CallbackQueryHandler(handler_callback))
-
-thread = utils.DeleteMessageThread()
-thread.start()
 
 variable_anon.updater.start_polling()
