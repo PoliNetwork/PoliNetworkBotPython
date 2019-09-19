@@ -41,7 +41,6 @@ def forward_message(group_id, message):
     return False, None
 
 
-
 def post_anonimi(update, context):
     message = update.message
     text = message.text
@@ -82,7 +81,7 @@ def post_anonimi(update, context):
     is_a_reply, message_reply_id = is_an_anon_message_link(data)
 
     forward_success, message2 = forward_message(config_anon.group_id,
-                                                      message.reply_to_message)
+                                                message.reply_to_message)
     if forward_success is not True:
         variable_anon.updater.bot.send_message(message.chat.id, "Errore nell'inoltro del messaggio per l'approvazione. "
                                                                 "Contatta gli admin di @PoliNetwork")
@@ -220,17 +219,28 @@ def handler_callback(update, data):
     link = ""
 
     len_reply = 6
-    identity = data[4]
+
+    try:
+        identity = data[4]
+    except:
+        identity = None
+
+    if identity is None:
+        return
 
     if len(data) == len_reply:
         reply = int(data[len_reply - 1])
     if data[3] == 'Y':
         group_id = config_anon.public_group_id
-        result, message = forward_message_anon(group_id,
-                                               update.callback_query.message.reply_to_message,
-                                               data[2],
-                                               reply,
-                                               identity)
+        try:
+            result, message = forward_message_anon(group_id,
+                                                   update.callback_query.message.reply_to_message,
+                                                   data[2],
+                                                   reply,
+                                                   identity)
+        except Exception as e:
+            pass
+
         link = message.link
         variable_anon.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è "
                                                                      "stato pubblicato, qui il link " + str(link))
@@ -257,6 +267,19 @@ def handler_callback(update, data):
         query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
                                      str(id2) + reply_string + "\n" + "Identità: " + str(identity))
     return None
+
+
+def handler_callback2(update, context):
+    query = update.callback_query
+
+    data = str(query.data).split(" ")
+
+    if data[0] == "anon":
+        handler_callback(update, data)
+        return
+    else:
+        # todo: in future, add new "modules"
+        return
 
 
 def help_handler(update, context):
@@ -307,6 +330,8 @@ dispatcher.add_handler(CommandHandler('anon', post_anonimi))
 dispatcher.add_handler(CommandHandler('help', help_handler))
 
 # all
-dispatcher.add_handler(CallbackQueryHandler(handler_callback))
+
+
+dispatcher.add_handler(CallbackQueryHandler(handler_callback2))
 
 variable_anon.updater.start_polling()

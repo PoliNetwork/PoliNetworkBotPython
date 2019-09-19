@@ -99,48 +99,6 @@ def post_anonimi(update, context):
     variable.updater.bot.send_message(message.chat.id, "Il messaggio è stato inoltrato e in attesa di approvazione")
 
 
-def handler_callback(update, data):
-    reply = None
-    link = ""
-
-    len_reply = 6
-    identity = data[4]
-
-    if len(data) == len_reply:
-        reply = int(data[len_reply - 1])
-    if data[3] == 'Y':
-        group_id = config_anon.public_group_id
-        result, message = utils.forward_message_anon(group_id,
-                                                     update.callback_query.message.reply_to_message,
-                                                     data[2],
-                                                     reply,
-                                                     identity)
-        link = message.link
-        variable.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è "
-                                                                "stato pubblicato, qui il link " + str(link))
-    else:
-        variable.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è stato rifiutato. \nControlla di "
-                                                                "aver rispettato le regole del network @PoliRules, "
-                                                                "e nel caso credi sia stato un errore, scrivici nella "
-                                                                "pagina facebook di PoliNetwork, grazie")
-
-    query = update.callback_query
-    id2 = data[2]
-    option = data[3]
-
-    if len(data) == len_reply:
-        reply_string = "\n[In risposta a t.me/PoliAnoniMi/" + str(reply) + "]"
-    else:
-        reply_string = ""
-
-    if data[3] == 'Y':
-        query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
-                                     str(id2) + reply_string + "\n" + str(link) + "\n" + "Identità: " + str(identity))
-    else:
-        query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
-                                     str(id2) + reply_string + "\n" + "Identità: " + str(identity))
-    return None
-
 
 def help_handler(update, context):
     message = update.message
