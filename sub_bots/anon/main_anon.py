@@ -5,8 +5,9 @@ import hashlib
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
-from config import creators
 from sub_bots.anon import config_anon, variable_anon
+
+owners = [5651789]  # id of @ArmeF97
 
 
 def start_handler(update, context):
@@ -36,7 +37,7 @@ def forward_message(group_id, message):
         return True, message_sent
     except Exception as e:
         e2 = str(e)
-        for owner2 in creators.owners:
+        for owner2 in owners:
             variable_anon.updater.bot.send_message(owner2, "Error forwarding message!\n\n" + e2)
     return False, None
 
@@ -138,7 +139,7 @@ def post_anonimi(update, context):
 
 def notify_owners(e):
     e2 = str(e)
-    for owner2 in creators.owners:
+    for owner2 in owners:
         variable_anon.updater.bot.send_message(owner2, "Eccezione:\n\n" + e2)
 
 
