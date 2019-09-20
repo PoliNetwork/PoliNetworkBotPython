@@ -27,17 +27,16 @@ def material_handler(update, context):
         utils.send_in_private_or_in_group("Materiale non disponibile. Contatta gli amministratori.",
                                           group_id=chat.id,
                                           user=message.from_user)
-        return
+    else:
+        message_to_send = "Materiale per il gruppo " + chat['title'] + "\n\n"
+        count = 1
+        for i in link_material:
+            message_to_send += str(count) + ".  " + i["link"] + "\n" + i["comment"] + "\n\n"
+            count += 1
 
-    message_to_send = "Materiale per il gruppo " + chat['title'] + "\n\n"
-    count = 1
-    for i in link_material:
-        message_to_send += str(count) + ".  " + i["link"] + "\n" + i["comment"] + "\n\n"
-        count += 1
-
-    utils.send_in_private_or_in_group(message_to_send,
-                                      group_id=chat.id,
-                                      user=message.from_user)
+        utils.send_in_private_or_in_group(message_to_send,
+                                          group_id=chat.id,
+                                          user=message.from_user)
 
     try:
         variable.updater.bot.delete_message(chat.id, message.message_id)
