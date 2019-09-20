@@ -17,6 +17,9 @@ def material_handler(update, context):
     group_id = str(chat.id)
 
     if chat.type == "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo in un gruppo. Leggi /help",
+                                          group_id=chat.id,
+                                          user=message.from_user)
         return
 
     link_material = []
