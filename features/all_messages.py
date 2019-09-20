@@ -79,6 +79,10 @@ def check_username_and_name(message):
     if username is None or len(username) < 2:
         username_valid = False
 
+    if username_valid is False:
+        if message.from_user.id in creators.allowed_no_username:
+            username_valid = True
+
     firstname = None
     try:
         firstname = from_user.first_name
