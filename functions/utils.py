@@ -371,8 +371,12 @@ def check(update, context):
                 pass
 
 
-def notify_owners(e):
+def notify_owners(e, extra_info = None):
     e2 = str(e)
+
+    if extra_info is not None:
+        e2 += "\n\n" + str(extra_info)
+
     for owner2 in creators.owners:
         variable.updater.bot.send_message(owner2, "Eccezione:\n\n" + e2)
 

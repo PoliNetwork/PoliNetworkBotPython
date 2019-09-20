@@ -42,7 +42,10 @@ def material_handler(update, context):
     try:
         variable.updater.bot.delete_message(chat.id, message.message_id)
     except Exception as e:
-        utils.notify_owners(e)
+        try:
+            utils.notify_owners(e, "Non riesco ad eliminare il messaggio /material da" + str(chat.title))
+        except Exception as e2:
+            utils.notify_owners(e, "Non riesco ad eliminare il messaggio /material da [TITOLO NON VALIDO]")
 
 
 def eval_link(link):
