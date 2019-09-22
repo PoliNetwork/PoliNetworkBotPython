@@ -105,6 +105,11 @@ def try_add_group(message):
     try:
         if group_found["we_are_admin"] is False:
             admins = variable.updater.bot.get_chat_administrators(chat.id)
+
+            if subcreator_is_present(admins):
+                write_group_file(chat['id'], chat['type'], chat['title'], None, None, True, False)
+                return None, 9
+
             if not creator_is_present(admins):
                 write_group_file(chat['id'], chat['type'], chat['title'], None, None, False, False)
                 return True, 4
