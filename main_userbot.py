@@ -15,7 +15,7 @@ def create_group(app, group_name, message):
 def message_from_owner(app, message):
     text = str(message.text)
     if text.startswith("/create"):
-        group_name = text[7:]
+        group_name = text[8:]
         create_group(app, group_name, message)
     else:
         message.reply_text("Comando non valido.")
