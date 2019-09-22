@@ -14,7 +14,7 @@ def find(id_to_find):
     return False, None
 
 
-def write_group_file(chat_id, chat_type, title, invite_link, last_update, we_are_admin):
+def write_group_file(chat_id, chat_type, title, invite_link, last_update, we_are_admin, keep_link):
     group = {
         "Chat": {
             "id": chat_id,
@@ -23,7 +23,8 @@ def write_group_file(chat_id, chat_type, title, invite_link, last_update, we_are
             "invite_link": invite_link
         },
         "LastUpdateInviteLinkTime": last_update,
-        "we_are_admin": we_are_admin
+        "we_are_admin": we_are_admin,
+        "keep_link": keep_link
     }
 
     variable.lock_group_list.acquire()
@@ -55,6 +56,16 @@ def creator_is_present(admins):
     return False
 
 
+def subcreator_is_present(admins):
+    for admin in admins:
+        if isNotBlank(admin.user.username):
+            a = str(admin.user.username).lower()
+            if a in creators.subcreators and admin.status == "creator":
+                return True
+
+    return False
+
+
 def try_add_group(message):
     chat = message['chat']
     if chat['type'] == 'private':
@@ -71,13 +82,18 @@ def try_add_group(message):
 
         admins = variable.updater.bot.get_chat_administrators(chat.id)
         if not creator_is_present(admins):
-            write_group_file(chat['id'], chat['type'], chat['title'], None, None, False)
-            return True, 2
+
+            if subcreator_is_present(admins):
+                write_group_file(chat['id'], chat['type'], chat['title'], None, None, True, False)
+                return None, 8
+            else:
+                write_group_file(chat['id'], chat['type'], chat['title'], None, None, False, False)
+                return True, 2
         else:
             (invite_link, last_update) = utils.get_link_and_last_update(message.chat.id)
 
             if invite_link is not None and invite_link != "":
-                write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update, True)
+                write_group_file(chat['id'], chat['type'], chat['title'], invite_link, last_update, True, True)
 
                 # check if we have to send invite link in chat
                 if message.new_chat_members is not None and len(message.new_chat_members) > 0 \
@@ -90,7 +106,7 @@ def try_add_group(message):
         if group_found["we_are_admin"] is False:
             admins = variable.updater.bot.get_chat_administrators(chat.id)
             if not creator_is_present(admins):
-                write_group_file(chat['id'], chat['type'], chat['title'], None, None, False)
+                write_group_file(chat['id'], chat['type'], chat['title'], None, None, False, False)
                 return True, 4
             else:
                 group_found["we_are_admin"] = True
