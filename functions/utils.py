@@ -289,9 +289,20 @@ def update_link(p):
                         group['Chat']['invite_link'] = invite_link
                         group['LastUpdateInviteLinkTime'] = last_update
                     else:
-                        (invite_link, last_update) = get_link_and_last_update(id2)
-                        group['Chat']['invite_link'] = invite_link
-                        group['LastUpdateInviteLinkTime'] = last_update
+
+                        keep_link = None
+                        try:
+                            keep_link = group["keep_link"]
+                        except:
+                            pass
+
+                        if keep_link is True or keep_link is None:
+                            (invite_link, last_update) = get_link_and_last_update(id2)
+                            group['Chat']['invite_link'] = invite_link
+                            group['LastUpdateInviteLinkTime'] = last_update
+                        else:
+                            group['Chat']['invite_link'] = None
+                            group['LastUpdateInviteLinkTime'] = None
                 except:
                     pass
 
