@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from telegram.ext import MessageHandler, CommandHandler, Filters
 
+import main_userbot
 import variable
 from config import creators
 from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, recordings
@@ -71,3 +71,7 @@ thread = utils.DeleteMessageThread()
 thread.start()
 
 variable.updater.start_polling()
+
+# ---
+# BOT - USERBOT
+main_userbot.main()

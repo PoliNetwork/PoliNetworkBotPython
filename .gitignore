@@ -10,3 +10,7 @@ data/*
 sub_bots/anon/salt/salt_anonimi.txt
 
 sub_bots/anon/token_anon.txt
+
+policreator.session
+
+config/userbot_config.py
