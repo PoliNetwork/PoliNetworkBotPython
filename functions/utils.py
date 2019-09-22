@@ -209,7 +209,7 @@ def validate_link(link):
     return "tgme_page_title" in requests.get(link).text
 
 
-def detectIfToUpdate(p):
+def detectIfToUpdate2(p):
     link2 = p['Chat']
 
     if link2 is None:
@@ -235,6 +235,23 @@ def detectIfToUpdate(p):
             return True
 
     return False
+
+
+def detectIfToUpdate(p):
+    c = detectIfToUpdate2(p)
+    if c is True:
+        keep_link = None
+        try:
+            keep_link = p["keep_link"]
+        except:
+            pass
+
+        if keep_link is None or keep_link is True:
+            c = True
+        else:
+            c = False
+
+    return c
 
 
 def get_link_and_last_update(id2):
@@ -381,7 +398,7 @@ def check(update, context):
                 pass
 
 
-def notify_owners(e, extra_info = None):
+def notify_owners(e, extra_info=None):
     e2 = str(e)
 
     if extra_info is not None:
@@ -389,8 +406,6 @@ def notify_owners(e, extra_info = None):
 
     for owner2 in creators.owners:
         variable.updater.bot.send_message(owner2, "Eccezione:\n\n" + e2)
-
-
 
 
 def forward_message(group_id, message):
@@ -404,9 +419,6 @@ def forward_message(group_id, message):
     return False, None
 
 
-
-
-
 def check_date(date):
     if date == "":
         return False
@@ -418,6 +430,6 @@ def check_date(date):
     if len(f_year) != 4 or len(s_year) != 4:
         return False
 
-    if s_year <= f_year or (s_year-f_year) > 1:
+    if s_year <= f_year or (s_year - f_year) > 1:
         return False
     return True
