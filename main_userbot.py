@@ -5,18 +5,20 @@ from config import userbot_config, creators
 from functions import utils
 
 
-def create_group(app, group_name):
+def create_group(app, group_name, message):
     # todo: create a group and set it correctly.
-    pass
+    message.reply_text("Volevi creare il gruppo " +
+                       '"' + str(group_name) + '"' +
+                       ". Quest'opzione sarà disponibile a breve.")
 
 
 def message_from_owner(app, message):
     text = str(message.text)
     if text.startswith("/create"):
         group_name = text[7:]
-        create_group(app, group_name)
+        create_group(app, group_name, message)
     else:
-        message.reply_text("Comando non valido.".format(message.from_user.first_name))
+        message.reply_text("Comando non valido.")
 
 
 def main():
