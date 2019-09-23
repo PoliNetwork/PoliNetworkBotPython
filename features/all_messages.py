@@ -55,11 +55,25 @@ def check_spam(message):
     if chat.type == "private":
         return
 
-    is_spam = utils.is_spam(message.text)
+    s_to_check = ""
+
+    if message.text is not None:
+        s_to_check = message.text
+
+    if not s_to_check and message.caption is not None:
+        s_to_check = message.caption
+
+    if not s_to_check:
+        return
+
+    is_spam = utils.is_spam(s_to_check)
 
     if is_spam is True:
         utils.mute_and_delete(message)
         return
+
+    if utils.contains_ko_ja_chi(s_to_check):
+        utils.temp_mute_and_delete(message, 60)
 
 
 def check_username_and_name(message):

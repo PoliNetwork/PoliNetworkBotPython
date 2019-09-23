@@ -1,5 +1,6 @@
 import datetime
 import json
+import re
 import time
 from json import JSONDecodeError
 from threading import Thread
@@ -149,6 +150,15 @@ def mute_and_delete(message):
     variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
 
 
+def temp_mute_and_delete(message, seconds):
+    chat = message.chat
+    user = message.from_user.id
+    variable.updater.bot.restrict_chat_member(chat.id,
+                                              user,
+                                              until_date=int(datetime.datetime.now().timestamp()) + seconds)
+    variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
+
+
 def has_spam_links(text):
     t = text.split(" ")
     for word in t:
@@ -252,6 +262,16 @@ def detectIfToUpdate(p):
             c = False
 
     return c
+
+
+def contains_ko_ja_chi(texts):
+    if re.search("[\uac00-\ud7a3]", texts):
+        return True
+    if re.search("[\u3040-\u30ff]", texts):
+        return True
+    if re.search("[\u4e00-\u9FFF]", texts):
+        return True
+    return False
 
 
 def get_link_and_last_update(id2):
