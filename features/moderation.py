@@ -127,5 +127,5 @@ def ban_all(update, context):
         text = text + "\nTranne in " + str(len(missed_list)) + " gruppi.\n"
         for missed in missed_list:
             text = text + "\n" + str(missed)
-
+    
     utils.send_in_private_or_in_group(text, chat_id, message.from_user)
