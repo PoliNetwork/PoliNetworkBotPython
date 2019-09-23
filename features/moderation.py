@@ -71,6 +71,29 @@ def mutes_bans_handler(update, context):
         utils.send_in_private_or_in_group("Utente sbannato con successo.", chat_id, message.from_user)
 
 
+def ban_all2(receiver):
+    missed_list = []
+    try:
+        for group in variable.groups_list:
+            try:
+                variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
+            except:
+                try:
+                    missed_list.append(group['Chat']['title'])
+                except:
+                    try:
+                        missed_list.append("[NAME NOT FOUND!] " + str(group['Chat']['id']))
+                    except:
+                        try:
+                            missed_list.append("[NAME NOT FOUND!] [ID NOT FOUND!]")
+                        except:
+                            pass
+    except Exception as e:
+        utils.notify_owners(e, "Crash in ban")
+
+    return missed_list
+
+
 def ban_all(update, context):
     message = update.message
     chat = message.chat
@@ -97,18 +120,7 @@ def ban_all(update, context):
     utils.send_in_private_or_in_group(
         "Sto cercando di bannare " + str(receiver), chat_id, message.from_user)
 
-    missed_list = []
-    for group in variable.groups_list:
-        try:
-            variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
-        except:
-            try:
-                missed_list.append(group['Chat']['title'])
-            except:
-                try:
-                    missed_list.append("[NAME NOT FOUND!] " + str(group['Chat']['id']))
-                except:
-                    missed_list.append("[NAME NOT FOUND!] [ID NOT FOUND!]")
+    missed_list = ban_all2(receiver)
 
     text = "Fatto! Ho bannato " + str(receiver)
     if len(missed_list) > 0:
