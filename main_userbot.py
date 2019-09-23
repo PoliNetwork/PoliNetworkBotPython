@@ -7,9 +7,30 @@ from functions import utils
 
 def create_group(app, group_name, message):
     # todo: create a group and set it correctly.
-    message.reply_text("Volevi creare il gruppo " +
-                       '"' + str(group_name) + '"' +
-                       ". Quest'opzione sarà disponibile a breve.")
+    description = "Gruppo del @PoliNetwork\n" \
+                  "Regole @PoliRules\n" \
+                  "Visita il nostro sito polinetwork.github.io"
+
+    try:
+        chat = app.create_supergroup(group_name, description)
+        admin = ["polinetworkbot", "polinetwork3bot"]
+        for admin2 in admin:
+            app.promote_chat_member(
+                chat_id=chat.id,
+                user_id=admin2,
+                can_change_info=True,
+                can_delete_messages=True,
+                can_invite_users=True,
+                can_restrict_members=True,
+                can_pin_messages=True,
+                can_promote_members=True
+            )
+
+    except Exception as e:
+        utils.notify_owners(e,
+                            "Volevi creare il gruppo " +
+                            '"' + str(group_name) + '"' +
+                            ". Quest'opzione sarà disponibile a breve.")
 
 
 def message_from_owner(app, message):

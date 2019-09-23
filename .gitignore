@@ -14,3 +14,5 @@ sub_bots/anon/token_anon.txt
 policreator.session
 
 config/userbot_config.py
+
+.vs/
