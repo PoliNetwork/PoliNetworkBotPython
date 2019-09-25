@@ -36,6 +36,11 @@ def post_materials2(update, description):
     utils.send_in_private_or_in_group("File correttamente inoltrato in " + str(material_config.channel_id),
                                       message.chat.id, message.from_user)
 
+    try:
+        variable.updater.bot.delete_message(message.chat.id, message.message_id)
+    except:
+        pass
+
 
 def material_handler(update, context):
     message = update.message
