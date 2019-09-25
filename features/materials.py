@@ -62,7 +62,7 @@ def material_handler(update, context):
 
         description = " ".join(text.split(" ")[1:])
 
-        if len(description) < 8:
+        if len(description) < 12:
             utils.send_in_private_or_in_group(
                 "La descrizione che hai dato è troppo corta!",
                 message.chat.id, message.from_user)
