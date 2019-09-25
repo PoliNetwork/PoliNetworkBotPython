@@ -93,9 +93,8 @@ def check_username_and_name(message):
     if username is None or len(username) < 2:
         username_valid = False
 
-    if username_valid is False:
-        if message.from_user.id in creators.allowed_no_username:
-            username_valid = True
+    if username_valid is False and message.from_user.id in creators.allowed_no_username:
+        username_valid = True
 
     firstname = None
     try:
@@ -130,7 +129,10 @@ def check_username_and_name(message):
         try:
             variable.updater.bot.delete_message(message.chat.id, message.message_id)
         except Exception as e:
-            utils.notify_owners(e)
+            try:
+                utils.notify_owners(e, message.chat.title)
+            except:
+                utils.notify_owners(e)
 
         try:
             time = float(datetime.datetime.now().timestamp()) + seconds
