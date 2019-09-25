@@ -83,7 +83,7 @@ int main( int argc, char *argv[] )
 			if (pos>0)
 			{
 				segment = segment.substr(0,pos);
-				command("kill " + segment);
+				command("kill -KILL " + segment);
 			}		
 		}
 	}
