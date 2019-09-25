@@ -22,7 +22,8 @@ def post_recordings2(update, description):
                                           message.chat.id, message.from_user)
         return
 
-    variable.updater.bot.send_message("@PoliRecordings", text=text2, reply_to_message_id=message2.message_id)
+    variable.updater.bot.send_message(recordings_config.channel_id, text=text2,
+                                      reply_to_message_id=message2.message_id)
     utils.send_in_private_or_in_group("Audio correttamente inoltrato in " + str(recordings_config.channel_id),
                                       message.chat.id, message.from_user)
 

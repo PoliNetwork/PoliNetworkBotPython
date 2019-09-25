@@ -2,6 +2,7 @@ import json
 import re
 
 import variable
+from config import material_config
 from functions import utils
 
 try:
@@ -11,43 +12,63 @@ except Exception as e:
     materials_dict = {}
 
 
-def material_handler(update, context):
+def post_materials2(update, description):
     message = update.message
-    chat = message.chat
-    group_id = str(chat.id)
 
-    if chat.type == "private":
-        utils.send_in_private_or_in_group("Questo comando funziona solo in un gruppo. Leggi /help",
-                                          group_id=chat.id,
-                                          user=message.from_user)
+    text2 = "Group: " + message.chat.title + "\n"
+
+    id2 = message.chat.id
+    if id2 < 0:
+        id2 = -id2
+
+    text2 += "#id" + str(id2) + "\n\n"
+    text2 += "Description: " + description
+
+    forward_success, message2 = utils.forward_message(material_config.channel_id, message.reply_to_message)
+    if forward_success is not True:
+        utils.send_in_private_or_in_group("C'è stato un problema con l'inoltro del file. Contatta gli "
+                                          "amministratori di @PoliNetwork",
+                                          message.chat.id, message.from_user)
         return
 
-    link_material = []
-    if materials_dict.keys().__contains__(group_id):
-        link_material = materials_dict.get(group_id)
+    variable.updater.bot.send_message(material_config.channel_id, text=text2,
+                                      reply_to_message_id=message2.message_id)
+    utils.send_in_private_or_in_group("File correttamente inoltrato in " + str(material_config.channel_id),
+                                      message.chat.id, message.from_user)
 
-    if not link_material:
-        utils.send_in_private_or_in_group("Materiale non disponibile. Contatta gli amministratori.",
-                                          group_id=chat.id,
-                                          user=message.from_user)
+
+def material_handler(update, context):
+    message = update.message
+
+    if message.chat.type == "private":
+        utils.send_in_private_or_in_group("Questo comando funziona solo un gruppo del network",
+                                          message.chat.id, message.from_user)
+        return
+
+    if message.reply_to_message is None:
+        utils.send_in_private_or_in_group("Questo comando funziona solo se rispondi ad un messaggio (di tipo file), "
+                                          "il quale messaggio sarà poi inviato in " + str(material_config.channel_id),
+                                          message.chat.id, message.from_user)
+        return
+
+    if message.reply_to_message.document is not None:
+
+        text = message.text
+
+        description = " ".join(text.split(" ")[1:])
+
+        if len(description) < 8:
+            utils.send_in_private_or_in_group(
+                "La descrizione che hai dato è troppo corta!",
+                message.chat.id, message.from_user)
+            return
+
+        post_materials2(update, description)
+        return
     else:
-        message_to_send = "Materiale per il gruppo " + chat['title'] + "\n\n"
-        count = 1
-        for i in link_material:
-            message_to_send += str(count) + ".  " + i["link"] + "\n" + i["comment"] + "\n\n"
-            count += 1
-
-        utils.send_in_private_or_in_group(message_to_send,
-                                          group_id=chat.id,
-                                          user=message.from_user)
-
-    try:
-        variable.updater.bot.delete_message(chat.id, message.message_id)
-    except Exception as e:
-        try:
-            utils.notify_owners(e, "Non riesco ad eliminare il messaggio /material da" + str(chat.title))
-        except Exception as e2:
-            utils.notify_owners(e, "Non riesco ad eliminare il messaggio /material da [TITOLO NON VALIDO]")
+        utils.send_in_private_or_in_group("Questo comando funziona solo se rispondi ad un messaggio (di tipo file), "
+                                          "il quale messaggio sarà poi inviato in " + str(material_config.channel_id),
+                                          message.chat.id, message.from_user)
 
 
 def eval_link(link):
