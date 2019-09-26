@@ -185,6 +185,11 @@ def help_handler(update, context):
                                           message.chat.id, message.from_user)
         return
 
-    update.message.reply_text("E' possibile ottenere i link ai materiali di un gruppo tramite il comando /material.\n"
-                              "Gli admin possono aggiungere materiale con /add_material LINK DESCRIZIONE\n"
-                              "E rimuoverlo con /remove_material LINK")
+    variable.updater.bot.send_message(update.message.chat.id,
+                                      "Entra in un gruppo e rispondi con /material [DESCRIZIONE]\n"
+                                      "Esempio: /material Lezione 1 - Termodinamica\n"
+                                      "Il nome del gruppo sarà scritto in automatico.\n"
+                                      "Il file contenente gli appunti sarà pubblicato sul canale @PoliMaterials\n"
+                                      "\n"
+                                      "Attenzione a cosa pubblicate, vi invitiamo a leggere le regole @PoliRules",
+                                      parse_mode="HTML")
