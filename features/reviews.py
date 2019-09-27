@@ -357,7 +357,7 @@ def send_html_reviews(reviews_list, update):
     try:
         html = get_reviews_html2(reviews_list, update)
     except Exception as e:
-        utils.notify_owners(e)
+        utils.notify_owners(e, 20)
         return
     # ASD
 
@@ -375,7 +375,7 @@ def send_html_reviews(reviews_list, update):
     try:
         os.remove(filename)
     except Exception as e:
-        utils.notify_owners(e)
+        utils.notify_owners(e, 21)
 
 
 def get_reviews_html(update, context):
