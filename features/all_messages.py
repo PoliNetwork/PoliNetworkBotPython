@@ -46,6 +46,9 @@ def check_if_exit(message):
     if groups.creator_is_present(admins):
         return False
 
+    if groups.subcreator_is_present(admins):
+        return False
+
     return True  # we are not admins of this group, bot should exit
 
 
