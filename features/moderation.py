@@ -76,7 +76,7 @@ def ban_all2(receiver):
     count = 0
     try:
         for group in variable.groups_list:
-            variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
+            # variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
             try:
                 variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
                 count = count + 1
