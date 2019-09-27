@@ -124,15 +124,20 @@ def ban_all(update, context):
         "Sto cercando di bannare " + str(receiver), chat_id, message.from_user)
 
     missed_list = None
-    count = 0
+    count = -1
 
     try:
         missed_list, count = ban_all2(receiver)
     except Exception as e:
         utils.notify_owners(e)
 
-    if missed_list is None or count == 0:
-        utils.send_in_private_or_in_group("Non sono riuscito a bannare " + str(receiver) + ".", chat_id,
+    if missed_list is None or count <= 0:
+        size = -1
+        if missed_list is not None:
+            size = len(missed_list)
+        utils.send_in_private_or_in_group("Non sono riuscito a bannare " + str(receiver) + ".\n"
+                                          + str(count) + " " + str(size),
+                                          chat_id,
                                           message.from_user)
         return
 
