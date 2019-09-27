@@ -204,13 +204,15 @@ def is_spam(text):
     return False
 
 
-def leave_chat(chat, ec1, ec2):
+def leave_chat(chat, ec1, ec2, ec3):
     text = "Solo gli amministratori di @PoliNetwork possono aggiungermi ai gruppi!" \
            " Sono uscito dal gruppo. Contatta gli amministratori.\n"
     text += "Error code: "
     text += str(ec1)
     text += "-"
     text += str(ec2)
+    text += "-"
+    text += str(ec3)
     variable.updater.bot.send_message(chat.id, text)
     variable.updater.bot.leave_chat(chat.id)
 

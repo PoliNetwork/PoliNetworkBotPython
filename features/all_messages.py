@@ -28,28 +28,28 @@ def find_user(new_chat_members, to_find):
 
 def check_if_exit(message):
     if message.new_chat_members is None or len(message.new_chat_members) == 0:
-        return False
+        return False, 1
 
     is_present = find_user(message.new_chat_members, creators.me)
     if is_present is False:
-        return False
+        return False, 2
 
     chat = message['chat']
     group_already_present, group_found = groups.find(chat['id'])
     if group_already_present is True:
         if group_found["we_are_admin"] is False:
-            return True
+            return True, 3
         elif group_found["we_are_admin"] is True:
-            return False
+            return False, 4
 
     admins = variable.updater.bot.get_chat_administrators(message.chat.id)
     if groups.creator_is_present(admins):
-        return False
+        return False, 5
 
     if groups.subcreator_is_present(admins):
-        return False
+        return False, 6
 
-    return True  # we are not admins of this group, bot should exit
+    return True, 7  # we are not admins of this group, bot should exit
 
 
 def check_spam(message):
@@ -161,12 +161,12 @@ def check_message(update, context):
 
     to_exit, error_code = groups.try_add_group(message)
     if to_exit is True:
-        utils.leave_chat(message.chat, 1, error_code)
+        utils.leave_chat(message.chat, 1, error_code, 0)
         return
 
-    to_exit = check_if_exit(message)
+    to_exit, error_code2 = check_if_exit(message)
     if to_exit is True:
-        utils.leave_chat(message.chat, 2, 0)
+        utils.leave_chat(message.chat, 2, 0, error_code2)
         return
 
     check_username_and_name(message)
