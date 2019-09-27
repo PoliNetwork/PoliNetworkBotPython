@@ -73,25 +73,28 @@ def mutes_bans_handler(update, context):
 
 def ban_all2(receiver):
     missed_list = []
+    count = 0
     try:
         for group in variable.groups_list:
+            variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
             try:
                 variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
-            except:
+                count = count + 1
+            except Exception as e1:
                 try:
                     missed_list.append(group['Chat']['title'])
-                except:
+                except Exception as e2:
                     try:
                         missed_list.append("[NAME NOT FOUND!] " + str(group['Chat']['id']))
-                    except:
+                    except Exception as e3:
                         try:
                             missed_list.append("[NAME NOT FOUND!] [ID NOT FOUND!]")
-                        except:
+                        except Exception as e4:
                             pass
     except Exception as e:
         utils.notify_owners(e, "Crash in ban")
 
-    return missed_list
+    return missed_list, count
 
 
 def ban_all(update, context):
@@ -121,13 +124,16 @@ def ban_all(update, context):
         "Sto cercando di bannare " + str(receiver), chat_id, message.from_user)
 
     missed_list = None
+    count = 0
+
     try:
-        missed_list = ban_all2(receiver)
+        missed_list, count = ban_all2(receiver)
     except Exception as e:
         utils.notify_owners(e)
 
-    if missed_list is None:
-        utils.send_in_private_or_in_group("Non sono riuscito a bannare "+str(receiver)+".", chat_id, message.from_user)
+    if missed_list is None or count == 0:
+        utils.send_in_private_or_in_group("Non sono riuscito a bannare " + str(receiver) + ".", chat_id,
+                                          message.from_user)
         return
 
     text = "Fatto! Ho bannato " + str(receiver)
@@ -135,5 +141,5 @@ def ban_all(update, context):
         text = text + "\nTranne in " + str(len(missed_list)) + " gruppi.\n"
         for missed in missed_list:
             text = text + "\n" + str(missed)
-    
+
     utils.send_in_private_or_in_group(text, chat_id, message.from_user)
