@@ -38,11 +38,22 @@ def check_if_exit(message):
     group_already_present, group_found = groups.find(chat['id'])
     if group_already_present is True:
         if group_found["we_are_admin"] is False:
+
+            admins = variable.updater.bot.get_chat_administrators(message.chat.id)
+
+            if groups.creator_is_present(admins):
+                return False, 8
+
+            if groups.subcreator_is_present(admins):
+                return False, 9
+
             return True, 3
+
         elif group_found["we_are_admin"] is True:
             return False, 4
 
     admins = variable.updater.bot.get_chat_administrators(message.chat.id)
+    
     if groups.creator_is_present(admins):
         return False, 5
 
