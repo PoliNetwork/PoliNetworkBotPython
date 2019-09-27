@@ -230,30 +230,39 @@ def get_reviews_html2(review_list, update):
 
     sum_votes = 0
     for year in review_list:
-        sum_year = 0
-        html2 += "<h2>Anno: " + str(year) + "</h2>"
-        for prof in review_list.get(year):
-            sum_prof = 0
-            html2 += "<h2>Prof: " + str(prof) + "</h2>"
-            html2 += "<ul>"
-            for single_review in review_list.get(year)[prof]:
-                vote = int(single_review['vote'])
-                sum_prof += vote
-                html2 += "<li>"
-                html2 += "<div class='col-md-4 col-sm-6'><div><a title='' href='#'>"
-                html2 += str(vote) + "/100 ⭐"
-                html2 += "</a><p>"
-                html2 += utils.escape(single_review['description'])
-                html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
-                html2 += "</div>	</div>"
-                html2 += "</li>"
-            html2 += "</ul>"
-            avg_prof = sum_prof / len(review_list.get(year)[prof])
-            html2 += "<h3>Media prof: " + str(avg_prof) + "</h3><br />"
-            sum_year += avg_prof
-        avg_year = sum_year / len(review_list.get(year))
-        html2 += "<h3>Media anno: " + str(avg_year) + "</h3><br /><hr /><br />"
-        sum_votes += avg_year
+        try:
+            sum_year = 0
+            html2 += "<h2>Anno: " + str(year) + "</h2>"
+            for prof in review_list.get(year):
+                try:
+                    sum_prof = 0
+                    html2 += "<h2>Prof: " + str(prof) + "</h2>"
+                    html2 += "<ul>"
+                    for single_review in review_list.get(year)[prof]:
+                        try:
+                            vote = int(single_review['vote'])
+                            sum_prof += vote
+                            html2 += "<li>"
+                            html2 += "<div class='col-md-4 col-sm-6'><div><a title='' href='#'>"
+                            html2 += str(vote) + "/100 ⭐"
+                            html2 += "</a><p>"
+                            html2 += utils.escape(single_review['description'])
+                            html2 += "</p><ins class='ab zmin sprite sprite-i-triangle block'></ins>	</div>"
+                            html2 += "</div>	</div>"
+                            html2 += "</li>"
+                        except Exception as e5:
+                            utils.notify_owners(e5, 24)
+                    html2 += "</ul>"
+                    avg_prof = sum_prof / len(review_list.get(year)[prof])
+                    html2 += "<h3>Media prof: " + str(avg_prof) + "</h3><br />"
+                    sum_year += avg_prof
+                except Exception as e4:
+                    utils.notify_owners(e4, 23)
+            avg_year = sum_year / len(review_list.get(year))
+            html2 += "<h3>Media anno: " + str(avg_year) + "</h3><br /><hr /><br />"
+            sum_votes += avg_year
+        except Exception as e3:
+            utils.notify_owners(e3, 22)
     avg = sum_votes / len(review_list)
 
     avg = ("{0:.2f}".format(round(avg, 2)))
