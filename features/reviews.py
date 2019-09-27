@@ -394,11 +394,19 @@ def get_reviews_html(update, context):
 
 def get_group_id_by_name(groupz):
     groups = variable.groups_list
-    group_id = -1
     for group in groups:
         if group['Chat']['title'] == groupz:
-            group_id = group['Chat']['id']
-    return group_id
+            return group['Chat']['id']
+
+    for group in groups:
+        if groupz.lower() in str(group['Chat']['title']).lower():
+            return group['Chat']['id']
+
+    for group in groups:
+        if str(group['Chat']['title']).lower() in groupz.lower():
+            return group['Chat']['id']
+
+    return -1
 
 
 # by prof
