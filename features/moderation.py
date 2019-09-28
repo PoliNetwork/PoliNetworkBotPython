@@ -75,6 +75,8 @@ def ban_all2(receiver):
     missed_list = []
     count = 0
 
+    errors = []
+
     try:
         for group in variable.groups_list:
             # variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
@@ -83,7 +85,10 @@ def ban_all2(receiver):
                 count = count + 1
             except Exception as e1:
                 try:
-                    utils.notify_owners(e1, 26)
+                    e1 = str(e1)
+                    if e1 not in errors:
+                        errors.append(e1)
+
                     missed_list.append(group['Chat']['title'])
                 except Exception as e2:
                     try:
@@ -98,6 +103,10 @@ def ban_all2(receiver):
                             pass
     except Exception as e:
         utils.notify_owners(e, "Crash in ban " + str(30))
+
+    if len(errors) > 0:
+        for error2 in errors:
+            utils.notify_owners(error2, 32)
 
     return missed_list, count
 
