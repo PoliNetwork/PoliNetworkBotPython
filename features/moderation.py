@@ -83,7 +83,7 @@ def ban_all2(receiver):
                 count = count + 1
             except Exception as e1:
                 try:
-                    # utils.notify_owners(e1, 26)
+                    utils.notify_owners(e1, 26)
                     missed_list.append(group['Chat']['title'])
                 except Exception as e2:
                     try:
