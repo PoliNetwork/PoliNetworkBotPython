@@ -251,7 +251,7 @@ def get_reviews_html2(review_list, update):
                             html2 += "</div>	</div>"
                             html2 += "</li>"
                         except Exception as e5:
-                            utils.notify_owners(e5, 24)
+                            utils.notify_owners(e5, 24 )
                     html2 += "</ul>"
                     avg_prof = sum_prof / len(review_list.get(year)[prof])
                     html2 += "<h3>Media prof: " + str(avg_prof) + "</h3><br />"

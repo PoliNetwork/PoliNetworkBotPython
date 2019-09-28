@@ -82,17 +82,21 @@ def ban_all2(receiver):
                 count = count + 1
             except Exception as e1:
                 try:
+                    utils.notify_owners(e1, 26)
                     missed_list.append(group['Chat']['title'])
                 except Exception as e2:
                     try:
+                        utils.notify_owners(e2, 27)
                         missed_list.append("[NAME NOT FOUND!] " + str(group['Chat']['id']))
                     except Exception as e3:
                         try:
+                            utils.notify_owners(e3, 28)
                             missed_list.append("[NAME NOT FOUND!] [ID NOT FOUND!]")
                         except Exception as e4:
+                            utils.notify_owners(e4, 29)
                             pass
     except Exception as e:
-        utils.notify_owners(e, "Crash in ban")
+        utils.notify_owners(e, "Crash in ban " + str(30))
 
     return missed_list, count
 
