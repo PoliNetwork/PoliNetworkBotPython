@@ -74,6 +74,15 @@ def mutes_bans_handler(update, context):
 def ban_all2(receiver):
     missed_list = []
     count = 0
+
+    try:
+        receiver = str(receiver)
+        receiver = utils.remove_spaces(receiver)
+        receiver = int(receiver)
+    except Exception as e5:
+        utils.notify_owners(e5, 31)
+        return None, 0
+
     try:
         for group in variable.groups_list:
             # variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
@@ -82,7 +91,7 @@ def ban_all2(receiver):
                 count = count + 1
             except Exception as e1:
                 try:
-                    utils.notify_owners(e1, 26)
+                    # utils.notify_owners(e1, 26)
                     missed_list.append(group['Chat']['title'])
                 except Exception as e2:
                     try:

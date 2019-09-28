@@ -251,7 +251,7 @@ def get_reviews_html2(review_list, update):
                             html2 += "</div>	</div>"
                             html2 += "</li>"
                         except Exception as e5:
-                            utils.notify_owners(e5, 24 )
+                            utils.notify_owners(e5, 24)
                     html2 += "</ul>"
                     avg_prof = sum_prof / len(review_list.get(year)[prof])
                     html2 += "<h3>Media prof: " + str(avg_prof) + "</h3><br />"
@@ -267,16 +267,6 @@ def get_reviews_html2(review_list, update):
 
     avg = ("{0:.2f}".format(round(avg, 2)))
     return html1 + "<br />Media: " + str(avg) + "/100</h1>" + html4 + html2 + html3
-
-
-def remove_spaces(text):
-    while True:
-        if text.startswith(" "):
-            text = text[1:]
-        else:
-            break
-
-    return text
 
 
 def get_reviews_private_from_text(text, update):
@@ -303,7 +293,7 @@ def get_reviews_private_from_text(text, update):
 
     for data2 in data:
         try:
-            data2 = remove_spaces(data2)
+            data2 = utils.remove_spaces(data2)
             data3 = data2.split(" ")
             if data3[0] == "teacher":
                 prof_b = True

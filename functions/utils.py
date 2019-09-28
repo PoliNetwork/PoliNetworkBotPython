@@ -204,6 +204,16 @@ def is_spam(text):
     return False
 
 
+def remove_spaces(text):
+    while True:
+        if text.startswith(" "):
+            text = text[1:]
+        else:
+            break
+
+    return text
+
+
 def leave_chat(chat, ec1, ec2, ec3):
     text = "Solo gli amministratori di @PoliNetwork possono aggiungermi ai gruppi!" \
            " Sono uscito dal gruppo. Contatta gli amministratori.\n"
