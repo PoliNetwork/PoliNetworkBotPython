@@ -76,14 +76,6 @@ def ban_all2(receiver):
     count = 0
 
     try:
-        receiver = str(receiver)
-        receiver = utils.remove_spaces(receiver)
-        receiver = int(receiver)
-    except Exception as e5:
-        utils.notify_owners(e5, 31)
-        return None, 0
-
-    try:
         for group in variable.groups_list:
             # variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
             try:
@@ -123,8 +115,6 @@ def ban_all(update, context):
             receiver = message.text.split(" ")[1]
         else:
             receiver = message.reply_to_message.from_user['id']
-
-        receiver = int(receiver)
     except:
         pass
 
