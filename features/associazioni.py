@@ -1,32 +1,72 @@
+import datetime
+
+import variable
+from config import db_associazioni
+from functions import utils
+
+
 def errore_no_associazione(update):
     # todo inviare "Non fai parte di nessuna associazione, scrivi agli admin di @PoliNetwork"
+    utils.send_in_private_or_in_group("Non fai parte di nessuna associazione, scrivi agli admin di @PoliNetwork",
+                                      update.message.chat.id, update.message.from_user)
     pass
 
 
-def get_associazione(update):
-    # todo: dato l'id del mittente del messaggio, ritornare l'associazione di cui fa parte, None se non fa parte di nessuna
+def get_associazione_name_from_user(x):
+    for ass in db_associazioni.json.keys():
+        for user in db_associazioni.json.get(ass).get("users"):
+            if user == x:
+                return ass
     return None
 
 
-def get_message_associazione(associazione):
-    # todo: tirare fuori il messaggio a partire dall'associazione trovata qui sopra, tornare None se non c'è nessun messaggio
+def get_associazione_json_from_associazione_name(name):
+    for ass in db_associazioni.json.keys():
+        if ass is name:
+            return db_associazioni.json.get(ass)
     return None
 
 
+# prendi il messaggio dell'associazione dal nome dell'associazione
+def get_message_from_associazione_name(name):
+    assoc = None
+    for associ in db_associazioni.json.keys():
+        if associ is name:
+            assoc = associ
+
+    if db_associazioni.messages_dict.__contains__(assoc):
+        return db_associazioni.messages_dict.get(assoc)
+
+    return None
+
+
+def get_message_from_associazione_json(json):
+    assoc = None
+    for associ in db_associazioni.json.keys():
+        if associ is json:
+            assoc = associ
+
+    if db_associazioni.messages_dict.__contains__(assoc):
+        return db_associazioni.messages_dict.get(assoc)
+
+    return None
+
+
+# leggi ed inoltra
 def assoc_read(update, context):
-    associazione = get_associazione(update)
+    associazione = get_associazione_name_from_user(update.message.from_user.id)
 
-    if associazione is not None:
+    if associazione is None:
         errore_no_associazione(update)
-
         return None
 
-    read_message = get_message_associazione(associazione)
+    read_message = get_message_from_associazione_name(associazione)
     if read_message is None:
-        # todo: inviare "nessun messaggio in coda!"
+        utils.send_in_private_or_in_group("Nessun messaggio in coda!",
+                                          update.message.chat.id, update.message.from_user)
         pass
     else:
-        # todo: inviare il messaggio con forward normale
+        variable.updater.bot.forward_message(read_message.get("chat_id"), read_message.get("chat_id"), read_message.get("message_id"))
         pass
 
     return None
@@ -34,37 +74,54 @@ def assoc_read(update, context):
 
 def check_message_associazioni(update):
     # todo: controllare che il messaggio rispetti i requisiti, inviare all'utente eventuali errori, e poi tornare True se il messaggio è valido, False altrimenti
-    return False
+    return True
 
 
 def assoc_write(update, context):
-    associazione = get_associazione(update)
+    associazione = get_associazione_name_from_user(update.message.from_user.id)
 
-    if associazione is not None:
+    if associazione is None:
         errore_no_associazione(update)
         return None
 
     messaggio_valido = check_message_associazioni(update)
     if messaggio_valido:
-        # todo: aggiungere il messaggio alla coda.
-        #  inviare all'utente che il messaggio è stato messo correttamente in coda
+        if get_message_from_associazione_name(associazione) is not None:
+            utils.send_in_private_or_in_group("Messaggio già in coda. Rimuovilo con /assoc delete.",
+                                              update.message.chat.id, update.message.from_user)
+            return
+
+        else:
+            messaggio_originale = update.message.reply_to_message
+            if messaggio_originale is None:
+                utils.send_in_private_or_in_group("Devi rispondere ad un messaggio per aggiungerlo alla coda",
+                                                  update.message.chat.id, update.message.from_user)
+                return
+            db_associazioni.messages_dict.__setitem__(associazione, {"chat_id": messaggio_originale.chat.id,
+                                                                     "message_id" : messaggio_originale.message_id,
+                                                                     "time": datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')})
+            utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
+                                              update.message.chat.id, update.message.from_user)
         pass
 
     return None
 
 
 def assoc_delete(update, context):
-    associazione = get_associazione(update)
+    associazione = get_associazione_name_from_user(update.message.from_user.id)
 
-    if associazione is not None:
+    if associazione is None:
         errore_no_associazione(update)
         return None
 
-    read_message = get_message_associazione(associazione)
+    read_message = get_message_from_associazione_name(associazione)
     if read_message is None:
-        # todo: inviare "nessun messaggio in coda!"
+        utils.send_in_private_or_in_group("Nessun messaggio in coda",
+                                          update.message.chat.id, update.message.from_user)
         pass
     else:
-        # todo: rimuovere il messaggio dalla coda e informare l'utente che è stato rimosso con successo.
-        pass
+        db_associazioni.messages_dict.pop(associazione, None)
+        utils.send_in_private_or_in_group("Messaggio rimosso con successo",
+                                          update.message.chat.id, update.message.from_user)
+    pass
     return None
