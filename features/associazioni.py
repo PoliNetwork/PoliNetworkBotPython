@@ -1,8 +1,10 @@
 import datetime
+from threading import Thread
 
 import variable
 from config import db_associazioni
 from functions import utils
+
 
 
 def errore_no_associazione(update):
@@ -100,6 +102,7 @@ def assoc_write(update, context):
             db_associazioni.messages_dict.__setitem__(associazione, {"chat_id": messaggio_originale.chat.id,
                                                                      "message_id" : messaggio_originale.message_id,
                                                                      "time": datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')})
+            db_associazioni.save_on_file()
             utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
                                               update.message.chat.id, update.message.from_user)
         pass
@@ -123,5 +126,26 @@ def assoc_delete(update, context):
         db_associazioni.messages_dict.pop(associazione, None)
         utils.send_in_private_or_in_group("Messaggio rimosso con successo",
                                           update.message.chat.id, update.message.from_user)
+        db_associazioni.save_on_file()
     pass
     return None
+
+
+def start_check():
+    if db_associazioni.date == "00:00:00:0000":
+        return
+
+    time = db_associazioni.date.split(":")
+    day = time[0]
+    month = time[1]
+    year = time[2]
+    hour = time[3]
+    minute = time[4]
+
+    scheduled_time = datetime.datetime(int(year),int(month),int(day),int(hour),int(minute))
+    if datetime.datetime.now() > scheduled_time: # i.e. is the scheduled time over?
+        for associazione in db_associazioni.messages_dict:
+            chat_id = db_associazioni.messages_dict.get(associazione)['chat_id']
+            message_id = db_associazioni.messages_dict.get(associazione)['message_id']
+            variable.updater.bot.forward_message(db_associazioni.group, chat_id, message_id)
+        db_associazioni.date = "00:00:00:0000"
