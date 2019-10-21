@@ -6,9 +6,7 @@ from config import db_associazioni
 from functions import utils
 
 
-
 def errore_no_associazione(update):
-    # todo inviare "Non fai parte di nessuna associazione, scrivi agli admin di @PoliNetwork"
     utils.send_in_private_or_in_group("Non fai parte di nessuna associazione, scrivi agli admin di @PoliNetwork",
                                       update.message.chat.id, update.message.from_user)
     pass
@@ -68,7 +66,8 @@ def assoc_read(update, context):
                                           update.message.chat.id, update.message.from_user)
         pass
     else:
-        variable.updater.bot.forward_message(read_message.get("chat_id"), read_message.get("chat_id"), read_message.get("message_id"))
+        variable.updater.bot.forward_message(read_message.get("chat_id"), read_message.get("chat_id"),
+                                             read_message.get("message_id"))
         pass
 
     return None
@@ -100,8 +99,9 @@ def assoc_write(update, context):
                                                   update.message.chat.id, update.message.from_user)
                 return
             db_associazioni.messages_dict.__setitem__(associazione, {"chat_id": messaggio_originale.chat.id,
-                                                                     "message_id" : messaggio_originale.message_id,
-                                                                     "time": datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')})
+                                                                     "message_id": messaggio_originale.message_id,
+                                                                     "time": datetime.datetime.now().strftime(
+                                                                         '%d-%m-%Y %H:%M:%S')})
             db_associazioni.save_on_file()
             utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
                                               update.message.chat.id, update.message.from_user)
@@ -142,8 +142,8 @@ def start_check():
     hour = time[3]
     minute = time[4]
 
-    scheduled_time = datetime.datetime(int(year),int(month),int(day),int(hour),int(minute))
-    if datetime.datetime.now() > scheduled_time: # i.e. is the scheduled time over?
+    scheduled_time = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute))
+    if datetime.datetime.now() > scheduled_time:  # i.e. is the scheduled time over?
         for associazione in db_associazioni.messages_dict:
             chat_id = db_associazioni.messages_dict.get(associazione)['chat_id']
             message_id = db_associazioni.messages_dict.get(associazione)['message_id']
