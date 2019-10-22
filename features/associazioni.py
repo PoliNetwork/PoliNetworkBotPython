@@ -1,5 +1,7 @@
 import datetime
 from threading import Thread
+import json as jsonn
+import time
 
 import variable
 from config import db_associazioni
@@ -102,7 +104,7 @@ def assoc_write(update, context):
                                                                      "message_id": messaggio_originale.message_id,
                                                                      "time": datetime.datetime.now().strftime(
                                                                          '%d-%m-%Y %H:%M:%S')})
-            db_associazioni.save_on_file()
+            save_on_file()
             utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
                                               update.message.chat.id, update.message.from_user)
         pass
@@ -126,26 +128,49 @@ def assoc_delete(update, context):
         db_associazioni.messages_dict.pop(associazione, None)
         utils.send_in_private_or_in_group("Messaggio rimosso con successo",
                                           update.message.chat.id, update.message.from_user)
-        db_associazioni.save_on_file()
+        save_on_file()
     pass
     return None
+
+
+class start_check_Thread(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+
+    def run(self):
+        while True:
+            start_check()
+            time.sleep(60 * 5)
 
 
 def start_check():
     if db_associazioni.date == "00:00:00:0000":
         return
 
-    time = db_associazioni.date.split(":")
-    day = time[0]
-    month = time[1]
-    year = time[2]
-    hour = time[3]
-    minute = time[4]
+    time2 = db_associazioni.date.split(":")
+    day = time2[0]
+    month = time2[1]
+    year = time2[2]
+    hour = time2[3]
+    minute = time2[4]
 
     scheduled_time = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute))
     if datetime.datetime.now() > scheduled_time:  # i.e. is the scheduled time over?
         for associazione in db_associazioni.messages_dict:
-            chat_id = db_associazioni.messages_dict.get(associazione)['chat_id']
-            message_id = db_associazioni.messages_dict.get(associazione)['message_id']
-            variable.updater.bot.forward_message(db_associazioni.group, chat_id, message_id)
+            try:
+                chat_id = db_associazioni.messages_dict.get(associazione)['chat_id']
+                message_id = db_associazioni.messages_dict.get(associazione)['message_id']
+                variable.updater.bot.forward_message(chat_id=db_associazioni.group, from_chat_id=chat_id,
+                                                     message_id=message_id)
+            except Exception as e:
+                pass
         db_associazioni.date = "00:00:00:0000"
+
+        # todo: svuotare la lista, controllare se queste due righe sotto vanno bene
+        db_associazioni.messages_dict = None
+        save_on_file()
+
+
+def save_on_file():
+    with open("data/ass_messages.json", 'w', encoding="utf-8") as file:
+        jsonn.dump(db_associazioni.messages_dict, file)

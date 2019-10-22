@@ -76,6 +76,9 @@ dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
 thread = utils.DeleteMessageThread()
 thread.start()
 
+thread2 = associazioni.start_check_Thread()
+thread2.start()
+
 variable.updater.start_polling()
 
 # ---

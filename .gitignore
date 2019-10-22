@@ -17,3 +17,5 @@ policreator.session
 config/userbot_config.py
 
 .vs/
+
+policreator.session-journal
