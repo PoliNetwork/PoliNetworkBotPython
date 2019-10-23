@@ -104,7 +104,7 @@ def assoc_write(update, context):
                                                                      "message_id": messaggio_originale.message_id,
                                                                      "time": datetime.datetime.now().strftime(
                                                                          '%d-%m-%Y %H:%M:%S')})
-            save_on_file()
+            save_ass_messages()
             utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
                                               update.message.chat.id, update.message.from_user)
         pass
@@ -128,7 +128,7 @@ def assoc_delete(update, context):
         db_associazioni.messages_dict.pop(associazione, None)
         utils.send_in_private_or_in_group("Messaggio rimosso con successo",
                                           update.message.chat.id, update.message.from_user)
-        save_on_file()
+        save_ass_messages()
     pass
     return None
 
@@ -165,12 +165,19 @@ def start_check():
             except Exception as e:
                 pass
         db_associazioni.date = "00:00:00:0000"
+        db_associazioni.config_json.update({"date" : db_associazioni.date})
+        save_date()
 
-        # todo: svuotare la lista, controllare se queste due righe sotto vanno bene
-        db_associazioni.messages_dict = None
-        save_on_file()
+        # done: svuotare la lista, controllare se queste due righe sotto vanno bene
+        db_associazioni.messages_dict.update({})
+        save_ass_messages()
 
 
-def save_on_file():
+def save_ass_messages():
     with open("data/ass_messages.json", 'w', encoding="utf-8") as file:
         jsonn.dump(db_associazioni.messages_dict, file)
+
+
+def save_date():
+    with open("data/date.json", 'w', encoding="utf-8") as file:
+        jsonn.dump(db_associazioni.config_json, file)

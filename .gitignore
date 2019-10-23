@@ -5,6 +5,7 @@ data/groups.json
 data/materials.json
 data/reviews.json
 data/to_delete.json
+data/date.json
 config/db_associazioni.py
 __pycache__/
 data/*
