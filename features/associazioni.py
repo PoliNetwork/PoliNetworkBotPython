@@ -77,6 +77,9 @@ def assoc_read(update, context):
 
 def check_message_associazioni(update):
     # todo: controllare che il messaggio rispetti i requisiti, inviare all'utente eventuali errori, e poi tornare True se il messaggio è valido, False altrimenti
+    message2 = update.message.reply_to_message
+    if len(message2.text)  > 0:
+        return False
     return True
 
 
@@ -108,6 +111,9 @@ def assoc_write(update, context):
             utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
                                               update.message.chat.id, update.message.from_user)
         pass
+    else:
+        utils.send_in_private_or_in_group("Il messaggio non rispetta i requisiti richiesti! Contatta gli admin di @PoliNetwork!",
+                                          update.message.chat.id, update.message.from_user)
 
     return None
 
@@ -165,7 +171,7 @@ def start_check():
             except Exception as e:
                 pass
         db_associazioni.date = "00:00:00:0000"
-        db_associazioni.config_json.update({"date" : db_associazioni.date})
+        db_associazioni.config_json.update({"date": db_associazioni.date})
         save_date()
 
         # done: svuotare la lista, controllare se queste due righe sotto vanno bene
