@@ -77,8 +77,12 @@ def assoc_read(update, context):
 
 def check_message_associazioni(update):
     # todo: controllare che il messaggio rispetti i requisiti, inviare all'utente eventuali errori, e poi tornare True se il messaggio è valido, False altrimenti
+
     message2 = update.message.reply_to_message
-    if len(message2.text)  > 0:
+    if message2.text is None:
+        return True
+
+    if len(message2.text) > 0:
         return False
     return True
 
@@ -112,8 +116,9 @@ def assoc_write(update, context):
                                               update.message.chat.id, update.message.from_user)
         pass
     else:
-        utils.send_in_private_or_in_group("Il messaggio non rispetta i requisiti richiesti! Contatta gli admin di @PoliNetwork!",
-                                          update.message.chat.id, update.message.from_user)
+        utils.send_in_private_or_in_group(
+            "Il messaggio non rispetta i requisiti richiesti! Contatta gli admin di @PoliNetwork!",
+            update.message.chat.id, update.message.from_user)
 
     return None
 
@@ -149,34 +154,55 @@ class start_check_Thread(Thread):
             time.sleep(60 * 5)
 
 
+def send_scheduled_messages():
+    for associazione in db_associazioni.messages_dict:
+        try:
+            associazione2 = db_associazioni.messages_dict.get(associazione)
+            chat_id = associazione2['chat_id']
+            message_id = associazione2['message_id']
+            if len(str(chat_id)) > 1 and len(str(message_id)) > 1:
+                variable.updater.bot.forward_message(chat_id=db_associazioni.group, from_chat_id=chat_id,
+                                                     message_id=message_id)
+            else:
+                # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
+                #  data di pubblicazione
+                pass
+        except Exception as e:
+            pass
+    db_associazioni.date = "00:00:00:00:00"
+    db_associazioni.config_json.update({"date": db_associazioni.date})
+    save_date()
+
+    for associazione in db_associazioni.messages_dict:
+        try:
+            associazione2 = db_associazioni.messages_dict.get(associazione)
+            associazione2['chat_id'] = 0
+            associazione2['message_id'] = 0
+            associazione2['time'] = None
+            db_associazioni.messages_dict[associazione] = associazione2
+
+        except Exception as e:
+            pass
+
+    save_ass_messages()
+    pass
+
+
 def start_check():
-    if db_associazioni.date == "00:00:00:0000":
+    if db_associazioni.date == "00:00:00:00:00":
         return
 
     time2 = db_associazioni.date.split(":")
-    day = time2[0]
+    day = time2[2]
     month = time2[1]
-    year = time2[2]
+    year = time2[0]
     hour = time2[3]
     minute = time2[4]
 
     scheduled_time = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute))
-    if datetime.datetime.now() > scheduled_time:  # i.e. is the scheduled time over?
-        for associazione in db_associazioni.messages_dict:
-            try:
-                chat_id = db_associazioni.messages_dict.get(associazione)['chat_id']
-                message_id = db_associazioni.messages_dict.get(associazione)['message_id']
-                variable.updater.bot.forward_message(chat_id=db_associazioni.group, from_chat_id=chat_id,
-                                                     message_id=message_id)
-            except Exception as e:
-                pass
-        db_associazioni.date = "00:00:00:0000"
-        db_associazioni.config_json.update({"date": db_associazioni.date})
-        save_date()
-
-        # done: svuotare la lista, controllare se queste due righe sotto vanno bene
-        db_associazioni.messages_dict.update({})
-        save_ass_messages()
+    dt_now = datetime.datetime.now()
+    if dt_now > scheduled_time:  # i.e. is the scheduled time over?
+        send_scheduled_messages()
 
 
 def save_ass_messages():
