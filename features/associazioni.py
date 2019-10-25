@@ -67,7 +67,7 @@ def assoc_read(update, context):
     try:
         read_message = get_message_from_associazione_name(associazione)
         if read_message is None:
-            utils.send_in_private_or_in_group(error1 + " - 01", update.message.chat.id, update.message.from_user)
+            utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
             pass
         else:
             variable.updater.bot.forward_message(read_message.get("chat_id"), read_message.get("chat_id"),
@@ -75,7 +75,7 @@ def assoc_read(update, context):
             pass
 
     except:
-        utils.send_in_private_or_in_group(error1 + " - 02", update.message.chat.id, update.message.from_user)
+        utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
         pass
     return None
 
