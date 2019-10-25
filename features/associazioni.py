@@ -184,7 +184,6 @@ def send_scheduled_messages():
             associazione2['chat_id'] = 0
             associazione2['message_id'] = 0
             associazione2['time'] = None
-
             db_associazioni.messages_dict[associazione] = associazione2
         except Exception as e:
             pass
