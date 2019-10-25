@@ -62,16 +62,21 @@ def assoc_read(update, context):
         errore_no_associazione(update)
         return None
 
-    read_message = get_message_from_associazione_name(associazione)
-    if read_message is None:
-        utils.send_in_private_or_in_group("Nessun messaggio in coda!",
-                                          update.message.chat.id, update.message.from_user)
-        pass
-    else:
-        variable.updater.bot.forward_message(read_message.get("chat_id"), read_message.get("chat_id"),
-                                             read_message.get("message_id"))
-        pass
+    error1 = "Nessun messaggio in coda!"
 
+    try:
+        read_message = get_message_from_associazione_name(associazione)
+        if read_message is None:
+            utils.send_in_private_or_in_group(error1 + " - 01", update.message.chat.id, update.message.from_user)
+            pass
+        else:
+            variable.updater.bot.forward_message(read_message.get("chat_id"), read_message.get("chat_id"),
+                                                 read_message.get("message_id"))
+            pass
+
+    except:
+        utils.send_in_private_or_in_group(error1 + " - 02", update.message.chat.id, update.message.from_user)
+        pass
     return None
 
 
@@ -175,7 +180,12 @@ def send_scheduled_messages():
 
     for associazione in db_associazioni.messages_dict:
         try:
-            db_associazioni.messages_dict.pop(associazione, None)
+            associazione2 = db_associazioni.messages_dict.get(associazione)
+            associazione2['chat_id'] = 0
+            associazione2['message_id'] = 0
+            associazione2['time'] = None
+
+            db_associazioni.messages_dict[associazione] = associazione2
         except Exception as e:
             pass
 
