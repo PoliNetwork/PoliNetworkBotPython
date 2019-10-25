@@ -3,6 +3,7 @@ from threading import Thread
 import json as jsonn
 import time
 
+import main_anon
 import variable
 from config import db_associazioni
 from functions import utils
@@ -166,8 +167,11 @@ def send_scheduled_messages():
             chat_id = associazione2['chat_id']
             message_id = associazione2['message_id']
             if len(str(chat_id)) > 1 and len(str(message_id)) > 1:
-                variable.updater.bot.forward_message(chat_id=db_associazioni.group, from_chat_id=chat_id,
-                                                     message_id=message_id)
+
+                # todo: sta parte non va, bisogna mettere giusti i parametri di questa funzione
+                main_anon.forward_message_anon(db_associazioni.group, message_id, chat_id, None, None)
+                # variable.updater.bot.forward_message(chat_id=db_associazioni.group, from_chat_id=chat_id,
+                # message_id=message_id)
             else:
                 # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
                 #  data di pubblicazione
