@@ -173,16 +173,9 @@ def send_scheduled_messages():
     db_associazioni.config_json.update({"date": db_associazioni.date})
     save_date()
 
-
     for associazione in db_associazioni.messages_dict:
         try:
-            associazione2 = db_associazioni.messages_dict.get(associazione)
-            associazione2['chat_id'] = 0
-            associazione2['message_id'] = 0
-            associazione2['time'] = None
-
-            db_associazioni.messages_dict[associazione] = associazione2
-
+            db_associazioni.messages_dict.pop(associazione, None)
         except Exception as e:
             pass
 
