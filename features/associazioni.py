@@ -87,7 +87,9 @@ def assoc_read(update, context):
                        caption=read_message.get("message_to_send_caption"),
                        text=read_message.get("message_to_send_text"),
                        photo=CreatePhotoFromJson(read_message),
-                       audio_file_id=read_message.get("message_to_send_audio_file_id"))
+                       audio_file_id=read_message.get("message_to_send_audio_file_id"),
+                       voice_file_id=read_message.get("message_to_send_voice_file_id"),
+                       video_file_id=read_message.get("message_to_send_video_file_id"))
             pass
 
     except:
@@ -131,6 +133,20 @@ def GetAudioFileID(messaggio_originale):
         return None
 
 
+def GetVoiceFileID(messaggio_originale):
+    try:
+        return messaggio_originale.voice.file_id
+    except:
+        return None
+
+
+def GetVideoFileID(messaggio_originale):
+    try:
+        return messaggio_originale.video.file_id
+    except:
+        return None
+
+
 def assoc_write(update, context):
     associazione = get_associazione_name_from_user(update.message.from_user.id)
 
@@ -160,6 +176,8 @@ def assoc_write(update, context):
 
             photo2 = GetLargerPhoto(messaggio_originale.photo)
             audio_file_id = GetAudioFileID(messaggio_originale)
+            voice_file_id = GetVoiceFileID(messaggio_originale)
+            video_file_id = GetVideoFileID(messaggio_originale)
             dict1 = {"message_to_send_caption": messaggio_originale.caption,
                      "message_to_send_text": messaggio_originale.text,
                      "message_to_send_photo_file_id": photo2.file_id,
@@ -167,6 +185,8 @@ def assoc_write(update, context):
                      "message_to_send_photo_height": photo2.height,
                      "message_to_send_photo_width": photo2.width,
                      "message_to_send_audio_file_id": audio_file_id,
+                     "message_to_send_voice_file_id": voice_file_id,
+                     "message_to_send_video_file_id":video_file_id,
                      "time": datetime.datetime.now().strftime(
                          '%d-%m-%Y %H:%M:%S')
                      }
@@ -214,7 +234,7 @@ class start_check_Thread(Thread):
             time.sleep(60 * 5)
 
 
-def invia_anon(destination, caption, text, photo, audio_file_id):
+def invia_anon(destination, caption, text, photo, audio_file_id, voice_file_id, video_file_id):
     try:
 
         if text is not None:
@@ -228,13 +248,13 @@ def invia_anon(destination, caption, text, photo, audio_file_id):
             message_sent = variable.updater.bot.send_audio(chat_id=destination,
                                                            audio=audio_file_id,
                                                            caption=caption)
-        elif voice is not None:
+        elif voice_file_id is not None:
             message_sent = variable.updater.bot.send_voice(chat_id=destination,
-                                                           voice=voice.file_id,
+                                                           voice=voice_file_id,
                                                            caption=caption)
-        elif video is not None:
+        elif video_file_id is not None:
             message_sent = variable.updater.bot.send_video(chat_id=destination,
-                                                           video=video.file_id,
+                                                           video=video_file_id,
                                                            caption=caption)
         elif video_note is not None:
             message_sent = variable.updater.bot.send_video_note(chat_id=destination,
@@ -271,7 +291,9 @@ def send_scheduled_messages():
                                                     caption=associazione2['message_to_send_caption'],
                                                     text=associazione2['message_to_send_text'],
                                                     photo=CreatePhotoFromJson(associazione2),
-                                                    audio_file_id=associazione2["message_to_send_audio_file_id"])
+                                                    audio_file_id=associazione2["message_to_send_audio_file_id"],
+                                                    voice_file_id=associazione2["message_to_send_voice_file_id"],
+                                                    video_file_id=associazione2["message_to_send_video_file_id"])
             else:
                 # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
                 #  data di pubblicazione
@@ -292,6 +314,8 @@ def send_scheduled_messages():
             associazione2['message_to_send_photo_height'] = None
             associazione2['message_to_send_photo_width'] = None
             associazione2["message_to_send_audio_file_id"] = None
+            associazione2["message_to_send_voice_file_id"] = None
+            associazione2["message_to_send_video_file_id"] = None
             associazione2['time'] = None
             db_associazioni.messages_dict[associazione] = associazione2
         except Exception as e:
