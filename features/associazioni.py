@@ -83,14 +83,17 @@ def assoc_read(update, context):
             utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
             pass
         else:
-            invia_anon(update.message.chat.id,
+            inviato, messaggio_inviato = invia_anon(update.message.chat.id,
                        caption=read_message.get("message_to_send_caption"),
                        text=read_message.get("message_to_send_text"),
                        photo=CreatePhotoFromJson(read_message),
                        audio_file_id=read_message.get("message_to_send_audio_file_id"),
                        voice_file_id=read_message.get("message_to_send_voice_file_id"),
                        video_file_id=read_message.get("message_to_send_video_file_id"))
-            pass
+
+            if inviato is False:
+                utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
+                return None
 
     except:
         utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
