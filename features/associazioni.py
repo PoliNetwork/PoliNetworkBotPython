@@ -297,20 +297,27 @@ def send_scheduled_messages():
     for associazione in db_associazioni.messages_dict:
         try:
             associazione2 = db_associazioni.messages_dict.get(associazione)
-            if True:
-                inviato, forse_inviato = invia_anon(db_associazioni.group,
-                                                    caption=associazione2['message_to_send_caption'],
-                                                    text=associazione2['message_to_send_text'],
-                                                    photo=CreatePhotoFromJson(associazione2),
-                                                    audio_file_id=associazione2["message_to_send_audio_file_id"],
-                                                    voice_file_id=associazione2["message_to_send_voice_file_id"],
-                                                    video_file_id=associazione2["message_to_send_video_file_id"])
+
+            inviato, forse_inviato = invia_anon(db_associazioni.group,
+                                                caption=associazione2['message_to_send_caption'],
+                                                text=associazione2['message_to_send_text'],
+                                                photo=CreatePhotoFromJson(associazione2),
+                                                audio_file_id=associazione2["message_to_send_audio_file_id"],
+                                                voice_file_id=associazione2["message_to_send_voice_file_id"],
+                                                video_file_id=associazione2["message_to_send_video_file_id"])
+
+            if inviato is True:
+                # todo: inviare un messaggio a quelli dell'associazione dicendo che hanno preso parte a questa
+                #  data di pubblicazione
+                pass
             else:
                 # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
                 #  data di pubblicazione
                 pass
+
         except Exception as e:
             pass
+        
     db_associazioni.date = "00:00:00:00:00"
     db_associazioni.config_json.update({"date": db_associazioni.date})
     save_date()
