@@ -21,7 +21,8 @@ json = {
         "name": "PoliNetwork",
         "link": "",
         "users": [
-            5651789  # @ArmeF97
+            5651789,  # @ArmeF97
+            203350312  # @GabrieleAur98
         ]
     },
     "WoShou": {
