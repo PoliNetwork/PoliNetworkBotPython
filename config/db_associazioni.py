@@ -31,5 +31,16 @@ json = {
         "users": [
             128132149  # @zhupeng
         ]
+    },
+    "PoliEdro": {
+        "name": "PoliEdro",
+        "link": "",
+        "users": [
+            652321021,  # @LucaUso
+            793377028,  # @Dagorsil
+            402462709,  # @disturbed_potato
+            10570026,  # @Markobau
+            166614456,  # @Helgafell
+        ]
     }
 }
