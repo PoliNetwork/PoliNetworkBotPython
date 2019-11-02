@@ -317,7 +317,7 @@ def send_scheduled_messages():
 
         except Exception as e:
             pass
-        
+
     db_associazioni.date = "00:00:00:00:00"
     db_associazioni.config_json.update({"date": db_associazioni.date})
     save_date()
