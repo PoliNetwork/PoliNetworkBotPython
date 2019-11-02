@@ -186,7 +186,7 @@ def assoc_write(update, context):
                      "message_to_send_photo_width": photo2.width,
                      "message_to_send_audio_file_id": audio_file_id,
                      "message_to_send_voice_file_id": voice_file_id,
-                     "message_to_send_video_file_id":video_file_id,
+                     "message_to_send_video_file_id": video_file_id,
                      "time": datetime.datetime.now().strftime(
                          '%d-%m-%Y %H:%M:%S')
                      }
@@ -256,23 +256,24 @@ def invia_anon(destination, caption, text, photo, audio_file_id, voice_file_id, 
             message_sent = variable.updater.bot.send_video(chat_id=destination,
                                                            video=video_file_id,
                                                            caption=caption)
-        elif video_note is not None:
-            message_sent = variable.updater.bot.send_video_note(chat_id=destination,
-                                                                video_note=video_note.file_id,
-                                                                caption=caption)
-        elif document is not None:
-            message_sent = variable.updater.bot.send_document(chat_id=destination,
-                                                              document=document.file_id,
-                                                              caption=caption)
-        elif sticker is not None:
-            message_sent = variable.updater.bot.send_sticker(chat_id=destination,
-                                                             sticker=sticker.file_id,
-                                                             caption=caption)
-        elif location is not None:
-            message_sent = variable.updater.bot.send_location(chat_id=destination,
-                                                              latitude=location.latitude,
-                                                              longitude=location.longitude,
-                                                              caption=caption)
+        #
+        # elif video_note is not None:
+        #    message_sent = variable.updater.bot.send_video_note(chat_id=destination,
+        #                                                        video_note=video_note.file_id,
+        #                                                        caption=caption)
+        # elif document is not None:
+        #    message_sent = variable.updater.bot.send_document(chat_id=destination,
+        #                                                      document=document.file_id,
+        #                                                      caption=caption)
+        # elif sticker is not None:
+        #    message_sent = variable.updater.bot.send_sticker(chat_id=destination,
+        #                                                     sticker=sticker.file_id,
+        #                                                     caption=caption)
+        # elif location is not None:
+        #    message_sent = variable.updater.bot.send_location(chat_id=destination,
+        #                                                      latitude=location.latitude,
+        #                                                      longitude=location.longitude,
+        #                                                      caption=caption)
         else:
             return False, None
 
