@@ -84,15 +84,16 @@ def assoc_read(update, context):
             pass
         else:
             inviato, messaggio_inviato = invia_anon(update.message.chat.id,
-                       caption=read_message.get("message_to_send_caption"),
-                       text=read_message.get("message_to_send_text"),
-                       photo=CreatePhotoFromJson(read_message),
-                       audio_file_id=read_message.get("message_to_send_audio_file_id"),
-                       voice_file_id=read_message.get("message_to_send_voice_file_id"),
-                       video_file_id=read_message.get("message_to_send_video_file_id"))
+                                                    caption=read_message.get("message_to_send_caption"),
+                                                    text=read_message.get("message_to_send_text"),
+                                                    photo=CreatePhotoFromJson(read_message),
+                                                    audio_file_id=read_message.get("message_to_send_audio_file_id"),
+                                                    voice_file_id=read_message.get("message_to_send_voice_file_id"),
+                                                    video_file_id=read_message.get("message_to_send_video_file_id"))
 
             if inviato is False:
                 utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
+                assoc_delete2(update, True)
                 return None
 
     except:
@@ -206,7 +207,7 @@ def assoc_write(update, context):
     return None
 
 
-def assoc_delete(update, context):
+def assoc_delete2(update, nascondi_messaggi):
     associazione = get_associazione_name_from_user(update.message.from_user.id)
 
     if associazione is None:
@@ -215,15 +216,21 @@ def assoc_delete(update, context):
 
     read_message = get_message_from_associazione_name(associazione)
     if read_message is None:
-        utils.send_in_private_or_in_group("Nessun messaggio in coda",
-                                          update.message.chat.id, update.message.from_user)
+        if nascondi_messaggi is False:
+            utils.send_in_private_or_in_group("Nessun messaggio in coda",
+                                              update.message.chat.id, update.message.from_user)
         pass
     else:
         db_associazioni.messages_dict.pop(associazione, None)
-        utils.send_in_private_or_in_group("Messaggio rimosso con successo",
-                                          update.message.chat.id, update.message.from_user)
+        if nascondi_messaggi is False:
+            utils.send_in_private_or_in_group("Messaggio rimosso con successo",
+                                              update.message.chat.id, update.message.from_user)
         save_ass_messages()
     pass
+
+
+def assoc_delete(update, context):
+    assoc_delete2(update, False)
     return None
 
 
