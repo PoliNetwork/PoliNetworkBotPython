@@ -76,5 +76,12 @@ json = {
         "users": [
             94927507  # @GioScatta
         ]
+    },
+    "AIM": {
+        "name": "AIM",
+        "link": "",
+        "users": [
+            89735486  # @SirPopiel
+        ]
     }
 }
