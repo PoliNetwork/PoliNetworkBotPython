@@ -49,5 +49,14 @@ json = {
         "users": [
             381711172  # @johnnyshock
         ]
+    },
+    "MESA": {
+        "name": "MESA",
+        "link": "",
+        "users": [
+            572959546,  # @Paoli_sPRitz_ina
+            498674296,  # @FrauLichteschtoin
+            169445839  # @SimoneMaestri
+        ]
     }
 }

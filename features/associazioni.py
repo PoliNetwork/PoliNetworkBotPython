@@ -95,6 +95,17 @@ def assoc_read(update, context):
                 utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
                 assoc_delete2(update, True)
                 return None
+            else:
+                username = read_message.get("from_username")
+                if username is None or len(username) < 1:
+                    username = "[No username!]"
+                else:
+                    username = "@" + username
+
+                msg1 = read_message.get("time") + " by " + username
+                utils.send_in_private_or_in_group(msg1,
+                                                  update.message.chat.id,
+                                                  update.message.from_user)
 
     except:
         utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
@@ -103,8 +114,6 @@ def assoc_read(update, context):
 
 
 def check_message_associazioni(update):
-    # todo: controllare che il messaggio rispetti i requisiti, inviare all'utente eventuali errori, e poi tornare True se il messaggio è valido, False altrimenti
-
     message2 = update.message.reply_to_message
 
     if message2 is None:
@@ -178,6 +187,9 @@ def assoc_write(update, context):
                                                   update.message.chat.id, update.message.from_user)
                 return
 
+            username = update.message.chat.username
+            if username is None or len(username) < 1:
+                username = "[No username!]"
             photo2 = GetLargerPhoto(messaggio_originale.photo)
             audio_file_id = GetAudioFileID(messaggio_originale)
             voice_file_id = GetVoiceFileID(messaggio_originale)
@@ -191,6 +203,7 @@ def assoc_write(update, context):
                      "message_to_send_audio_file_id": audio_file_id,
                      "message_to_send_voice_file_id": voice_file_id,
                      "message_to_send_video_file_id": video_file_id,
+                     "from_username": username,
                      "time": datetime.datetime.now().strftime(
                          '%d-%m-%Y %H:%M:%S')
                      }
@@ -334,6 +347,7 @@ def send_scheduled_messages():
             associazione2["message_to_send_audio_file_id"] = None
             associazione2["message_to_send_voice_file_id"] = None
             associazione2["message_to_send_video_file_id"] = None
+            associazione2["from_username"] = None
             associazione2['time'] = None
             db_associazioni.messages_dict[associazione] = associazione2
         except Exception as e:
