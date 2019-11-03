@@ -83,5 +83,19 @@ json = {
         "users": [
             89735486  # @SirPopiel
         ]
+    },
+    "Resilient GAP": {
+        "name": "Resilient GAP",
+        "link": "",
+        "users": [
+            566650603  # @Eleonora_Redaelli
+        ]
+    },
+    "Skyward": {
+        "name": "Skyward",
+        "link": "",
+        "users": [
+            93369600  # @jeyjey11
+        ]
     }
 }
