@@ -62,5 +62,12 @@ json = {
             192532766,  # @emilygreta
             191331983  # @fatmagentatranslucent
         ]
+    },
+    "ListaAperta": {
+        "name": "ListaAperta",
+        "link": "",
+        "users": [
+            451955751  # @matteooggioni
+        ]
     }
 }
