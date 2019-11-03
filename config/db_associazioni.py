@@ -42,5 +42,12 @@ json = {
             10570026,  # @Markobau
             166614456,  # @Helgafell
         ]
+    },
+    "PoliRadio": {
+        "name": "PoliRadio",
+        "link": "",
+        "users": [
+            381711172  # @johnnyshock
+        ]
     }
 }

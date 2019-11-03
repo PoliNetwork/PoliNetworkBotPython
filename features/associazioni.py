@@ -371,3 +371,21 @@ def save_ass_messages():
 def save_date():
     with open("data/date.json", 'w', encoding="utf-8") as file:
         jsonn.dump(db_associazioni.config_json, file)
+
+
+def assoc_read_all(update, context):
+    # todo: check se è un owner, altrimenti return
+    # todo: se è un owner, rispondere con i messaggi in coda di tutte le associazioni.
+    return None
+
+
+def assoc_set_date(update, context):
+    # todo: importare la data "db_associazioni.date" a quella passata come paremetro a questa funzione
+    # formato della data passata = "2019:11:30:15:56:43"
+    # YY:MM:DD:HH:mm:ss
+
+    # salvare poi la data sul file, formattata in modo corretto
+    # db_associazioni.date = "00:00:00:00:00"
+    # db_associazioni.config_json.update({"date": db_associazioni.date})
+    # save_date()
+    return None

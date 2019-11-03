@@ -69,6 +69,8 @@ dispatcher.add_handler(CommandHandler('remove_material', materials.add_remove_ma
 dispatcher.add_handler(CommandHandler('assoc_read', associazioni.assoc_read))
 dispatcher.add_handler(CommandHandler('assoc_write', associazioni.assoc_write))
 dispatcher.add_handler(CommandHandler('assoc_delete', associazioni.assoc_delete))
+dispatcher.add_handler(CommandHandler('assoc_read_all', associazioni.assoc_read_all))
+dispatcher.add_handler(CommandHandler('assoc_date', associazioni.assoc_set_date))
 
 # all
 dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))
