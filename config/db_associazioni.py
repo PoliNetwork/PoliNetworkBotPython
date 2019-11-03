@@ -56,7 +56,11 @@ json = {
         "users": [
             572959546,  # @Paoli_sPRitz_ina
             498674296,  # @FrauLichteschtoin
-            169445839  # @SimoneMaestri
+            169445839,  # @SimoneMaestri
+            436266604,  # @alepas
+            457924371,  # @tommy_lucarelli
+            192532766,  # @emilygreta
+            191331983  # @fatmagentatranslucent
         ]
     }
 }
