@@ -1,7 +1,9 @@
 import datetime
 import json as jsonn
 import time
+from random import shuffle
 from threading import Thread
+
 import telegram.ext
 
 import variable
@@ -306,8 +308,14 @@ def invia_anon(destination, caption, text, photo, audio_file_id, voice_file_id, 
         return False, None
 
 
-def send_scheduled_messages():
+def send_scheduled_messages2():
+    associazioni2 = []
     for associazione in db_associazioni.messages_dict:
+        associazioni2.append(associazione)
+
+    shuffle(associazioni2)
+
+    for associazione in associazioni2:
         try:
             associazione2 = db_associazioni.messages_dict.get(associazione)
 
@@ -330,6 +338,10 @@ def send_scheduled_messages():
 
         except Exception as e:
             pass
+
+
+def send_scheduled_messages():
+    send_scheduled_messages2()
 
     db_associazioni.date = "00:00:00:00:00"
     db_associazioni.config_json.update({"date": db_associazioni.date})
