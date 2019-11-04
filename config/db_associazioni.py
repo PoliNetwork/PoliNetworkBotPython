@@ -105,5 +105,13 @@ json = {
             238880018,  # @CarloGiova
             341098092  # @Teclilaa
         ]
+    },
+    "TernaSinistrosa": {
+        "name": "TernaSinistrosa",
+        "link": "",
+        "users": [
+            450395880,  # @Alice_Simionato
+            125235631  # @fabrizio_vasconi
+        ]
     }
 }
