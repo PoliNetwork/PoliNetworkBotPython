@@ -82,7 +82,7 @@ def ban_all2(receiver):
             # variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
             try:
                 variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
-                count = count + 1
+                count += 1
             except Exception as e1:
                 try:
                     e1 = str(e1)

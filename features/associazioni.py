@@ -432,7 +432,7 @@ def assoc_read_all(update, context):
         if v2 is not None:
             ret = assoc_read2(read_message=v2, chat_id=update.message.chat.id, error1=None, update=None, nome_assoc=v1)
             if ret is True:
-                count = count+1
+                count += 1
 
     if count == 0:
         variable.updater.bot.send_message(update.message.chat.id, "Nessun messaggio in coda da parte di nessuno!")
