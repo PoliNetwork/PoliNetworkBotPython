@@ -65,7 +65,7 @@ def get_message_from_associazione_json(json):
     return None
 
 
-def CreatePhotoFromJson(read_message):
+def CreatePhotoFromJson(read_message, chat_id):
     try:
         return telegram.PhotoSize(file_id=read_message["message_to_send_photo_file_id"],
                                   width=read_message["message_to_send_photo_width"],
@@ -77,36 +77,42 @@ def CreatePhotoFromJson(read_message):
     return None
 
 
+def assoc_read3(read_message, chat_id, nome_assoc, update, error1):
+    inviato, messaggio_inviato = invia_anon(chat_id,
+                                            caption=read_message.get("message_to_send_caption"),
+                                            text=read_message.get("message_to_send_text"),
+                                            photo=CreatePhotoFromJson(read_message),
+                                            audio_file_id=read_message.get("message_to_send_audio_file_id"),
+                                            voice_file_id=read_message.get("message_to_send_voice_file_id"),
+                                            video_file_id=read_message.get("message_to_send_video_file_id"))
+
+    if inviato is False:
+        if update is not None:
+            if error1 is not None:
+                variable.updater.bot.send_message(chat_id, error1)
+            assoc_delete2(update, True)
+        return None
+    else:
+        username = read_message.get("from_username")
+        if username is None or len(username) < 1:
+            username = "[No username!]"
+        else:
+            username = "@" + username
+
+        msg1 = read_message.get("time") + " by " + username
+        msg1 = msg1 + " " + "[" + nome_assoc + "]"
+        variable.updater.bot.send_message(chat_id, msg1)
+        return True
+
+
 def assoc_read2(read_message, chat_id, error1, update, nome_assoc):
     if read_message is None:
         if error1 is not None:
             variable.updater.bot.send_message(chat_id, error1)
-        pass
     else:
-        inviato, messaggio_inviato = invia_anon(chat_id,
-                                                caption=read_message.get("message_to_send_caption"),
-                                                text=read_message.get("message_to_send_text"),
-                                                photo=CreatePhotoFromJson(read_message),
-                                                audio_file_id=read_message.get("message_to_send_audio_file_id"),
-                                                voice_file_id=read_message.get("message_to_send_voice_file_id"),
-                                                video_file_id=read_message.get("message_to_send_video_file_id"))
+        return assoc_read3(read_message, chat_id, nome_assoc, update, error1)
 
-        if inviato is False:
-            if update is not None:
-                if error1 is not None:
-                    variable.updater.bot.send_message(chat_id, error1)
-                assoc_delete2(update, True)
-            return None
-        else:
-            username = read_message.get("from_username")
-            if username is None or len(username) < 1:
-                username = "[No username!]"
-            else:
-                username = "@" + username
-
-            msg1 = read_message.get("time") + " by " + username
-            msg1 = msg1 + " " + "[" + nome_assoc+ "]"
-            variable.updater.bot.send_message(chat_id, msg1)
+    return None
 
 
 def assoc_read(update, context):
@@ -420,10 +426,16 @@ def assoc_read_all(update, context):
     if chat_id not in creators.owners:  # only owners can do this command
         return
 
+    count = 0
     for v1 in db_associazioni.messages_dict:
         v2 = get_message_from_associazione_name(v1)
         if v2 is not None:
-            assoc_read2(read_message=v2, chat_id=update.message.chat.id, error1=None, update=None, nome_assoc=v1)
+            ret = assoc_read2(read_message=v2, chat_id=update.message.chat.id, error1=None, update=None, nome_assoc=v1)
+            if ret is True:
+                count = count+1
+
+    if count == 0:
+        variable.updater.bot.send_message(update.message.chat.id, "Nessun messaggio in coda da parte di nessuno!")
 
     return None
 
