@@ -224,6 +224,11 @@ def forward_message_anon(group_id, message, user_id, reply, identity):
         return False, None
 
 
+def send_to_fb():
+    # todo: send message to fb
+    pass
+
+
 def handler_callback(update, data):
     reply = None
     link = ""
@@ -242,12 +247,14 @@ def handler_callback(update, data):
         reply = int(data[len_reply - 1])
     if data[3] == 'Y':
         group_id = config_anon.public_group_id
+        message = None
         try:
             result, message = forward_message_anon(group_id,
                                                    update.callback_query.message.reply_to_message,
                                                    data[2],
                                                    reply,
                                                    identity)
+            send_to_fb()
         except Exception as e:
             pass
 
