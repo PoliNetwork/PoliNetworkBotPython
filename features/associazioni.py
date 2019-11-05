@@ -7,7 +7,7 @@ from threading import Thread
 import telegram.ext
 
 import variable
-from config import db_associazioni
+from config import db_associazioni, creators
 from functions import utils
 
 
@@ -33,11 +33,19 @@ def get_associazione_json_from_associazione_name(name):
 
 
 # prendi il messaggio dell'associazione dal nome dell'associazione
-def get_message_from_associazione_name(name):
-    assoc = None
+def get_associazione_json_from_associazione_name2(name):
     for associ in db_associazioni.json.keys():
-        if associ is name:
-            assoc = associ
+        if associ == name:
+            return associ
+
+    return None
+
+
+# prendi il messaggio dell'associazione dal nome dell'associazione
+def get_message_from_associazione_name(name):
+    assoc = get_associazione_json_from_associazione_name2(name)
+    if assoc is None:
+        return None
 
     if db_associazioni.messages_dict.__contains__(assoc):
         return db_associazioni.messages_dict.get(assoc)
@@ -69,6 +77,38 @@ def CreatePhotoFromJson(read_message):
     return None
 
 
+def assoc_read2(read_message, chat_id, error1, update, nome_assoc):
+    if read_message is None:
+        if error1 is not None:
+            variable.updater.bot.send_message(chat_id, error1)
+        pass
+    else:
+        inviato, messaggio_inviato = invia_anon(chat_id,
+                                                caption=read_message.get("message_to_send_caption"),
+                                                text=read_message.get("message_to_send_text"),
+                                                photo=CreatePhotoFromJson(read_message),
+                                                audio_file_id=read_message.get("message_to_send_audio_file_id"),
+                                                voice_file_id=read_message.get("message_to_send_voice_file_id"),
+                                                video_file_id=read_message.get("message_to_send_video_file_id"))
+
+        if inviato is False:
+            if update is not None:
+                if error1 is not None:
+                    variable.updater.bot.send_message(chat_id, error1)
+                assoc_delete2(update, True)
+            return None
+        else:
+            username = read_message.get("from_username")
+            if username is None or len(username) < 1:
+                username = "[No username!]"
+            else:
+                username = "@" + username
+
+            msg1 = read_message.get("time") + " by " + username
+            msg1 = msg1 + " " + "[" + nome_assoc+ "]"
+            variable.updater.bot.send_message(chat_id, msg1)
+
+
 def assoc_read(update, context):
     # leggi ed inoltra
     associazione = get_associazione_name_from_user(update.message.from_user.id)
@@ -81,33 +121,7 @@ def assoc_read(update, context):
 
     try:
         read_message = get_message_from_associazione_name(associazione)
-        if read_message is None:
-            utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
-            pass
-        else:
-            inviato, messaggio_inviato = invia_anon(update.message.chat.id,
-                                                    caption=read_message.get("message_to_send_caption"),
-                                                    text=read_message.get("message_to_send_text"),
-                                                    photo=CreatePhotoFromJson(read_message),
-                                                    audio_file_id=read_message.get("message_to_send_audio_file_id"),
-                                                    voice_file_id=read_message.get("message_to_send_voice_file_id"),
-                                                    video_file_id=read_message.get("message_to_send_video_file_id"))
-
-            if inviato is False:
-                utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
-                assoc_delete2(update, True)
-                return None
-            else:
-                username = read_message.get("from_username")
-                if username is None or len(username) < 1:
-                    username = "[No username!]"
-                else:
-                    username = "@" + username
-
-                msg1 = read_message.get("time") + " by " + username
-                utils.send_in_private_or_in_group(msg1,
-                                                  update.message.chat.id,
-                                                  update.message.from_user)
+        assoc_read2(read_message, update.message.chat.id, error1, update, nome_assoc=associazione)
 
     except:
         utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
@@ -400,17 +414,26 @@ def save_date():
 
 
 def assoc_read_all(update, context):
-    # todo: check se è un owner, altrimenti return
-    # todo: se è un owner, rispondere con i messaggi in coda di tutte le associazioni.
+    message = update.message
+    chat = message.chat
+    chat_id = chat.id
+    if chat_id not in creators.owners:  # only owners can do this command
+        return
+
+    for v1 in db_associazioni.messages_dict:
+        v2 = get_message_from_associazione_name(v1)
+        if v2 is not None:
+            assoc_read2(read_message=v2, chat_id=update.message.chat.id, error1=None, update=None, nome_assoc=v1)
+
     return None
 
 
 def assoc_set_date(update, context):
-    # todo: importare la data "db_associazioni.date" a quella passata come paremetro a questa funzione
+    # todo: importare la data "db_associazioni.date" a quella passata come parametro a questa funzione
     # formato della data passata = "2019:11:30:15:56:43"
     # YY:MM:DD:HH:mm:ss
 
-    # salvare poi la data sul file, formattata in modo corretto
+    # salvare poi la data sul file, formattata in modo corretto, con l'uso di questo codice:
     # db_associazioni.date = "00:00:00:00:00"
     # db_associazioni.config_json.update({"date": db_associazioni.date})
     # save_date()
