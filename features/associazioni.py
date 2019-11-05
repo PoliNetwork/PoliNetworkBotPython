@@ -65,7 +65,7 @@ def get_message_from_associazione_json(json):
     return None
 
 
-def CreatePhotoFromJson(read_message, chat_id):
+def CreatePhotoFromJson(read_message):
     try:
         return telegram.PhotoSize(file_id=read_message["message_to_send_photo_file_id"],
                                   width=read_message["message_to_send_photo_width"],
