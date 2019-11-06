@@ -113,5 +113,12 @@ json = {
             450395880,  # @Alice_Simionato
             125235631  # @fabrizio_vasconi
         ]
+    },
+    "JEMP": {
+        "name": "JEMP",
+        "link": "",
+        "users": [
+            624959740  # @Emi97
+        ]
     }
 }
