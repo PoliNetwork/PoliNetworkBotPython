@@ -6,7 +6,10 @@ messages_dict = jsonn.load(messages_file)
 config = open("data/date.json", encoding="utf-8")
 config_json = jsonn.load(config)
 
-group = "-1001452300981"
+group = "-1001117918825"  # @PoliAssociazioni
+# group = "-1001452300981" # Canale test
+
+
 date = config_json.get("date")
 
 json = {

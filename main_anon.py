@@ -108,6 +108,12 @@ def post_anonimi(update, context):
                                                                + " " + 'Y'
                                                                + " " + str(identity)
                                                                + message_reply_id2),
+            InlineKeyboardButton(text="Uncensored", callback_data='anon'
+                                                                  + " " + str(message2_id)
+                                                                  + " " + str(message.chat.id)
+                                                                  + " " + 'U'
+                                                                  + " " + str(identity)
+                                                                  + message_reply_id2),
             InlineKeyboardButton(text="Rifiuta", callback_data='anon'
                                                                + " " + str(message2_id)
                                                                + " " + str(message.chat.id)
@@ -229,6 +235,31 @@ def send_to_fb():
     pass
 
 
+def send_to_tg(group_id, update, data, reply, identity, option):
+    message = None
+    try:
+        result, message = forward_message_anon(group_id,
+                                               update.callback_query.message.reply_to_message,
+                                               data[2],
+                                               reply,
+                                               identity)
+        send_to_fb()
+    except Exception as e:
+        pass
+
+    link = message.link
+
+    s1 = None
+    if option == 'U':
+        s1 = "Il tuo messaggio è stato pubblicato su @PoliAnoniMiUncensored, qui il link "
+    elif option == 'Y':
+        s1 = "Il tuo messaggio è stato pubblicato su @PoliAnoniMi, qui il link "
+    else:
+        s1 = "Il tuo messaggio è stato pubblicato, qui il link "
+    variable_anon.updater.bot.send_message(chat_id=data[2], text=s1 + str(link))
+    return link
+
+
 def handler_callback(update, data):
     reply = None
     link = ""
@@ -245,22 +276,15 @@ def handler_callback(update, data):
 
     if len(data) == len_reply:
         reply = int(data[len_reply - 1])
-    if data[3] == 'Y':
-        group_id = config_anon.public_group_id
-        message = None
-        try:
-            result, message = forward_message_anon(group_id,
-                                                   update.callback_query.message.reply_to_message,
-                                                   data[2],
-                                                   reply,
-                                                   identity)
-            send_to_fb()
-        except Exception as e:
-            pass
 
-        link = message.link
-        variable_anon.updater.bot.send_message(chat_id=data[2], text="Il tuo messaggio è "
-                                                                     "stato pubblicato, qui il link " + str(link))
+    option = data[3]
+    link = None
+    if option == 'Y':
+        link = send_to_tg(config_anon.public_group_id,
+                          update, data, reply, identity, option)
+    elif option == 'U':
+        link = send_to_tg(config_anon.public_uncensored_group_id,
+                          update, data, reply, identity, option)
     else:
         variable_anon.updater.bot.send_message(chat_id=data[2],
                                                text="Il tuo messaggio è stato rifiutato. \nControlla di "
@@ -270,14 +294,13 @@ def handler_callback(update, data):
 
     query = update.callback_query
     id2 = data[2]
-    option = data[3]
 
     if len(data) == len_reply:
         reply_string = "\n[In risposta a t.me/PoliAnoniMi/" + str(reply) + "]"
     else:
         reply_string = ""
 
-    if data[3] == 'Y':
+    if option == 'Y' or option == 'U':
         query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
                                      str(id2) + reply_string + "\n" + str(link) + "\n" + "Identità: " + str(identity))
     else:
