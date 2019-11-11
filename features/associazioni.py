@@ -198,7 +198,9 @@ def assoc_write(update, context):
     messaggio_valido = check_message_associazioni(update)
     if messaggio_valido:
         if get_message_from_associazione_name(associazione) is not None:
-            utils.send_in_private_or_in_group("Messaggio già in coda. Rimuovilo con /assoc_delete.",
+            utils.send_in_private_or_in_group("C'è un messaggio già in coda. "
+                                              "Guardalo con /assoc_read. "
+                                              "Rimuovilo con /assoc_delete.",
                                               update.message.chat.id, update.message.from_user)
             return
 
