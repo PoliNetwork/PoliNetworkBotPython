@@ -71,6 +71,7 @@ dispatcher.add_handler(CommandHandler('assoc_write', associazioni.assoc_write))
 dispatcher.add_handler(CommandHandler('assoc_delete', associazioni.assoc_delete))
 dispatcher.add_handler(CommandHandler('assoc_read_all', associazioni.assoc_read_all))
 dispatcher.add_handler(CommandHandler('assoc_date', associazioni.assoc_set_date))
+dispatcher.add_handler(CommandHandler('assoc_send', associazioni.assoc_send))
 
 # all
 dispatcher.add_handler(MessageHandler(Filters.all, all_messages.check_message))

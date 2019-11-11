@@ -216,12 +216,37 @@ def assoc_write(update, context):
             audio_file_id = GetAudioFileID(messaggio_originale)
             voice_file_id = GetVoiceFileID(messaggio_originale)
             video_file_id = GetVideoFileID(messaggio_originale)
+
+            ph2_file_id = None
+            try:
+                ph2_file_id = photo2.file_id
+            except:
+                pass
+
+            ph2_file_size = None
+            try:
+                ph2_file_size = photo2.file_size
+            except:
+                pass
+
+            ph2_height = None
+            try:
+                ph2_height = photo2.height
+            except:
+                pass
+
+            ph2_width = None
+            try:
+                ph2_width = photo2.width
+            except:
+                pass
+
             dict1 = {"message_to_send_caption": messaggio_originale.caption,
                      "message_to_send_text": messaggio_originale.text,
-                     "message_to_send_photo_file_id": photo2.file_id,
-                     "message_to_send_photo_file_size": photo2.file_size,
-                     "message_to_send_photo_height": photo2.height,
-                     "message_to_send_photo_width": photo2.width,
+                     "message_to_send_photo_file_id": ph2_file_id,
+                     "message_to_send_photo_file_size": ph2_file_size,
+                     "message_to_send_photo_height": ph2_height,
+                     "message_to_send_photo_width": ph2_width,
                      "message_to_send_audio_file_id": audio_file_id,
                      "message_to_send_voice_file_id": voice_file_id,
                      "message_to_send_video_file_id": video_file_id,
@@ -450,3 +475,13 @@ def assoc_set_date(update, context):
     # db_associazioni.config_json.update({"date": db_associazioni.date})
     # save_date()
     return None
+
+
+def assoc_send(update, context):
+    message = update.message
+    chat = message.chat
+    chat_id = chat.id
+    if chat_id not in creators.owners:  # only owners can do this command
+        return
+
+    send_scheduled_messages()
