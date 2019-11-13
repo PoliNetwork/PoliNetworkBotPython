@@ -3,7 +3,7 @@ import urllib
 import urllib.request
 # noinspection PyUnresolvedReferences
 import lxml
-from bs4 import BeautifulSoup
+from beautifulsoup4 import BeautifulSoup
 
 
 def f1(url):
