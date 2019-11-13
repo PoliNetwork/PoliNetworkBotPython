@@ -5,7 +5,7 @@ import lxml
 from bs4 import BeautifulSoup
 
 
-def f1(url):
+def f1(url, aula_da_trovare):
     contents = urllib.request.urlopen(url).read()
 
     soup = BeautifulSoup(contents, 'html.parser')
@@ -13,7 +13,7 @@ def f1(url):
     mydivs2 = mydivs.findAll("table", {"class": "scrollTable"})[0]
     mydivs3 = mydivs2.findAll("td", {"class": "dove"})
 
-    aula_da_trovare = "N.0.2"
+
 
     head = soup.findAll("head", {})[0]
 
@@ -74,7 +74,7 @@ def f2(aula, head):
     return f4(aula2, intestazione, head)
 
 
-def f5(day, month, year):
+def f5(day, month, year, aula_da_trovare):
     url = "https://www7.ceda.polimi.it/spazi/spazi/controller/OccupazioniGiornoEsatto.do?" \
           "csic=MIA" \
           "&categoria=tutte" \
@@ -84,9 +84,10 @@ def f5(day, month, year):
           "&giorno_year=" + str(year) + \
           "&jaf_giorno_date_format=dd%2FMM%2Fyyyy&evn_visualizza="
 
-    return f1(url)
+    return f1(url, aula_da_trovare)
 
 
 datetime_object = datetime.datetime.now()
-result = f5(datetime_object.day, datetime_object.month, datetime_object.year)
+aula_da_trovare = "N.0.2"
+result = f5(datetime_object.day, datetime_object.month, datetime_object.year, aula_da_trovare)
 pass
