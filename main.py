@@ -6,7 +6,7 @@ import main_userbot
 import variable
 from config import creators
 from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, recordings, \
-    associazioni
+    associazioni, aule
 from functions import utils
 
 
@@ -44,6 +44,10 @@ dispatcher.add_handler(CommandHandler('help_anon', anonimi.help_handler))
 # PoliRecordings
 dispatcher.add_handler(CommandHandler('postrecording', recordings.post_recordings))
 dispatcher.add_handler(CommandHandler('help_record', recordings.help_handler))
+
+# Aule
+dispatcher.add_handler(CommandHandler('aula', aule.get_orari_aula))
+
 
 # test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))

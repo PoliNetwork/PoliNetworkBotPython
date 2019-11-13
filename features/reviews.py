@@ -344,6 +344,26 @@ def get_reviews_html_private(update):
     send_html_reviews(reviews_list, update)
 
 
+def send_file(update, html, filename, title):
+    with open(filename, 'w', encoding="utf-8") as file_to_write:
+        file_to_write.write(html)
+
+    html = open(filename, 'rb')
+    # then send them
+
+    if title is None:
+        utils.send_file_in_private_or_warning_in_group(update.message.from_user, html,
+                                                       update.message.chat.id, update.message.chat.title, False)
+    else:
+        utils.send_file_in_private_or_warning_in_group(update.message.from_user, html,
+                                                       update.message.chat.id, title, True)
+    html.close()
+    try:
+        os.remove(filename)
+    except Exception as e:
+        utils.notify_owners(e, 21)
+
+
 def send_html_reviews(reviews_list, update):
     if reviews_list is None:
         return
@@ -362,19 +382,7 @@ def send_html_reviews(reviews_list, update):
 
     n = random.randint(1, 9999999)
     filename = 'data/review' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
-
-    with open(filename, 'w', encoding="utf-8") as file_to_write:
-        file_to_write.write(html)
-
-    html = open(filename, 'rb')
-    # then send them
-    utils.send_file_in_private_or_warning_in_group(update.message.from_user, html,
-                                                   update.message.chat.id, update.message.chat.title)
-    html.close()
-    try:
-        os.remove(filename)
-    except Exception as e:
-        utils.notify_owners(e, 21)
+    send_file(update, html, filename, None)
 
 
 def get_reviews_html(update, context):

@@ -1,8 +1,11 @@
 import datetime
+import random
 import urllib
 import urllib.request
 import lxml
 from bs4 import BeautifulSoup
+
+from features import reviews
 
 
 def f1(url, aula_da_trovare):
@@ -85,7 +88,20 @@ def f5(day, month, year, aula_da_trovare):
     return f1(url, aula_da_trovare)
 
 
-datetime_object = datetime.datetime.now()
-aula_da_trovare = "N.0.2"
-result = f5(datetime_object.day, datetime_object.month, datetime_object.year, aula_da_trovare)
-pass
+def get_orari_aula(update, context):
+    datetime_object = datetime.datetime.now()
+
+    message = update.message
+    text = message.text
+    text = str(text)
+    text = text[6:]
+    text = text.strip()
+
+    aula_da_trovare = text
+    result = f5(datetime_object.day, datetime_object.month, datetime_object.year, aula_da_trovare)
+
+    n = random.randint(1, 9999999)
+    filename = 'data/aula' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
+    reviews.send_file(update, result, filename, aula_da_trovare)
+
+    return None
