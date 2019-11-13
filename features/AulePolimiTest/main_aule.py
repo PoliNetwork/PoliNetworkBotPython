@@ -13,8 +13,6 @@ def f1(url, aula_da_trovare):
     mydivs2 = mydivs.findAll("table", {"class": "scrollTable"})[0]
     mydivs3 = mydivs2.findAll("td", {"class": "dove"})
 
-
-
     head = soup.findAll("head", {})[0]
 
     for aula in mydivs3:
