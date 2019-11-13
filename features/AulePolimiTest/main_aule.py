@@ -1,9 +1,8 @@
 import datetime
 import urllib
 import urllib.request
-# noinspection PyUnresolvedReferences
 import lxml
-from beautifulsoup4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 
 def f1(url):
