@@ -26,25 +26,44 @@ def f1(url, aula_da_trovare):
 
 
 def f3(aula2):
-    list = []
+
+    list2 = []
     temp = aula2
     while True:
+
         prec = temp.previous_sibling
         e1 = None
         try:
-
             e1 = prec.findAll("td", {"class": "innerEdificio"})
         except:
             pass
 
-        list.append(prec)
+        if prec is not None:
+            list2.append(prec)
 
         if (e1 is not None) and len(e1) == 1:
-            return list
+            return list2
 
         temp = prec
 
     return None
+
+
+def f6(intestazione2):
+    count = 0
+    html = ""
+    for int35 in intestazione2:
+
+        if count >= 2:
+            return html
+
+        html += "<tr>"
+        html += int35.prettify()
+        html += "</tr>"
+
+        count += 1
+
+    return html
 
 
 def f4(aula, intestazione, head):
@@ -55,10 +74,7 @@ def f4(aula, intestazione, head):
     html += "<table>"
 
     intestazione2 = reversed(intestazione)
-    for int35 in intestazione2:
-        html += "<tr>"
-        html += int35.prettify()
-        html += "</tr>"
+    html += f6(intestazione2)
 
     html += aula.prettify()
 
