@@ -121,6 +121,8 @@ def send_file_in_private_or_warning_in_group(user, document, group_id, title, fo
             variable.updater.bot.send_document(chat_id=user_id, document=document, caption=caption)
     except Unauthorized as e:
         success = False
+    except Exception as e2:
+        success = False
 
     if success is True:
         return

@@ -1,8 +1,8 @@
+import hashlib
 import json
 import os
 import random
 from json import JSONDecodeError
-import hashlib
 
 import variable
 from config import creators
@@ -348,16 +348,17 @@ def send_file(update, html, filename, title):
     with open(filename, 'w', encoding="utf-8") as file_to_write:
         file_to_write.write(html)
 
-    html = open(filename, 'rb')
+    html2 = open(filename, 'rb')
+
     # then send them
 
     if title is None:
-        utils.send_file_in_private_or_warning_in_group(update.message.from_user, html,
+        utils.send_file_in_private_or_warning_in_group(update.message.from_user, html2,
                                                        update.message.chat.id, update.message.chat.title, False)
     else:
-        utils.send_file_in_private_or_warning_in_group(update.message.from_user, html,
+        utils.send_file_in_private_or_warning_in_group(update.message.from_user, html2,
                                                        update.message.chat.id, title, True)
-    html.close()
+    html2.close()
     try:
         os.remove(filename)
     except Exception as e:
