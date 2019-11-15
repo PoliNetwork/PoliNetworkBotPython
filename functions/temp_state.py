@@ -20,10 +20,12 @@
 # Per gestire il tutto serve un thread di eliminazione, un json scritto su file, e un lock che si usa scrittura. Nota
 # bene: il lock potrebbe anche essere messo in una funzione di lettura, se nel suo percorso di esecuzione c'è anche
 # solo la possibilità che scriva.
-
-
+import datetime
 import json as jsonn
+import random
 
+import variable
+from features import aule, reviews
 
 state_dict = None
 try:
@@ -42,16 +44,50 @@ def get_state(id_telegram):
     return None
 
 
-def next_abc(id_telegram, stato):
-    # esempio: se il modulo è abc, viene gestito dalla next abc occhio: prima di passare ad un nuovo stato
-    # aggiornando il valore di "state", bisogna controllare che sia ancora nel json, perché magari il tempo è scaduto
+def overwrite_state(id_telegram, stato):
+
+    # todo: occhio! bisogna controllare che ci sia qualcosa nel json, perché se è vuoto, è stato eliminato
+    if state_dict[id_telegram] is None:
+        return
+
+    # todo: scrivere su file e usare il lock
+    state_dict[id_telegram] = stato
     return None
 
 
-def next_main(id_telegram):
+def delete_state(id_telegram):
+    # todo: rimuovi id_telegram e tutto il suo stato dal dizionario, scrivi su file (usare il lock)
+    pass
+
+
+def next_a1(update, id_telegram, stato):
+    if stato["state"] == "0":
+        variable.updater.bot.send_message(chat_id=update.message.chat.id,
+                                          text="Scrivi il codice dell'aula (esempio: N.0.1)")
+        stato["state"] = "1"
+        overwrite_state(id_telegram, stato)
+        return None
+    elif stato["state"] == "1":
+        datetime_object = datetime.datetime.now()
+        message = update.message
+        text = message.text
+        aula_da_trovare = text
+        result = aule.f5(datetime_object.day, datetime_object.month, datetime_object.year, aula_da_trovare)
+        n = random.randint(1, 9999999)
+        filename = 'data/aula' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
+        reviews.send_file(update, result, filename, aula_da_trovare)
+
+        delete_state(id_telegram)
+
+        return None
+
+    return None
+
+
+def next_main(id_telegram, update):
     # noinspection PyNoneFunctionAssignment
     stato = get_state(id_telegram)
-    if stato["module"] == "abc":  # esempio
-        return next_abc(id_telegram, stato)
+    if stato["module"] == "a1":
+        return next_a1(update, id_telegram, stato)
     else:
         return None
