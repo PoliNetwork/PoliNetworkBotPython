@@ -8,11 +8,12 @@
 # la sua sessione sarà rimossa senza dare nessun avviso.
 
 # Gli stati sono un json che ha come chiave l'id telegram della persona, e come valore al suo interno 2 valori
-# "module", "state", "values" dove "module" è una stringa, è il nome della macchina a stati finiti che l'utente sta
-# attraversando dove "state" è il punto della macchina a stati finiti in cui l'utente si trova dove "values" è un
-# array di stringhe, delle variabili opzionali utili per passarsi valori man mano che si avanza negli stati
+# "date", "module", "state", "values" dove "module" è una stringa, è il nome della macchina a stati finiti che
+# l'utente sta attraversando dove "state" è il punto della macchina a stati finiti in cui l'utente si trova dove
+# "values" è un array di stringhe, delle variabili opzionali utili per passarsi valori man mano che si avanza negli
+# stati
 
-# {123:{"module":"abc", "state": "1a", "values":["v1", "v2"]}}
+# {123:{"date":"2019-12-31_23:59", "module":"abc", "state": "1a", "values":["v1", "v2"]}}
 # qui sopra un esempio, 123 è l'id telegram, abc il nome
 # del modulo, 1a lo stato, v1 e v2 i valori dell'array dei valori.
 
@@ -35,7 +36,9 @@ except:
 
 
 def get_state(id_telegram):
-    # todo, ritorna lo stato di una persona leggendolo dal json "state_dict"
+    for ass in state_dict.keys():
+        if ass is id_telegram:
+            return state_dict.get(ass)
     return None
 
 
