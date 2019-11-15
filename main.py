@@ -8,6 +8,7 @@ from config import creators
 from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, recordings, \
     associazioni, aule
 from functions import utils
+from functions.temp_state import temp_state_main
 
 
 def start_handler(update, context):
@@ -48,6 +49,8 @@ dispatcher.add_handler(CommandHandler('help_record', recordings.help_handler))
 # Aule
 dispatcher.add_handler(CommandHandler('aula', aule.get_orari_aula))
 
+# Cancel
+dispatcher.add_handler(CommandHandler('cancel', temp_state_main.cancel))
 
 # test
 dispatcher.add_handler(CommandHandler('getgroupjson', groups.get_group_json))

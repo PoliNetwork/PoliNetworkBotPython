@@ -93,3 +93,8 @@ def create_state(module, state, id_telegram):
     stato = {"module": module, "state": state, "values": [], "time": ""}
     temp_state_variable.state_dict[id_telegram] = stato
     return None
+
+
+def cancel(update, context):
+    delete_state(update.message.chat.id)
+    return None

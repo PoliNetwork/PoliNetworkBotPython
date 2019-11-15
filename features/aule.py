@@ -3,6 +3,7 @@ import random
 import urllib
 import urllib.request
 from bs4 import BeautifulSoup
+import lxml
 
 from features import reviews
 from functions.temp_state import temp_state_main
