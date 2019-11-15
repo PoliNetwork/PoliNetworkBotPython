@@ -118,7 +118,8 @@ json = {
         "link": "",
         "users": [
             238880018,  # @CarloGiova
-            341098092  # @Teclilaa
+            341098092,  # @Teclilaa
+            232009625  # @NyquistX
         ]
     },
     "TernaSinistrosa": {
