@@ -3,7 +3,8 @@ import datetime
 import variable
 from config import creators
 from features import groups
-from functions import utils, temp_state
+from functions import utils
+from functions.temp_state import temp_state_main, temp_state_variable
 
 
 def check_blacklist(message):
@@ -168,11 +169,11 @@ def check_if_is_exit_message_of_user(message):
 
 
 def check_for_state(update):
-    stato = temp_state.state_dict[update.message.chat.id]
+    stato = temp_state_variable.state_dict[update.message.chat.id]
     if stato is None:
         return None
 
-    return temp_state.next_main(update.message.chat.id, update=update)
+    return temp_state_main.next_main(update.message.chat.id, update=update)
 
 
 def check_message(update, context):

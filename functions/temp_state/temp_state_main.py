@@ -21,41 +21,34 @@
 # bene: il lock potrebbe anche essere messo in una funzione di lettura, se nel suo percorso di esecuzione c'è anche
 # solo la possibilità che scriva.
 import datetime
-import json as jsonn
+
 import random
 
 import variable
 from features import aule, reviews
-
-state_dict = None
-try:
-    state_file = open("data/state.json", encoding="utf-8")
-    state_dict = jsonn.load(state_file)
-except:
-    state_dict = {}
-    # todo: crea il file e scrivilo su disco
+from functions.temp_state import temp_state_variable
 
 
 def get_state(id_telegram):
-    for ass in state_dict.keys():
+    for ass in temp_state_variable.state_dict.keys():
         if ass == id_telegram:
-            return state_dict.get(ass)
+            return temp_state_variable.state_dict.get(ass)
     return None
 
 
 def overwrite_state(id_telegram, stato):
     # todo: occhio! bisogna controllare che ci sia qualcosa nel json, perché se è vuoto, è stato eliminato
-    if state_dict[id_telegram] is None:
+    if temp_state_variable.state_dict[id_telegram] is None:
         return None
 
     # todo: scrivere su file e usare il lock
-    state_dict[id_telegram] = stato
+    temp_state_variable.state_dict[id_telegram] = stato
     return None
 
 
 def delete_state(id_telegram):
     # todo: rimuovi id_telegram e tutto il suo stato dal dizionario, scrivi su file (usare il lock)
-    del state_dict[id_telegram]
+    del temp_state_variable.state_dict[id_telegram]
     return None
 
 
@@ -98,5 +91,5 @@ def next_main(id_telegram, update):
 def create_state(module, state, id_telegram):
     # todo: scrivi su file e usa il lock
     stato = {"module": module, "state": state, "values": [], "time": ""}
-    state_dict[id_telegram] = stato
+    temp_state_variable.state_dict[id_telegram] = stato
     return None

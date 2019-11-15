@@ -2,11 +2,10 @@ import datetime
 import random
 import urllib
 import urllib.request
-import lxml
 from bs4 import BeautifulSoup
 
 from features import reviews
-from functions import temp_state
+from functions.temp_state import temp_state_main
 
 
 def f1(url, aula_da_trovare):
@@ -124,7 +123,7 @@ def f7(update):
 def get_orari_aula(update, context):
     # f7(update)
 
-    temp_state.create_state(module="a1", state="0", id_telegram=update.message.chat.id)
-    temp_state.next_main(id_telegram=update.message.chat.id, update= update)
+    temp_state_main.create_state(module="a1", state="0", id_telegram=update.message.chat.id)
+    temp_state_main.next_main(id_telegram=update.message.chat.id, update= update)
 
     return None
