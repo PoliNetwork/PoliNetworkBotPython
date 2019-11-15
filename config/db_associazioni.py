@@ -6,6 +6,7 @@ try:
     messages_dict = jsonn.load(messages_file)
 except:
     messages_dict = {}
+    # todo: crea il file e scrivilo su disco
     pass
 
 config_json = None
@@ -14,6 +15,7 @@ try:
     config_json = jsonn.load(config)
 except:
     config_json = {"date": "00:00:00:00:00"}
+    # todo: crea il file e scrivilo su disco
     pass
 
 group = "-1001117918825"  # @PoliAssociazioni

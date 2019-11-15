@@ -20,8 +20,22 @@
 # bene: il lock potrebbe anche essere messo in una funzione di lettura, se nel suo percorso di esecuzione c'è anche
 # solo la possibilità che scriva.
 
+
+import json as jsonn
+
+
+state_dict = None
+try:
+    state_file = open("data/state.json", encoding="utf-8")
+    state_dict = jsonn.load(state_file)
+except:
+    state_dict = {}
+    # todo: crea il file e scrivilo su disco
+    pass
+
+
 def get_state(id_telegram):
-    # todo, ritorna lo stato di una persona leggendolo dal json
+    # todo, ritorna lo stato di una persona leggendolo dal json "state_dict"
     return None
 
 
