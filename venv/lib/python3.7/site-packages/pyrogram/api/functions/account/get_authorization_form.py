@@ -1,0 +1,74 @@
+# Pyrogram - Telegram MTProto API Client Library for Python
+# Copyright (C) 2017-2019 Dan Tès <https://github.com/delivrance>
+#
+# This file is part of Pyrogram.
+#
+# Pyrogram is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Pyrogram is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
+
+from io import BytesIO
+
+from pyrogram.api.core import *
+
+
+class GetAuthorizationForm(TLObject):
+    """Attributes:
+        LAYER: ``105``
+
+    Attributes:
+        ID: ``0xb86ba8e1``
+
+    Parameters:
+        bot_id: ``int`` ``32-bit``
+        scope: ``str``
+        public_key: ``str``
+
+    Returns:
+        :obj:`account.AuthorizationForm <pyrogram.api.types.account.AuthorizationForm>`
+    """
+
+    __slots__ = ["bot_id", "scope", "public_key"]
+
+    ID = 0xb86ba8e1
+    QUALNAME = "functions.account.GetAuthorizationForm"
+
+    def __init__(self, *, bot_id: int, scope: str, public_key: str):
+        self.bot_id = bot_id  # int
+        self.scope = scope  # string
+        self.public_key = public_key  # string
+
+    @staticmethod
+    def read(b: BytesIO, *args) -> "GetAuthorizationForm":
+        # No flags
+        
+        bot_id = Int.read(b)
+        
+        scope = String.read(b)
+        
+        public_key = String.read(b)
+        
+        return GetAuthorizationForm(bot_id=bot_id, scope=scope, public_key=public_key)
+
+    def write(self) -> bytes:
+        b = BytesIO()
+        b.write(Int(self.ID, False))
+
+        # No flags
+        
+        b.write(Int(self.bot_id))
+        
+        b.write(String(self.scope))
+        
+        b.write(String(self.public_key))
+        
+        return b.getvalue()

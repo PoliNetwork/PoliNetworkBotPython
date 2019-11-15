@@ -1,0 +1,129 @@
+Metadata-Version: 2.1
+Name: Pyrogram
+Version: 0.16.0
+Summary: Telegram MTProto API Client Library and Framework for Python
+Home-page: https://github.com/pyrogram
+Author: Dan
+Author-email: dan@pyrogram.org
+License: LGPLv3+
+Download-URL: https://github.com/pyrogram/pyrogram/releases/latest
+Project-URL: Tracker, https://github.com/pyrogram/pyrogram/issues
+Project-URL: Community, https://t.me/Pyrogram
+Project-URL: Source, https://github.com/pyrogram/pyrogram
+Project-URL: Documentation, https://docs.pyrogram.org
+Keywords: telegram chat messenger mtproto api client library python
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: Implementation
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Internet
+Classifier: Topic :: Communications
+Classifier: Topic :: Communications :: Chat
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Requires-Python: ~=3.5
+Description-Content-Type: text/markdown
+Requires-Dist: pyaes (==1.6.1)
+Requires-Dist: pysocks (==1.7.0)
+Provides-Extra: fast
+Requires-Dist: tgcrypto (==1.2.0) ; extra == 'fast'
+
+<p align="center">
+    <a href="https://github.com/pyrogram/pyrogram">
+        <img src="https://i.imgur.com/BOgY9ai.png" alt="Pyrogram">
+    </a>
+    <br>
+    <b>Telegram MTProto API Framework for Python</b>
+    <br>
+    <a href="https://docs.pyrogram.org">
+        Documentation
+    </a>
+    •
+    <a href="https://github.com/pyrogram/pyrogram/releases">
+        Releases
+    </a>
+    •
+    <a href="https://t.me/Pyrogram">
+        Community
+    </a>
+</p>
+
+## Pyrogram
+
+``` python
+from pyrogram import Client, Filters
+
+app = Client("my_account")
+
+
+@app.on_message(Filters.private)
+def hello(client, message):
+    message.reply_text("Hello {}".format(message.from_user.first_name))
+
+
+app.run()
+```
+
+**Pyrogram** is an elegant, easy-to-use [Telegram](https://telegram.org/) client library and framework written from the
+ground up in Python and C. It enables you to easily create custom apps for both user and bot identities (bot API alternative) via the [MTProto API](https://core.telegram.org/api#telegram-api).
+
+> [Pyrogram in fully-asynchronous mode is also available »](https://github.com/pyrogram/pyrogram/issues/181)
+>
+> [Working PoC of Telegram voice calls using Pyrogram »](https://github.com/bakatrouble/pytgvoip)
+
+### Features
+
+- **Easy**: You can install Pyrogram with pip and start building your applications right away.
+- **Elegant**: Low-level details are abstracted and re-presented in a much nicer and easier way.
+- **Fast**: Crypto parts are boosted up by [TgCrypto](https://github.com/pyrogram/tgcrypto), a high-performance library
+  written in pure C.
+- **Documented**: Pyrogram API methods, types and public interfaces are well documented.
+- **Type-hinted**: Exposed Pyrogram types and method parameters are all type-hinted.
+- **Updated**, to make use of the latest Telegram API version and features.
+- **Bot API-like**: Similar to the Bot API in its simplicity, but much more powerful and detailed.
+- **Pluggable**: The Smart Plugin system allows to write components with minimal boilerplate code.
+- **Comprehensive**: Execute any advanced action an official client is able to do, and even more.
+
+### Requirements
+
+- Python 3.5.3 or higher.
+- A [Telegram API key](https://docs.pyrogram.org/intro/setup#api-keys).
+
+### Installing
+
+``` bash
+pip3 install pyrogram
+```
+
+### Resources
+
+- The Docs contain lots of resources to help you getting started with Pyrogram: https://docs.pyrogram.org.
+- Reading [Examples in this repository](https://github.com/pyrogram/pyrogram/tree/master/examples) is also a good way
+  for learning how Pyrogram works.
+- Seeking extra help? Don't be shy, come join and ask our [Community](https://t.me/PyrogramChat)!
+- For other requests you can send an [Email](mailto:dan@pyrogram.org) or a [Message](https://t.me/haskell).
+
+### Contributing
+
+Pyrogram is brand new, and **you are welcome to try it and help make it even better** by either submitting pull
+requests or reporting issues/bugs as well as suggesting best practices, ideas, enhancements on both code
+and documentation. Any help is appreciated!
+
+### Copyright & License
+
+- Copyright (C) 2017-2019 Dan Tès <<https://github.com/delivrance>>
+- Licensed under the terms of the [GNU Lesser General Public License v3 or later (LGPLv3+)](COPYING.lesser)
+
+

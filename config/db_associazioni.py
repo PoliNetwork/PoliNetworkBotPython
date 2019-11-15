@@ -1,10 +1,20 @@
 import json as jsonn
 
-messages_file = open("data/ass_messages.json", encoding="utf-8")
-messages_dict = jsonn.load(messages_file)
+messages_dict = None
+try:
+    messages_file = open("data/ass_messages.json", encoding="utf-8")
+    messages_dict = jsonn.load(messages_file)
+except:
+    messages_dict = {}
+    pass
 
-config = open("data/date.json", encoding="utf-8")
-config_json = jsonn.load(config)
+config_json = None
+try:
+    config = open("data/date.json", encoding="utf-8")
+    config_json = jsonn.load(config)
+except:
+    config_json = {"date": "00:00:00:00:00"}
+    pass
 
 group = "-1001117918825"  # @PoliAssociazioni
 # group = "-1001452300981" # Canale test
