@@ -8,16 +8,17 @@
 # la sua sessione sarà rimossa senza dare nessun avviso.
 
 # Gli stati sono un json che ha come chiave l'id telegram della persona, e come valore al suo interno 2 valori
-# "module", "state", "values"
-# dove "module" è una stringa, è il nome della macchina a stati finiti che l'utente sta attraversando
-# dove "state" è il punto della macchina a stati finiti in cui l'utente si trova
-# dove "values" è un array di stringhe, delle variabili opzionali utili per passarsi valori man mano che si avanza negli stati
+# "module", "state", "values" dove "module" è una stringa, è il nome della macchina a stati finiti che l'utente sta
+# attraversando dove "state" è il punto della macchina a stati finiti in cui l'utente si trova dove "values" è un
+# array di stringhe, delle variabili opzionali utili per passarsi valori man mano che si avanza negli stati
 
 # {123:{"module":"abc", "state": "1a", "values":["v1", "v2"]}}
-# qui sopra un esempio, 123 è l'id telegram, abc il nome del modulo, 1a lo stato, v1 e v2 i valori dell'array dei valori.
+# qui sopra un esempio, 123 è l'id telegram, abc il nome
+# del modulo, 1a lo stato, v1 e v2 i valori dell'array dei valori.
 
-# Per gestire il tutto serve un thread di eliminazione, un json scritto su file, e un lock che si usa scrittura.
-# Nota bene: il lock potrebbe anche essere messo in una funzione di lettura, se nel suo percorso di esecuzione c'è anche solo la possibilità che scriva.
+# Per gestire il tutto serve un thread di eliminazione, un json scritto su file, e un lock che si usa scrittura. Nota
+# bene: il lock potrebbe anche essere messo in una funzione di lettura, se nel suo percorso di esecuzione c'è anche
+# solo la possibilità che scriva.
 
 def get_state(id_telegram):
     # todo, ritorna lo stato di una persona leggendolo dal json
@@ -25,8 +26,8 @@ def get_state(id_telegram):
 
 
 def next_abc(id_telegram, stato):
-    # esempio: se il modulo è abc, viene gestito dalla next abc
-    # occhio: prima di passare ad un nuovo stato aggiornando il valore di "state", bisogna controllare che sia ancora nel json, perché magari il tempo è scaduto
+    # esempio: se il modulo è abc, viene gestito dalla next abc occhio: prima di passare ad un nuovo stato
+    # aggiornando il valore di "state", bisogna controllare che sia ancora nel json, perché magari il tempo è scaduto
     return None
 
 
