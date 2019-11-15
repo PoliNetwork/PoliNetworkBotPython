@@ -34,21 +34,19 @@ try:
 except:
     state_dict = {}
     # todo: crea il file e scrivilo su disco
-    pass
 
 
 def get_state(id_telegram):
     for ass in state_dict.keys():
-        if ass is id_telegram:
+        if ass == id_telegram:
             return state_dict.get(ass)
     return None
 
 
 def overwrite_state(id_telegram, stato):
-
     # todo: occhio! bisogna controllare che ci sia qualcosa nel json, perché se è vuoto, è stato eliminato
     if state_dict[id_telegram] is None:
-        return
+        return None
 
     # todo: scrivere su file e usare il lock
     state_dict[id_telegram] = stato
@@ -57,7 +55,8 @@ def overwrite_state(id_telegram, stato):
 
 def delete_state(id_telegram):
     # todo: rimuovi id_telegram e tutto il suo stato dal dizionario, scrivi su file (usare il lock)
-    pass
+    del state_dict[id_telegram]
+    return None
 
 
 def next_a1(update, id_telegram, stato):
@@ -87,7 +86,17 @@ def next_a1(update, id_telegram, stato):
 def next_main(id_telegram, update):
     # noinspection PyNoneFunctionAssignment
     stato = get_state(id_telegram)
+    if stato is None:
+        return None
+
     if stato["module"] == "a1":
         return next_a1(update, id_telegram, stato)
-    else:
-        return None
+
+    return None
+
+
+def create_state(module, state, id_telegram):
+    # todo: scrivi su file e usa il lock
+    stato = {"module": module, "state": state, "values": [], "time": ""}
+    state_dict[id_telegram] = stato
+    return None

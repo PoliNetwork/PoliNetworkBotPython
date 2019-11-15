@@ -6,6 +6,7 @@ import lxml
 from bs4 import BeautifulSoup
 
 from features import reviews
+from functions import temp_state
 
 
 def f1(url, aula_da_trovare):
@@ -26,7 +27,6 @@ def f1(url, aula_da_trovare):
 
 
 def f3(aula2):
-
     list2 = []
     temp = aula2
     while True:
@@ -104,7 +104,7 @@ def f5(day, month, year, aula_da_trovare):
     return f1(url, aula_da_trovare)
 
 
-def get_orari_aula(update, context):
+def f7(update):
     datetime_object = datetime.datetime.now()
 
     message = update.message
@@ -119,5 +119,12 @@ def get_orari_aula(update, context):
     n = random.randint(1, 9999999)
     filename = 'data/aula' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
     reviews.send_file(update, result, filename, aula_da_trovare)
+
+
+def get_orari_aula(update, context):
+    # f7(update)
+
+    temp_state.create_state(module="a1", state="0", id_telegram=update.message.chat.id)
+    temp_state.next_main(id_telegram=update.message.chat.id, update= update)
 
     return None
