@@ -19,3 +19,4 @@ config/userbot_config.py
 .vs/
 
 policreator.session-journal
+/venv/
