@@ -37,18 +37,24 @@ def get_state(id_telegram):
 
 
 def overwrite_state(id_telegram, stato):
-    # todo: occhio! bisogna controllare che ci sia qualcosa nel json, perché se è vuoto, è stato eliminato
+    temp_state_variable.lock_state.acquire()
+
     if temp_state_variable.state_dict[id_telegram] is None:
+        # todo: occhio! bisogna controllare che ci sia qualcosa nel json, perché se è vuoto, è stato eliminato
+        temp_state_variable.lock_state.release()
         return None
 
-    # todo: scrivere su file e usare il lock
     temp_state_variable.state_dict[id_telegram] = stato
+    temp_state_variable.save_file_no_lock()
+    temp_state_variable.lock_state.release()
     return None
 
 
 def delete_state(id_telegram):
-    # todo: rimuovi id_telegram e tutto il suo stato dal dizionario, scrivi su file (usare il lock)
+    temp_state_variable.lock_state.acquire()
     del temp_state_variable.state_dict[id_telegram]
+    temp_state_variable.save_file_no_lock()
+    temp_state_variable.lock_state.release()
     return None
 
 
@@ -89,9 +95,14 @@ def next_main(id_telegram, update):
 
 
 def create_state(module, state, id_telegram):
-    # todo: scrivi su file e usa il lock
+
     stato = {"module": module, "state": state, "values": [], "time": ""}
+
+    temp_state_variable.lock_state.acquire()
     temp_state_variable.state_dict[id_telegram] = stato
+    temp_state_variable.save_file_no_lock()
+    temp_state_variable.lock_state.release()
+
     return None
 
 

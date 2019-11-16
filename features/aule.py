@@ -87,7 +87,6 @@ def f4(aula, intestazione, head):
 def f2(aula, head):
     aula2 = aula.parent
     intestazione = f3(aula2)
-    # todo: unire intestazione e aula per fare l'output
     return f4(aula2, intestazione, head)
 
 
