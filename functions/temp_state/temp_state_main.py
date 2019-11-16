@@ -132,7 +132,10 @@ def create_state(module, state, id_telegram):
 
 
 def cancel(update, context):
-    temp_state_variable.delete_state(update.message.chat.id)
+    try:
+        temp_state_variable.delete_state(update.message.chat.id)
+    except:
+        pass
     return None
 
 

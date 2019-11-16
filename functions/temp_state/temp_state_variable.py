@@ -11,7 +11,10 @@ lock_state = Lock()
 
 def delete_state(id_telegram):
     lock_state.acquire()
-    del state_dict[id_telegram]
+    try:
+        del state_dict[id_telegram]
+    except:
+        pass
     save_file_no_lock()
     lock_state.release()
     return None
