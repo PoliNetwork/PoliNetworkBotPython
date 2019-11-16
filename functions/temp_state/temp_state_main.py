@@ -24,6 +24,8 @@ import datetime
 
 import random
 
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
 import variable
 from features import aule, reviews
 from functions.temp_state import temp_state_variable
@@ -52,11 +54,37 @@ def overwrite_state(id_telegram, stato):
 
 def next_a1(update, id_telegram, stato):
     if stato["state"] == "0":
+        keyboard = [
+            [
+                InlineKeyboardButton(text="Search classroom", callback_data="1"),
+                InlineKeyboardButton(text="Free Classroom", callback_data="2")
+            ],
+            [
+                InlineKeyboardButton(text="Occupancies of the day", callback_data="3"),
+                InlineKeyboardButton(text="Help", callback_data="4")
+            ]
+        ]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
         variable.updater.bot.send_message(chat_id=update.message.chat.id,
-                                          text="Scrivi il codice dell'aula (esempio: N.0.1)")
-        stato["state"] = "1"
+                                          text="Scegli",
+                                          reply_markup=reply_markup)
+
+        stato["state"] = "0b"
         overwrite_state(id_telegram, stato)
-        return None
+    elif stato["state"] == "0b":
+        # dipende dal callback data
+        cb = str(update.callback_query.data)
+        if cb == "3":
+            variable.updater.bot.send_message(chat_id=update.callback_query.message.chat.id,
+                                              text="Scrivi il codice dell'aula (esempio: N.0.1)")
+            stato["state"] = "1"
+            overwrite_state(id_telegram, stato)
+        else:
+            variable.updater.bot.send_message(chat_id=update.callback_query.message.chat.id,
+                                              text="Questa funzione non è ancora supportata!")
+            temp_state_variable.delete_state(id_telegram)
+            pass
     elif stato["state"] == "1":
         datetime_object = datetime.datetime.now()
         message = update.message
@@ -102,3 +130,9 @@ def create_state(module, state, id_telegram):
 def cancel(update, context):
     temp_state_variable.delete_state(update.message.chat.id)
     return None
+
+
+def callback_method(update, context):
+    query = update.callback_query
+    query.edit_message_text(text="⬇️".format(query.data))
+    next_main(id_telegram=query.from_user.id, update=update)

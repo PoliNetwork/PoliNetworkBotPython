@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from telegram.ext import MessageHandler, CommandHandler, Filters
+from telegram.ext import MessageHandler, CommandHandler, Filters, CallbackQueryHandler
 
 import main_userbot
 import variable
@@ -90,6 +90,8 @@ thread2 = associazioni.start_check_Thread()
 thread2.start()
 
 variable.updater.start_polling()
+
+variable.updater.dispatcher.add_handler(CallbackQueryHandler(temp_state_main.callback_method))
 
 # ---
 # BOT - USERBOT
