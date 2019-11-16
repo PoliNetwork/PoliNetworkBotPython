@@ -52,7 +52,12 @@ class DeleteMessageStateThread(Thread):
 
     def run(self):
         while True:
-            DeleteMessageStateThread2()
+
+            try:
+                DeleteMessageStateThread2()
+            except:
+                pass
+
             time.sleep(15)
 
 

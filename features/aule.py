@@ -3,6 +3,7 @@ import random
 import urllib
 import urllib.request
 from bs4 import BeautifulSoup
+# noinspection PyUnresolvedReferences
 import lxml
 
 from features import reviews
@@ -30,21 +31,27 @@ def f3(aula2):
     list2 = []
     temp = aula2
     while True:
-
-        prec = temp.previous_sibling
-        e1 = None
         try:
-            e1 = prec.findAll("td", {"class": "innerEdificio"})
+            if temp is None:
+                return list2
+
+            prec = temp.previous_sibling
+
+            e1 = None
+            try:
+                e1 = prec.findAll("td", {"class": "innerEdificio"})
+            except:
+                pass
+
+            if prec is not None:
+                list2.append(prec)
+
+            if (e1 is not None) and len(e1) == 1:
+                return list2
+
+            temp = prec
         except:
-            pass
-
-        if prec is not None:
-            list2.append(prec)
-
-        if (e1 is not None) and len(e1) == 1:
-            return list2
-
-        temp = prec
+            break
 
     return None
 
@@ -124,6 +131,6 @@ def get_orari_aula(update, context):
     # f7(update)
 
     temp_state_main.create_state(module="a1", state="0", id_telegram=update.message.chat.id)
-    temp_state_main.next_main(id_telegram=update.message.chat.id, update= update)
+    temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
 
     return None
