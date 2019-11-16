@@ -50,14 +50,6 @@ def overwrite_state(id_telegram, stato):
     return None
 
 
-def delete_state(id_telegram):
-    temp_state_variable.lock_state.acquire()
-    del temp_state_variable.state_dict[id_telegram]
-    temp_state_variable.save_file_no_lock()
-    temp_state_variable.lock_state.release()
-    return None
-
-
 def next_a1(update, id_telegram, stato):
     if stato["state"] == "0":
         variable.updater.bot.send_message(chat_id=update.message.chat.id,
@@ -75,7 +67,7 @@ def next_a1(update, id_telegram, stato):
         filename = 'data/aula' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
         reviews.send_file(update, result, filename, aula_da_trovare)
 
-        delete_state(id_telegram)
+        temp_state_variable.delete_state(id_telegram)
 
         return None
 
@@ -95,8 +87,9 @@ def next_main(id_telegram, update):
 
 
 def create_state(module, state, id_telegram):
-
-    stato = {"module": module, "state": state, "values": [], "time": ""}
+    now = datetime.datetime.now()
+    now2 = now.strftime("%m/%d/%Y %H:%M:%S %f")
+    stato = {"module": module, "state": state, "values": [], "time": now2}
 
     temp_state_variable.lock_state.acquire()
     temp_state_variable.state_dict[id_telegram] = stato
@@ -107,5 +100,5 @@ def create_state(module, state, id_telegram):
 
 
 def cancel(update, context):
-    delete_state(update.message.chat.id)
+    temp_state_variable.delete_state(update.message.chat.id)
     return None
