@@ -52,6 +52,12 @@ def overwrite_state(id_telegram, stato):
     return None
 
 
+def not_supported_exception(id):
+    variable.updater.bot.send_message(chat_id=id,
+                                      text="Questa funzione non è ancora supportata!")
+    temp_state_variable.delete_state(id)
+
+
 def next_a1(update, id_telegram, stato):
     if stato["state"] == "0":
         keyboard = [
@@ -81,10 +87,8 @@ def next_a1(update, id_telegram, stato):
             stato["state"] = "1"
             overwrite_state(id_telegram, stato)
         else:
-            variable.updater.bot.send_message(chat_id=update.callback_query.message.chat.id,
-                                              text="Questa funzione non è ancora supportata!")
-            temp_state_variable.delete_state(id_telegram)
-            pass
+            not_supported_exception(id_telegram)
+
     elif stato["state"] == "1":
         datetime_object = datetime.datetime.now()
         message = update.message
