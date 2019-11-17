@@ -46,7 +46,7 @@ def material_handler(update, context):
     message = update.message
 
     if message.chat.type == "private":
-        utils.send_in_private_or_in_group("Questo comando funziona solo un gruppo del network",
+        utils.send_in_private_or_in_group("Questo comando funziona solo in un gruppo del network",
                                           message.chat.id, message.from_user)
         return
 
