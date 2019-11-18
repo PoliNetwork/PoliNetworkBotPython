@@ -450,7 +450,7 @@ def assoc_read_all(update, context):
     message = update.message
     chat = message.chat
     chat_id = chat.id
-    if chat_id not in creators.owners:  # only owners can do this command
+    if chat_id not in creators.assoc_owners:  # only owners can do this command
         return
 
     count = 0

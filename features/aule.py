@@ -2,6 +2,8 @@ import datetime
 import random
 import urllib
 import urllib.request
+
+import requests
 from bs4 import BeautifulSoup
 # noinspection PyUnresolvedReferences
 import lxml
@@ -127,6 +129,32 @@ def f7(update):
     reviews.send_file(update, result, filename, aula_da_trovare)
 
 
+def get_aule_libere2(mydivs2):
+    pass
+
+
+def get_aule_libere(ora_inizio, ora_fine):
+    url = "https://www7.ceda.polimi.it/spazi/spazi/controller/RicercaAuleLibere.do?jaf_currentWFID=main"
+
+    data = {'spazi___model___formbean___RicercaAuleLibereVO___postBack': "true",
+            'spazi___model___formbean___RicercaAuleLibereVO___formMode': 'FILTER',
+            'spazi___model___formbean___RicercaAuleLibereVO___sede': "tutte",
+            'spazi___model___formbean___RicercaAuleLibereVO___giorno_day': '18',
+            "spazi___model___formbean___RicercaAuleLibereVO___giorno_month": "11",
+            "spazi___model___formbean___RicercaAuleLibereVO___giorno_year": "2019",
+            "jaf_spazi___model___formbean___RicercaAuleLibereVO___giorno_date_format": "dd/MM/yyyy",
+            "spazi___model___formbean___RicercaAuleLibereVO___orario_dal": str(ora_inizio),
+            "spazi___model___formbean___RicercaAuleLibereVO___orario_al": str(ora_fine),
+            "evn_ricerca": "Ricerca aule libere"
+            }
+    r = requests.post(url=url, data=data)
+    a = 0
+    soup = BeautifulSoup(r, 'html.parser')
+
+    mydivs2 = soup.findAll("tbody", {"class": "TableDati-tbody"})[0]
+    return get_aule_libere2(mydivs2)
+
+
 def get_orari_aula(update, context):
     # f7(update)
 
@@ -134,3 +162,4 @@ def get_orari_aula(update, context):
     temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
 
     return None
+
