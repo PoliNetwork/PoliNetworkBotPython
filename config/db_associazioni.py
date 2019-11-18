@@ -18,7 +18,8 @@ except:
     # todo: crea il file e scrivilo su disco
     pass
 
-group = "-1001117918825"  # @PoliAssociazioni
+group = "@PoliAssociazioni"
+# group = "-1001117918825"  # @PoliAssociazioni
 # group = "-1001452300981" # Canale test
 
 
