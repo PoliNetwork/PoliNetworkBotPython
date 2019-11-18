@@ -120,7 +120,8 @@ json = {
         "users": [
             238880018,  # @CarloGiova
             341098092,  # @Teclilaa
-            232009625  # @NyquistX
+            232009625,  # @NyquistX
+            592268417  # @Francescamarra
         ]
     },
     "TernaSinistrosa": {
