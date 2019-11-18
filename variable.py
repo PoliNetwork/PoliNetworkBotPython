@@ -8,8 +8,13 @@ lock_to_delete = Lock()
 lock_group_list = Lock()
 lock_material_list = Lock()
 
-token = open("token.txt").read()
-updater = Updater(token, use_context=True)
+try:
+    token = open("token.txt").read()
+except:
+    token = None
+
+if token is not None:
+    updater = Updater(token, use_context=True)
 
 lock_group_list.acquire()
 try:
