@@ -130,7 +130,27 @@ def f7(update):
 
 
 def get_aule_libere2(mydivs2):
-    pass
+    a = 0
+
+    mydivs3 = mydivs2.findAll("tr", {})
+    a = 0
+    a = 0
+    text = ""
+    emoji = "@"
+    for m4 in mydivs3:
+        m5 = m4.findAll("td", {})
+        a = 0
+        text += emoji
+        text2 = str(m5[0].text).strip()
+        text3 = text2.split("\t")
+        text += str(text3[0]).strip()
+        text += " "
+        text += str(text3[1]).strip()
+        text += " "
+        text += str(m5[1].text).strip()
+        text += '\n'
+        text += '\n'
+    return text
 
 
 def get_aule_libere(ora_inizio, ora_fine):
@@ -148,10 +168,11 @@ def get_aule_libere(ora_inizio, ora_fine):
             "evn_ricerca": "Ricerca aule libere"
             }
     r = requests.post(url=url, data=data)
-    a = 0
-    soup = BeautifulSoup(r, 'html.parser')
+
+    soup = BeautifulSoup(r.text, 'html.parser')
 
     mydivs2 = soup.findAll("tbody", {"class": "TableDati-tbody"})[0]
+
     return get_aule_libere2(mydivs2)
 
 
