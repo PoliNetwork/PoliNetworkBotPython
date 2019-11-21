@@ -8,5 +8,6 @@ allowed_spam = [5651789  # @ArmeF97
 allowed_no_username = [777000]  # telegram
 
 assoc_owners = [
-            5651789  # @ArmeF97
+            5651789,  # @ArmeF97
+            203350312
         ]
