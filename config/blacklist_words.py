@@ -3,7 +3,8 @@ blacklist_words = ["porcodio", "dioporco", "diocane"]
 
 blacklist_sites = ["facebook.com", "t.me", "whatsapp.com",
                    "instagram.com", "bit.ly", "is.gd",
-                   "amzn.to", "goo.gl", "forms.gle"]  # sites with potential spam
+                   "amzn.to", "goo.gl", "forms.gle",
+                   "docs.google.com"]  # sites with potential spam
 
 allowed_tags = ["@poligruppo", "@infopolimi", "@polirules",
                 "@polinetwork", "@polibook", "@polimispotted",

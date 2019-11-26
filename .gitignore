@@ -20,3 +20,5 @@ config/userbot_config.py
 
 policreator.session-journal
 /venv/
+
+sub_bots/fb_messenger/fb_messenger_config.py
