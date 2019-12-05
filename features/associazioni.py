@@ -243,7 +243,7 @@ def assoc_write(update, context):
             except:
                 pass
 
-            dict1 = {"message_to_send_caption": messaggio_originale.caption,
+            dict1 = {"message_to_send_caption": messaggio_originale.caption_html,
                      "message_to_send_text": messaggio_originale.text,
                      "message_to_send_photo_file_id": ph2_file_id,
                      "message_to_send_photo_file_size": ph2_file_size,
@@ -311,23 +311,28 @@ def invia_anon(destination, caption, text, photo, audio_file_id, voice_file_id, 
 
         if text is not None:
             message_sent = variable.updater.bot.send_message(chat_id=destination,
-                                                             text=text)
+                                                             text=text,
+                                                             parse_mode="HTML")
         elif photo:
             message_sent = variable.updater.bot.send_photo(chat_id=destination,
                                                            photo=photo,
-                                                           caption=caption)
+                                                           caption=caption,
+                                                           parse_mode="HTML")
         elif audio_file_id:
             message_sent = variable.updater.bot.send_audio(chat_id=destination,
                                                            audio=audio_file_id,
-                                                           caption=caption)
+                                                           caption=caption,
+                                                           parse_mode="HTML")
         elif voice_file_id is not None:
             message_sent = variable.updater.bot.send_voice(chat_id=destination,
                                                            voice=voice_file_id,
-                                                           caption=caption)
+                                                           caption=caption,
+                                                           parse_mode="HTML")
         elif video_file_id is not None:
             message_sent = variable.updater.bot.send_video(chat_id=destination,
                                                            video=video_file_id,
-                                                           caption=caption)
+                                                           caption=caption,
+                                                           parse_mode="HTML")
         #
         # elif video_note is not None:
         #    message_sent = variable.updater.bot.send_video_note(chat_id=destination,
