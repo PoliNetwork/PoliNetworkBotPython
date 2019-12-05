@@ -83,7 +83,8 @@ json = {
         "name": "ListaAperta",
         "link": "",
         "users": [
-            451955751  # @matteooggioni
+            451955751,  # @matteooggioni
+            677243338
         ]
     },
     "AESport": {
