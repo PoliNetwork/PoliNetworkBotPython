@@ -126,9 +126,9 @@ def next_assoc_write(update, id_telegram, stato):
         # dipende dal callback data
         cb = str(update.callback_query.data)
         if cb == "1":
-            update_old = stato["values"]["update"]
+            message_old = stato["values"]["message"]
             associazione_old = stato["values"]["associazione"]
-            associazioni.assoc_write2(update_old, associazione_old)
+            associazioni.assoc_write2(message_old, associazione_old)
 
             temp_state_variable.delete_state(id_telegram)
         else:
