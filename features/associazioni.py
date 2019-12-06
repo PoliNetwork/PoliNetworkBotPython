@@ -185,14 +185,13 @@ def GetVideoFileID(messaggio_originale):
         return None
 
 
-def assoc_write2(message, associazione):
-    messaggio_originale = message.reply_to_message
+def assoc_write2(username, message_chat_id, message_from_user, associazione, messaggio_originale):
+
     if messaggio_originale is None:
         utils.send_in_private_or_in_group("Devi rispondere ad un messaggio per aggiungerlo alla coda",
-                                          message.chat.id, message.from_user)
+                                          message_chat_id, message_from_user)
         return
 
-    username = message.chat.username
     if username is None or len(username) < 1:
         username = "[No username!]"
     photo2 = GetLargerPhoto(messaggio_originale.photo)
@@ -244,7 +243,7 @@ def assoc_write2(message, associazione):
     db_associazioni.messages_dict.__setitem__(associazione, dict2)
     save_ass_messages()
     utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
-                                      message.chat.id, message.from_user)
+                                      message_chat_id, message_from_user)
 
 
 def assoc_write(update, context):
@@ -272,7 +271,10 @@ def assoc_write(update, context):
 
         else:
 
-            values_to_pass = {"message": update.message, "associazione": associazione}
+            values_to_pass = {"message_chat_id": update.message.chat.id,
+                              "message_from_user": update.message.from_user, "associazione": associazione,
+                              "username": update.message.chat.username,
+                              "messaggio_originale": update.message.reply_to_message}
             temp_state_main.create_state(module="assoc_write", state="0",
                                          id_telegram=update.message.chat.id, values=values_to_pass)
             temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)

@@ -54,7 +54,7 @@ def check_if_exit(message):
             return False, 4
 
     admins = variable.updater.bot.get_chat_administrators(message.chat.id)
-    
+
     if groups.creator_is_present(admins):
         return False, 5
 
@@ -161,7 +161,6 @@ def check_username_and_name(message):
 
 
 def check_if_is_exit_message_of_user(message):
-
     if message.left_chat_member is not None:
         variable.updater.bot.delete_message(message.chat.id, message.message_id)
 
@@ -199,5 +198,5 @@ def check_message(update, context):
         check_if_is_exit_message_of_user(message)
     except Exception as e:
         utils.notify_owners(e)
-        
+
     check_for_state(update)

@@ -127,8 +127,13 @@ def next_assoc_write(update, id_telegram, stato):
         cb = str(update.callback_query.data)
         if cb == "1":
             message_old = stato["values"]["message"]
+            message_chat_id = stato["values"]["message_chat_id"]
+            message_from_user = stato["values"]["message_from_user"]
             associazione_old = stato["values"]["associazione"]
-            associazioni.assoc_write2(message_old, associazione_old)
+            username = stato["values"]["username"]
+            messaggio_originale = stato["values"]["messaggio_originale"]
+            associazioni.assoc_write2(username, message_chat_id,
+                                      message_from_user, associazione_old, messaggio_originale)
 
             temp_state_variable.delete_state(id_telegram)
         else:
@@ -148,7 +153,7 @@ def next_main(id_telegram, update):
     if stato["module"] == "a1":
         return next_a1(update, id_telegram, stato)
     elif stato["module"] == 'assoc_write':
-        return next_assoc_write(update,id_telegram,stato)
+        return next_assoc_write(update, id_telegram, stato)
 
     return None
 
