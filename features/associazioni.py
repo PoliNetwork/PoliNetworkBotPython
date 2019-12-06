@@ -307,7 +307,6 @@ def assoc_write(update, context):
 
 
 def getUserFromObject(message_from_user):
-
     if message_from_user is None:
         return None
 
@@ -454,21 +453,21 @@ def getAudioFromObject(audio):
     if audio is None:
         return None
 
-    pass
+    return {"file_id": audio.file_id}
 
 
 def getVideoFromObject(video):
     if video is None:
         return None
 
-    pass
+    return {"file_id": video.file_id}
 
 
 def getVoiceFromObject(voice):
     if voice is None:
         return None
 
-    pass
+    return {"file_id": voice.file_id}
 
 
 def messageFromObject(message_object):
