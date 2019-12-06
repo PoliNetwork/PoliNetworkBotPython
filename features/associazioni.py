@@ -48,7 +48,8 @@ def get_message_from_associazione_name(name):
         return None
 
     if db_associazioni.messages_dict.__contains__(assoc):
-        return db_associazioni.messages_dict.get(assoc)
+        a = db_associazioni.messages_dict.get(assoc)
+        return a['message']
 
     return None
 
@@ -127,7 +128,8 @@ def assoc_read(update, context):
 
     try:
         read_message = get_message_from_associazione_name(associazione)
-        assoc_read2(read_message, update.message.chat.id, error1, update, nome_assoc=associazione)
+        for read_message2 in read_message:
+            assoc_read2(read_message2, update.message.chat.id, error1, update, nome_assoc=associazione)
 
     except:
         utils.send_in_private_or_in_group(error1, update.message.chat.id, update.message.from_user)
@@ -197,7 +199,8 @@ def assoc_write(update, context):
 
     messaggio_valido = check_message_associazioni(update)
     if messaggio_valido:
-        if get_message_from_associazione_name(associazione) is not None:
+        messaggi_in_coda = get_message_from_associazione_name(associazione)
+        if messaggi_in_coda is not None and len(messaggi_in_coda) > 0:
             utils.send_in_private_or_in_group("C'è un messaggio già in coda. "
                                               "Guardalo con /assoc_read. "
                                               "Rimuovilo con /assoc_delete.",
@@ -256,7 +259,11 @@ def assoc_write(update, context):
                      "time": datetime.datetime.now().strftime(
                          '%d-%m-%Y %H:%M:%S')
                      }
-            db_associazioni.messages_dict.__setitem__(associazione, dict1)
+
+            list2 = [dict1]
+            dict2 = {"message": list2}
+
+            db_associazioni.messages_dict.__setitem__(associazione, dict2)
             save_ass_messages()
             utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
                                               update.message.chat.id, update.message.from_user)
@@ -283,7 +290,7 @@ def assoc_delete2(update, nascondi_messaggi):
                                               update.message.chat.id, update.message.from_user)
         pass
     else:
-        db_associazioni.messages_dict.pop(associazione, None)
+        db_associazioni.messages_dict[associazione]['message'] = None
         if nascondi_messaggi is False:
             utils.send_in_private_or_in_group("Messaggio rimosso con successo",
                                               update.message.chat.id, update.message.from_user)
@@ -462,9 +469,10 @@ def assoc_read_all(update, context):
     for v1 in db_associazioni.messages_dict:
         v2 = get_message_from_associazione_name(v1)
         if v2 is not None:
-            ret = assoc_read2(read_message=v2, chat_id=update.message.chat.id, error1=None, update=None, nome_assoc=v1)
-            if ret is True:
-                count += 1
+            for v3 in v2:
+                ret = assoc_read2(read_message=v3, chat_id=update.message.chat.id, error1=None, update=None, nome_assoc=v1)
+                if ret is True:
+                    count += 1
 
     if count == 0:
         variable.updater.bot.send_message(update.message.chat.id, "Nessun messaggio in coda da parte di nessuno!")

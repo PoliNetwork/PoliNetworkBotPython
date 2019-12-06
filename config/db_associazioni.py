@@ -84,7 +84,7 @@ json = {
         "link": "",
         "users": [
             451955751,  # @matteooggioni
-            677243338
+            677243338  # @GiacomoBura
         ]
     },
     "AESport": {
