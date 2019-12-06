@@ -374,6 +374,17 @@ def invia_anon(destination, caption, text, photo, audio_file_id, voice_file_id, 
         return False, None
 
 
+def contains_dict(associazione, param):
+    try:
+        a = db_associazioni.messages_dict[associazione][param]
+        if a is not None:
+            return True
+    except:
+        return False
+
+    return False
+
+
 def send_scheduled_messages2():
     associazioni2 = []
     for associazione in db_associazioni.messages_dict:
@@ -383,24 +394,34 @@ def send_scheduled_messages2():
 
     for associazione in associazioni2:
         try:
-            associazione2 = db_associazioni.messages_dict.get(associazione)
+            associazione2 = db_associazioni.messages_dict.get(associazione)['message']
 
-            inviato, forse_inviato = invia_anon(db_associazioni.group,
-                                                caption=associazione2['message_to_send_caption'],
-                                                text=associazione2['message_to_send_text'],
-                                                photo=CreatePhotoFromJson(associazione2),
-                                                audio_file_id=associazione2["message_to_send_audio_file_id"],
-                                                voice_file_id=associazione2["message_to_send_voice_file_id"],
-                                                video_file_id=associazione2["message_to_send_video_file_id"])
+            for associazione3 in associazione2:
+                inviato, forse_inviato = invia_anon(db_associazioni.group,
+                                                    caption=associazione3['message_to_send_caption'],
+                                                    text=associazione3['message_to_send_text'],
+                                                    photo=CreatePhotoFromJson(associazione3),
+                                                    audio_file_id=associazione3["message_to_send_audio_file_id"],
+                                                    voice_file_id=associazione3["message_to_send_voice_file_id"],
+                                                    video_file_id=associazione3["message_to_send_video_file_id"])
 
-            if inviato is True:
-                # todo: inviare un messaggio a quelli dell'associazione dicendo che hanno preso parte a questa
-                #  data di pubblicazione
-                pass
-            else:
-                # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
-                #  data di pubblicazione
-                pass
+                if inviato is True:
+
+                    # todo: inviare un messaggio a quelli dell'associazione dicendo che hanno preso parte a questa
+                    #  data di pubblicazione
+
+                    if contains_dict(associazione, "sent") is False:
+                        db_associazioni.messages_dict[associazione]['sent'] = []
+                        pass
+
+                    #todo: cambiare "forse inviato" con delle info migliori sul messaggio, data e link
+                    db_associazioni.messages_dict[associazione]['sent'].append(forse_inviato)
+
+                    pass
+                else:
+                    # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
+                    #  data di pubblicazione
+                    pass
 
         except Exception as e:
             pass
@@ -465,7 +486,8 @@ def assoc_read_all(update, context):
         v2 = get_message_from_associazione_name(v1)
         if v2 is not None:
             for v3 in v2:
-                ret = assoc_read2(read_message=v3, chat_id=update.message.chat.id, error1=None, update=None, nome_assoc=v1)
+                ret = assoc_read2(read_message=v3, chat_id=update.message.chat.id, error1=None, update=None,
+                                  nome_assoc=v1)
                 if ret is True:
                     count += 1
 
