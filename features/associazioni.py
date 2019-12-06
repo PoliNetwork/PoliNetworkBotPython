@@ -412,12 +412,10 @@ def send_scheduled_messages2():
 
                     if contains_dict(associazione, "sent") is False:
                         db_associazioni.messages_dict[associazione]['sent'] = []
-                        pass
 
-                    #todo: cambiare "forse inviato" con delle info migliori sul messaggio, data e link
+                    # todo: cambiare "forse inviato" con delle info migliori sul messaggio, data e link
                     db_associazioni.messages_dict[associazione]['sent'].append(forse_inviato)
 
-                    pass
                 else:
                     # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
                     #  data di pubblicazione
