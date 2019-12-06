@@ -185,48 +185,46 @@ def GetVideoFileID(messaggio_originale):
         return None
 
 
-def assoc_write2(username, message_chat_id, message_from_user, associazione, isMessaggioOriginaleNone,
-                 messaggio_originale_caption_html, messaggio_originale_text,
-                 messaggio_originale_photo, messaggio_originale_audio_file_id,
-                 messaggio_originale_voice_file_id, messaggio_originale_video_file_id):
-    if isMessaggioOriginaleNone is True:
+def assoc_write2(username, message_chat_id, message_from_user, associazione, message):
+    messaggio_originale = message['reply_to_message']
+    if message is None:
         utils.send_in_private_or_in_group("Devi rispondere ad un messaggio per aggiungerlo alla coda",
                                           message_chat_id, message_from_user)
         return
 
     if username is None or len(username) < 1:
         username = "[No username!]"
-    photo2 = GetLargerPhoto(messaggio_originale_photo)
-    audio_file_id = messaggio_originale_audio_file_id
-    voice_file_id = messaggio_originale_voice_file_id
-    video_file_id = messaggio_originale_video_file_id
+    photo2 = GetLargerPhoto(messaggio_originale['photo'])
+    audio_file_id = messaggio_originale['audio']['file_id']
+    voice_file_id = messaggio_originale['voice']['file_id']
+    video_file_id = messaggio_originale['video']['file_id']
 
     ph2_file_id = None
     try:
-        ph2_file_id = photo2.file_id
+        ph2_file_id = photo2['file_id']
     except:
         pass
 
     ph2_file_size = None
     try:
-        ph2_file_size = photo2.file_size
+        ph2_file_size = photo2['file_size']
     except:
         pass
 
     ph2_height = None
     try:
-        ph2_height = photo2.height
+        ph2_height = photo2['height']
     except:
         pass
 
     ph2_width = None
     try:
-        ph2_width = photo2.width
+        ph2_width = photo2['width']
     except:
         pass
 
-    dict1 = {"message_to_send_caption": messaggio_originale_caption_html,
-             "message_to_send_text": messaggio_originale_text,
+    dict1 = {"message_to_send_caption": messaggio_originale['caption_html'],
+             "message_to_send_text": messaggio_originale['text'],
              "message_to_send_photo_file_id": ph2_file_id,
              "message_to_send_photo_file_size": ph2_file_size,
              "message_to_send_photo_height": ph2_height,
@@ -279,20 +277,13 @@ def assoc_write(update, context):
 
         else:
 
-            isMessaggioOriginaleNone = False
-            if update.message.reply_to_message is None:
-                isMessaggioOriginaleNone = True
-            values_to_pass = {"message_chat_id": update.message.chat.id,
-                              "message_from_user": update.message.from_user, "associazione": associazione,
-                              "username": update.message.chat.username,
-                              # "messaggio_originale": update.message.reply_to_message,
-                              "isMessaggioOriginaleNone": isMessaggioOriginaleNone,
-                              "messaggio_originale_caption_html": update.message.reply_to_message.caption_html,
-                              "messaggio_originale_text": update.message.reply_to_message.text,
-                              "messaggio_originale_photo": update.message.reply_to_message.photo,
-                              "messaggio_originale_audio_file_id": GetAudioFileID(update.message.reply_to_message),
-                              "messaggio_originale_voice_file_id": GetVoiceFileID(update.message.reply_to_message),
-                              "messaggio_originale_video_file_id": GetVideoFileID(update.message.reply_to_message)}
+            values_to_pass = {
+                "message_chat_id": update.message.chat.id,
+                "message_from_user": getUserFromObject(update.message.from_user),
+                "associazione": associazione,
+                "username": update.message.chat.username,
+                "message": messageFromObject(update.message),
+            }
             temp_state_main.create_state(module="assoc_write", state="0",
                                          id_telegram=update.message.chat.id, values=values_to_pass)
             temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
@@ -304,6 +295,13 @@ def assoc_write(update, context):
             update.message.chat.id, update.message.from_user)
 
     return None
+
+
+def getUserFromObject(message_from_user):
+    r = {"id": message_from_user.id, "first_name": message_from_user.first_name,
+         "last_name": message_from_user.last_name, "username": message_from_user.username,
+         "language_code": message_from_user.language_code}
+    return r
 
 
 def delete4(associazione):
@@ -415,6 +413,37 @@ def contains_dict(associazione, param):
     return False
 
 
+def getPhotosFromObject(photo):
+
+    if photo is None:
+        return None
+
+    if len(photo) == 0:
+        return []
+
+    photos = []
+    for photo_s in photo:
+        photo_j = {"file_id": photo_s.file_id,
+                   "file_size": photo_s.file_size,
+                   "height": photo_s.height,
+                   "width": photo_s.width}
+        photos.append(photo_j)
+
+    return photos
+
+
+def messageFromObject(message_object):
+
+    if message_object is None:
+        return None
+
+    r = {"message_id": message_object.message_id,
+         "reply_to_message": messageFromObject(message_object.reply_to_message),
+         "photo": getPhotosFromObject(message_object.photo)}
+
+    return r
+
+
 def send_scheduled_messages2():
     associazioni2 = []
     for associazione in db_associazioni.messages_dict:
@@ -444,7 +473,7 @@ def send_scheduled_messages2():
                         db_associazioni.messages_dict[associazione]['sent'] = []
 
                     # todo: cambiare "forse inviato" con delle info migliori sul messaggio, data e link
-                    db_associazioni.messages_dict[associazione]['sent'].append(forse_inviato)
+                    db_associazioni.messages_dict[associazione]['sent'].append(messageFromObject(forse_inviato))
 
                 else:
                     # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
