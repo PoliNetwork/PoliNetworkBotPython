@@ -95,15 +95,15 @@ class DeleteMessageThread(Thread):
 
 
 def get_user_mention(user):
-    if user.username is not None and user.username != "":
-        return "@" + user.username
+    if user['username'] is not None and user['username'] != "":
+        return "@" + user['username']
     else:
         nome = user['first_name']
         if user['last_name'] is not None and user['last_name'] != "":
             nome = nome + " " + user["last_name"]
 
         nome = str(escape(nome))
-        return "<a href='tg://user?id=" + str(user.id) + "'>" + nome + "</a>"
+        return "<a href='tg://user?id=" + str(user['id']) + "'>" + nome + "</a>"
 
 
 def send_file_in_private_or_warning_in_group(user, document, group_id, title, forced_title):
