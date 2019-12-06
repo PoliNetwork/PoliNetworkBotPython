@@ -27,7 +27,7 @@ import random
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 import variable
-from features import aule, reviews
+from features import aule, reviews, associazioni
 from functions.temp_state import temp_state_variable
 
 
@@ -106,6 +106,39 @@ def next_a1(update, id_telegram, stato):
     return None
 
 
+def next_assoc_write(update, id_telegram, stato):
+    if stato["state"] == "0":
+        keyboard = [
+            [
+                InlineKeyboardButton(text="Metti in coda per la pubblicazione comune", callback_data="1"),
+                InlineKeyboardButton(text="Scegli la data di pubblicazione", callback_data="2")
+            ]
+        ]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        variable.updater.bot.send_message(chat_id=update.message.chat.id,
+                                          text="Scegli",
+                                          reply_markup=reply_markup)
+
+        stato["state"] = "0b"
+        overwrite_state(id_telegram, stato)
+    elif stato["state"] == "0b":
+        # dipende dal callback data
+        cb = str(update.callback_query.data)
+        if cb == "1":
+            update_old = stato["values"]["update"]
+            associazione_old = stato["values"]["associazione"]
+            associazioni.assoc_write2(update_old, associazione_old)
+
+            temp_state_variable.delete_state(id_telegram)
+        else:
+            not_supported_exception(id_telegram)
+
+        return None
+
+    return None
+
+
 def next_main(id_telegram, update):
     # noinspection PyNoneFunctionAssignment
     stato = get_state(id_telegram)
@@ -114,14 +147,16 @@ def next_main(id_telegram, update):
 
     if stato["module"] == "a1":
         return next_a1(update, id_telegram, stato)
+    elif stato["module"] == 'assoc_write':
+        return next_assoc_write(update,id_telegram,stato)
 
     return None
 
 
-def create_state(module, state, id_telegram):
+def create_state(module, state, id_telegram, values):
     now = datetime.datetime.now()
     now2 = now.strftime("%m/%d/%Y %H:%M:%S %f")
-    stato = {"module": module, "state": state, "values": [], "time": now2}
+    stato = {"module": module, "state": state, "values": values, "time": now2}
 
     temp_state_variable.lock_state.acquire()
     temp_state_variable.state_dict[id_telegram] = stato

@@ -9,6 +9,7 @@ import telegram.ext
 import variable
 from config import db_associazioni, creators
 from functions import utils
+from functions.temp_state import temp_state_main
 
 
 def errore_no_associazione(update):
@@ -184,6 +185,68 @@ def GetVideoFileID(messaggio_originale):
         return None
 
 
+def assoc_write2(update, associazione):
+    messaggio_originale = update.message.reply_to_message
+    if messaggio_originale is None:
+        utils.send_in_private_or_in_group("Devi rispondere ad un messaggio per aggiungerlo alla coda",
+                                          update.message.chat.id, update.message.from_user)
+        return
+
+    username = update.message.chat.username
+    if username is None or len(username) < 1:
+        username = "[No username!]"
+    photo2 = GetLargerPhoto(messaggio_originale.photo)
+    audio_file_id = GetAudioFileID(messaggio_originale)
+    voice_file_id = GetVoiceFileID(messaggio_originale)
+    video_file_id = GetVideoFileID(messaggio_originale)
+
+    ph2_file_id = None
+    try:
+        ph2_file_id = photo2.file_id
+    except:
+        pass
+
+    ph2_file_size = None
+    try:
+        ph2_file_size = photo2.file_size
+    except:
+        pass
+
+    ph2_height = None
+    try:
+        ph2_height = photo2.height
+    except:
+        pass
+
+    ph2_width = None
+    try:
+        ph2_width = photo2.width
+    except:
+        pass
+
+    dict1 = {"message_to_send_caption": messaggio_originale.caption_html,
+             "message_to_send_text": messaggio_originale.text,
+             "message_to_send_photo_file_id": ph2_file_id,
+             "message_to_send_photo_file_size": ph2_file_size,
+             "message_to_send_photo_height": ph2_height,
+             "message_to_send_photo_width": ph2_width,
+             "message_to_send_audio_file_id": audio_file_id,
+             "message_to_send_voice_file_id": voice_file_id,
+             "message_to_send_video_file_id": video_file_id,
+             "from_username": username,
+             "time": datetime.datetime.now().strftime(
+                 '%d-%m-%Y %H:%M:%S')
+             }
+
+    list2 = [dict1]
+    dict2 = {"message": list2}
+
+    db_associazioni.messages_dict.__setitem__(associazione, dict2)
+    save_ass_messages()
+    utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
+                                      update.message.chat.id, update.message.from_user)
+
+
 def assoc_write(update, context):
     associazione = get_associazione_name_from_user(update.message.from_user.id)
 
@@ -208,65 +271,12 @@ def assoc_write(update, context):
             return
 
         else:
-            messaggio_originale = update.message.reply_to_message
-            if messaggio_originale is None:
-                utils.send_in_private_or_in_group("Devi rispondere ad un messaggio per aggiungerlo alla coda",
-                                                  update.message.chat.id, update.message.from_user)
-                return
 
-            username = update.message.chat.username
-            if username is None or len(username) < 1:
-                username = "[No username!]"
-            photo2 = GetLargerPhoto(messaggio_originale.photo)
-            audio_file_id = GetAudioFileID(messaggio_originale)
-            voice_file_id = GetVoiceFileID(messaggio_originale)
-            video_file_id = GetVideoFileID(messaggio_originale)
+            values_to_pass = {"update": update, "associazione": associazione}
+            temp_state_main.create_state(module="assoc_write", state="0",
+                                         id_telegram=update.message.chat.id, values=values_to_pass)
+            temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
 
-            ph2_file_id = None
-            try:
-                ph2_file_id = photo2.file_id
-            except:
-                pass
-
-            ph2_file_size = None
-            try:
-                ph2_file_size = photo2.file_size
-            except:
-                pass
-
-            ph2_height = None
-            try:
-                ph2_height = photo2.height
-            except:
-                pass
-
-            ph2_width = None
-            try:
-                ph2_width = photo2.width
-            except:
-                pass
-
-            dict1 = {"message_to_send_caption": messaggio_originale.caption_html,
-                     "message_to_send_text": messaggio_originale.text,
-                     "message_to_send_photo_file_id": ph2_file_id,
-                     "message_to_send_photo_file_size": ph2_file_size,
-                     "message_to_send_photo_height": ph2_height,
-                     "message_to_send_photo_width": ph2_width,
-                     "message_to_send_audio_file_id": audio_file_id,
-                     "message_to_send_voice_file_id": voice_file_id,
-                     "message_to_send_video_file_id": video_file_id,
-                     "from_username": username,
-                     "time": datetime.datetime.now().strftime(
-                         '%d-%m-%Y %H:%M:%S')
-                     }
-
-            list2 = [dict1]
-            dict2 = {"message": list2}
-
-            db_associazioni.messages_dict.__setitem__(associazione, dict2)
-            save_ass_messages()
-            utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
-                                              update.message.chat.id, update.message.from_user)
         pass
     else:
         utils.send_in_private_or_in_group(

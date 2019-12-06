@@ -179,7 +179,7 @@ def get_aule_libere(ora_inizio, ora_fine):
 def get_orari_aula(update, context):
     # f7(update)
 
-    temp_state_main.create_state(module="a1", state="0", id_telegram=update.message.chat.id)
+    temp_state_main.create_state(module="a1", state="0", id_telegram=update.message.chat.id, values=[])
     temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
 
     return None
