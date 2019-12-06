@@ -6,8 +6,8 @@ try:
     messages_dict = jsonn.load(messages_file)
 except:
     messages_dict = {}
-    # todo: crea il file e scrivilo su disco
-    pass
+    with open("data/ass_messages.json", 'w', encoding="utf-8") as file:
+        jsonn.dump(messages_dict, file)
 
 config_json = None
 try:
@@ -15,8 +15,8 @@ try:
     config_json = jsonn.load(config)
 except:
     config_json = {"date": "00:00:00:00:00"}
-    # todo: crea il file e scrivilo su disco
-    pass
+    with open("data/date.json", 'w', encoding="utf-8") as file:
+        jsonn.dump(config_json, file)
 
 group = "@PoliAssociazioni"
 # group = "-1001117918825"  # @PoliAssociazioni
