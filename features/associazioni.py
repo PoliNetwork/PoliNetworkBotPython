@@ -158,7 +158,7 @@ def GetLargerPhoto(photo):
         if larger is None:
             larger = photo2
 
-        if photo2.width > larger.width:
+        if int(photo2['width']) > int(larger['width']):
             larger = photo2
 
     return larger
@@ -195,9 +195,18 @@ def assoc_write2(username, message_chat_id, message_from_user, associazione, mes
     if username is None or len(username) < 1:
         username = "[No username!]"
     photo2 = GetLargerPhoto(messaggio_originale['photo'])
-    audio_file_id = messaggio_originale['audio']['file_id']
-    voice_file_id = messaggio_originale['voice']['file_id']
-    video_file_id = messaggio_originale['video']['file_id']
+
+    audio_file_id = None
+    if messaggio_originale['audio'] is not None:
+        audio_file_id = messaggio_originale['audio']['file_id']
+
+    voice_file_id = None
+    if messaggio_originale['voice'] is not None:
+        voice_file_id = messaggio_originale['voice']['file_id']
+
+    video_file_id = None
+    if messaggio_originale['video'] is not None:
+        video_file_id = messaggio_originale['video']['file_id']
 
     ph2_file_id = None
     try:
@@ -414,7 +423,6 @@ def contains_dict(associazione, param):
 
 
 def getPhotosFromObject(photo):
-
     if photo is None:
         return None
 
@@ -432,14 +440,41 @@ def getPhotosFromObject(photo):
     return photos
 
 
-def messageFromObject(message_object):
+def getAudioFromObject(audio):
+    if audio is None:
+        return None
 
+    pass
+
+
+def getVideoFromObject(video):
+    if video is None:
+        return None
+
+    pass
+
+
+def getVoiceFromObject(voice):
+    if voice is None:
+        return None
+
+    pass
+
+
+def messageFromObject(message_object):
     if message_object is None:
         return None
 
-    r = {"message_id": message_object.message_id,
-         "reply_to_message": messageFromObject(message_object.reply_to_message),
-         "photo": getPhotosFromObject(message_object.photo)}
+    r = {
+        "message_id": message_object.message_id,
+        "reply_to_message": messageFromObject(message_object.reply_to_message),
+        "photo": getPhotosFromObject(message_object.photo),
+        "audio": getAudioFromObject(message_object.audio),
+        "video": getVideoFromObject(message_object.video),
+        "voice": getVoiceFromObject(message_object.voice),
+        "caption_html": message_object.caption_html,
+        "text": message_object.text
+    }
 
     return r
 

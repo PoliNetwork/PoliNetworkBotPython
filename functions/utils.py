@@ -42,7 +42,7 @@ def add_message_to_delete(group_id, done2):
 
 def send_in_private_or_in_group(text, group_id, user):
     success = True
-    user_id = user.id
+    user_id = user['id']
 
     try:
         variable.updater.bot.send_message(user_id, text)
