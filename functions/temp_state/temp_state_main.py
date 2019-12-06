@@ -126,14 +126,26 @@ def next_assoc_write(update, id_telegram, stato):
         # dipende dal callback data
         cb = str(update.callback_query.data)
         if cb == "1":
-            message_old = stato["values"]["message"]
+
             message_chat_id = stato["values"]["message_chat_id"]
             message_from_user = stato["values"]["message_from_user"]
             associazione_old = stato["values"]["associazione"]
             username = stato["values"]["username"]
-            messaggio_originale = stato["values"]["messaggio_originale"]
+            isMessaggioOriginaleNone = stato["values"]["isMessaggioOriginaleNone"]
+            messaggio_originale_caption_html = stato["values"]["messaggio_originale_caption_html"]
+            messaggio_originale_text = stato["values"]["messaggio_originale_text"]
+            messaggio_originale_photo = stato["values"]["messaggio_originale_photo"]
+            messaggio_originale_audio_file_id = stato["values"]["messaggio_originale_audio_file_id"]
+            messaggio_originale_voice_file_id = stato["values"]["messaggio_originale_voice_file_id"]
+            messaggio_originale_video_file_id = stato["values"]["messaggio_originale_video_file_id"]
+
             associazioni.assoc_write2(username, message_chat_id,
-                                      message_from_user, associazione_old, messaggio_originale)
+                                      message_from_user, associazione_old,
+                                      isMessaggioOriginaleNone, messaggio_originale_caption_html,
+                                      messaggio_originale_text, messaggio_originale_photo,
+                                      messaggio_originale_audio_file_id,
+                                      messaggio_originale_voice_file_id,
+                                      messaggio_originale_video_file_id)
 
             temp_state_variable.delete_state(id_telegram)
         else:

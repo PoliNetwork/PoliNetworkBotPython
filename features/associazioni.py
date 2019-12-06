@@ -185,19 +185,21 @@ def GetVideoFileID(messaggio_originale):
         return None
 
 
-def assoc_write2(username, message_chat_id, message_from_user, associazione, messaggio_originale):
-
-    if messaggio_originale is None:
+def assoc_write2(username, message_chat_id, message_from_user, associazione, isMessaggioOriginaleNone,
+                 messaggio_originale_caption_html, messaggio_originale_text,
+                 messaggio_originale_photo, messaggio_originale_audio_file_id,
+                 messaggio_originale_voice_file_id, messaggio_originale_video_file_id):
+    if isMessaggioOriginaleNone is True:
         utils.send_in_private_or_in_group("Devi rispondere ad un messaggio per aggiungerlo alla coda",
                                           message_chat_id, message_from_user)
         return
 
     if username is None or len(username) < 1:
         username = "[No username!]"
-    photo2 = GetLargerPhoto(messaggio_originale.photo)
-    audio_file_id = GetAudioFileID(messaggio_originale)
-    voice_file_id = GetVoiceFileID(messaggio_originale)
-    video_file_id = GetVideoFileID(messaggio_originale)
+    photo2 = GetLargerPhoto(messaggio_originale_photo)
+    audio_file_id = messaggio_originale_audio_file_id
+    voice_file_id = messaggio_originale_voice_file_id
+    video_file_id = messaggio_originale_video_file_id
 
     ph2_file_id = None
     try:
@@ -223,8 +225,8 @@ def assoc_write2(username, message_chat_id, message_from_user, associazione, mes
     except:
         pass
 
-    dict1 = {"message_to_send_caption": messaggio_originale.caption_html,
-             "message_to_send_text": messaggio_originale.text,
+    dict1 = {"message_to_send_caption": messaggio_originale_caption_html,
+             "message_to_send_text": messaggio_originale_text,
              "message_to_send_photo_file_id": ph2_file_id,
              "message_to_send_photo_file_size": ph2_file_size,
              "message_to_send_photo_height": ph2_height,
@@ -239,8 +241,14 @@ def assoc_write2(username, message_chat_id, message_from_user, associazione, mes
 
     list2 = [dict1]
     dict2 = {"message": list2}
+    try:
+        if db_associazioni.messages_dict[associazione]['message'] is None:
+            db_associazioni.messages_dict.__setitem__(associazione, dict2)
+        else:
+            db_associazioni.messages_dict[associazione]['message'].append(dict1)
+    except:
+        db_associazioni.messages_dict.__setitem__(associazione, dict2)
 
-    db_associazioni.messages_dict.__setitem__(associazione, dict2)
     save_ass_messages()
     utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
                                       message_chat_id, message_from_user)
@@ -271,10 +279,20 @@ def assoc_write(update, context):
 
         else:
 
+            isMessaggioOriginaleNone = False
+            if update.message.reply_to_message is None:
+                isMessaggioOriginaleNone = True
             values_to_pass = {"message_chat_id": update.message.chat.id,
                               "message_from_user": update.message.from_user, "associazione": associazione,
                               "username": update.message.chat.username,
-                              "messaggio_originale": update.message.reply_to_message}
+                              # "messaggio_originale": update.message.reply_to_message,
+                              "isMessaggioOriginaleNone": isMessaggioOriginaleNone,
+                              "messaggio_originale_caption_html": update.message.reply_to_message.caption_html,
+                              "messaggio_originale_text": update.message.reply_to_message.text,
+                              "messaggio_originale_photo": update.message.reply_to_message.photo,
+                              "messaggio_originale_audio_file_id": GetAudioFileID(update.message.reply_to_message),
+                              "messaggio_originale_voice_file_id": GetVoiceFileID(update.message.reply_to_message),
+                              "messaggio_originale_video_file_id": GetVideoFileID(update.message.reply_to_message)}
             temp_state_main.create_state(module="assoc_write", state="0",
                                          id_telegram=update.message.chat.id, values=values_to_pass)
             temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
