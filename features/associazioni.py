@@ -276,6 +276,11 @@ def assoc_write(update, context):
     return None
 
 
+def delete4(associazione):
+    db_associazioni.messages_dict[associazione]['message'] = None
+    pass
+
+
 def assoc_delete2(update, nascondi_messaggi):
     associazione = get_associazione_name_from_user(update.message.from_user.id)
 
@@ -290,7 +295,9 @@ def assoc_delete2(update, nascondi_messaggi):
                                               update.message.chat.id, update.message.from_user)
         pass
     else:
-        db_associazioni.messages_dict[associazione]['message'] = None
+
+        delete4(associazione)
+
         if nascondi_messaggi is False:
             utils.send_in_private_or_in_group("Messaggio rimosso con successo",
                                               update.message.chat.id, update.message.from_user)
@@ -408,19 +415,7 @@ def send_scheduled_messages():
 
     for associazione in db_associazioni.messages_dict:
         try:
-            associazione2 = db_associazioni.messages_dict.get(associazione)
-            associazione2['message_to_send_caption'] = None
-            associazione2['message_to_send_text'] = None
-            associazione2['message_to_send_photo_file_id'] = None
-            associazione2['message_to_send_photo_file_size'] = None
-            associazione2['message_to_send_photo_height'] = None
-            associazione2['message_to_send_photo_width'] = None
-            associazione2["message_to_send_audio_file_id"] = None
-            associazione2["message_to_send_voice_file_id"] = None
-            associazione2["message_to_send_video_file_id"] = None
-            associazione2["from_username"] = None
-            associazione2['time'] = None
-            db_associazioni.messages_dict[associazione] = associazione2
+            delete4(associazione)
         except Exception as e:
             pass
 
