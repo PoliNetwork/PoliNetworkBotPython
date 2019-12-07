@@ -110,15 +110,16 @@ def next_assoc_write(update, id_telegram, stato):
     if stato["state"] == "0":
         keyboard = [
             [
-                InlineKeyboardButton(text="Metti in coda per la pubblicazione comune", callback_data="1"),
-                InlineKeyboardButton(text="Scegli la data di pubblicazione", callback_data="2")
+                InlineKeyboardButton(text="Metti in coda", callback_data="1"),
+                InlineKeyboardButton(text="Scegli la data", callback_data="2")
             ]
         ]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
         variable.updater.bot.send_message(chat_id=update.message.chat.id,
-                                          text="Scegli",
-                                          reply_markup=reply_markup)
+                                          text="Data di pubblicazione?",
+                                          reply_markup=reply_markup,
+                                          parse_mode="HTML")
 
         stato["state"] = "0b"
         overwrite_state(id_telegram, stato)
