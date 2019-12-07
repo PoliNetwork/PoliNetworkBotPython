@@ -242,19 +242,22 @@ def assoc_write2(username, message_chat_id, message_from_user, associazione, mes
              "message_to_send_voice_file_id": voice_file_id,
              "message_to_send_video_file_id": video_file_id,
              "from_username": username,
-             "time": datetime.datetime.now().strftime(
-                 '%d-%m-%Y %H:%M:%S')
+             "time": datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
+             "from_user": message_from_user
              }
 
     list2 = [dict1]
-    dict2 = {"message": list2}
     try:
         if db_associazioni.messages_dict[associazione]['message'] is None:
-            db_associazioni.messages_dict.__setitem__(associazione, dict2)
+            db_associazioni.messages_dict[associazione]['message'] = list2
         else:
             db_associazioni.messages_dict[associazione]['message'].append(dict1)
     except:
-        db_associazioni.messages_dict.__setitem__(associazione, dict2)
+        if not db_associazioni.messages_dict.__contains__(associazione):
+            db_associazioni.messages_dict[associazione] = {}
+            db_associazioni.messages_dict[associazione]['message'] = list2
+        else:
+            db_associazioni.messages_dict[associazione]['message'] = list2
 
     save_ass_messages()
     utils.send_in_private_or_in_group("Messaggio aggiunto alla coda correttamente",
@@ -524,7 +527,9 @@ def send_scheduled_messages2():
                     if contains_dict(associazione, "sent") is False:
                         db_associazioni.messages_dict[associazione]['sent'] = []
 
-                    db_associazioni.messages_dict[associazione]['sent'].append(messageFromObject(forse_inviato))
+                    message_sent = messageFromObject(forse_inviato)
+                    message_sent["from_user"] = associazione3["from_user"]
+                    db_associazioni.messages_dict[associazione]['sent'].append(message_sent)
 
                 else:
                     # todo: inviare un messaggio a quelli dell'associazione dicendo che non hanno preso parte a questa
