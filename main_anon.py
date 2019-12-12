@@ -5,6 +5,8 @@ import hashlib
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
+from features import associazioni
+from functions.temp_state import temp_state_main
 from sub_bots.anon import config_anon, variable_anon
 
 owners = [5651789]  # id of @ArmeF97
@@ -71,18 +73,71 @@ def post_anonimi(update, context):
         identity_valid = False
 
     if identity_valid is False:
-        variable_anon.updater.bot.send_message(message.chat.id, "Devi indicare un'identità!\n"
-                                                                "\n"
-                                                                "Esempio:\n"
-                                                                "/anon 1 [eventuale link di risposta]\n"
-                                                                "\n"
-                                                                "Maggiori info con /help_anon")
+        keyboard = [
+            [
+                InlineKeyboardButton(text="ANONIMO", callback_data="0")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 1", callback_data="1")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 2", callback_data="2")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 3", callback_data="3")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 4", callback_data="4")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 5", callback_data="5")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 6", callback_data="6")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 7", callback_data="7")
+            ]
+
+        ]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
+                                               text="Con quale identità anonima vuoi pubblicare?",
+                                               reply_markup=reply_markup,
+                                               parse_mode="HTML")
+
+        valuesToSend = {"message": associazioni.messageFromObject(update.message), "data": data}
+
+        temp_state_main.create_state(module="anon1", state="0",
+                                     id_telegram=update.message.chat.id,
+                                     values=valuesToSend)
+        temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
+
         return
 
+    post_anonimi2(data, associazioni.messageFromObject(message.reply_to_message), identity)
+
+
+def forward_message_for_Approval(group_id, message):
+    success = False
+    message_sent = None
+
+    try:
+        if (message.__contains__("text")) and message["text"] is not None:
+            message_sent = variable_anon.updater.bot.send_message(chat_id=group_id, text=message["text"])
+            success = True
+    except Exception as e:
+        print(e)
+
+    return success, message_sent
+
+
+def post_anonimi2(data, message, identity):
     is_a_reply, message_reply_id = is_an_anon_message_link(data)
 
-    forward_success, message2 = forward_message(config_anon.group_id,
-                                                message.reply_to_message)
+    forward_success, message2 = forward_message_for_Approval(config_anon.group_id,
+                                                             message)
     if forward_success is not True:
         variable_anon.updater.bot.send_message(message.chat.id, "Errore nell'inoltro del messaggio per l'approvazione. "
                                                                 "Contatta gli admin di @PoliNetwork")
@@ -90,7 +145,7 @@ def post_anonimi(update, context):
 
     message2_id = None
     try:
-        message2_id = message2.message_id
+        message2_id = message2['message_id']
     except:
         variable_anon.updater.bot.send_message(message.chat.id, "Errore nell'inoltro del messaggio per l'approvazione. "
                                                                 "Contatta gli admin di @PoliNetwork")
@@ -104,19 +159,19 @@ def post_anonimi(update, context):
         [
             InlineKeyboardButton(text="Accetta", callback_data='anon'
                                                                + " " + str(message2_id)
-                                                               + " " + str(message.chat.id)
+                                                               + " " + str(message['chat']['id'])
                                                                + " " + 'Y'
                                                                + " " + str(identity)
                                                                + message_reply_id2),
             InlineKeyboardButton(text="Uncensored", callback_data='anon'
                                                                   + " " + str(message2_id)
-                                                                  + " " + str(message.chat.id)
+                                                                  + " " + str(message['chat']['id'])
                                                                   + " " + 'U'
                                                                   + " " + str(identity)
                                                                   + message_reply_id2),
             InlineKeyboardButton(text="Rifiuta", callback_data='anon'
                                                                + " " + str(message2_id)
-                                                               + " " + str(message.chat.id)
+                                                               + " " + str(message['chat']['id'])
                                                                + " " + 'N'
                                                                + " " + str(identity)
                                                                + message_reply_id2),
@@ -130,7 +185,7 @@ def post_anonimi(update, context):
         if is_a_reply:
             reply_string = "[In risposta a t.me/PoliAnoniMi/" + str(message_reply_id) + "]"
 
-        text2 = reply_string + "\n\nApprovare?\n#id" + str(message.chat.id) + "\nIdentità: " + str(identity)
+        text2 = reply_string + "\n\nApprovare?\nIdentità: " + str(identity)
 
         variable_anon.updater.bot.send_message(chat_id=config_anon.group_id,
                                                text=text2,
@@ -139,7 +194,7 @@ def post_anonimi(update, context):
                                                parse_mode="HTML")
     except Exception as e:
         pass
-    variable_anon.updater.bot.send_message(message.chat.id,
+    variable_anon.updater.bot.send_message(message['chat']['id'],
                                            "Il messaggio è stato inoltrato e in attesa di approvazione")
 
 
@@ -301,25 +356,31 @@ def handler_callback(update, data):
         reply_string = ""
 
     if option == 'Y' or option == 'U':
-        query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
-                                     str(id2) + reply_string + "\n" + str(link) + "\n" + "Identità: " + str(identity))
+        query.edit_message_text(text="Selected option: " + str(option) + reply_string + "\n" + str(link) + "\n" + "Identità: " + str(identity))
     else:
-        query.edit_message_text(text="Selected option: " + str(option) + "\n#id" +
-                                     str(id2) + reply_string + "\n" + "Identità: " + str(identity))
+        query.edit_message_text(text="Selected option: " + str(option) + reply_string + "\n" + "Identità: " + str(identity))
     return None
 
 
 def handler_callback2(update, context):
-    query = update.callback_query
 
-    data = str(query.data).split(" ")
+    try:
+        query = update.callback_query
 
-    if data[0] == "anon":
-        handler_callback(update, data)
-        return
-    else:
-        # todo: in future, add new "modules"
-        return
+        data = str(query.data).split(" ")
+
+        if data[0] == "anon":
+            handler_callback(update, data)
+            return
+        else:
+            # todo: in future, add new "modules"
+            a = 0
+    except:
+        a = 0
+
+    temp_state_main.callback_method(update, context)
+
+    return
 
 
 def help_handler(update, context):

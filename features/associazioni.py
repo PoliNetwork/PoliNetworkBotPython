@@ -473,6 +473,11 @@ def getVoiceFromObject(voice):
     return {"file_id": voice.file_id}
 
 
+def getChatFromObject(chat):
+    r = {"id": chat.id, "type": chat.type}
+    return r
+
+
 def messageFromObject(message_object):
     if message_object is None:
         return None
@@ -493,7 +498,8 @@ def messageFromObject(message_object):
         "caption_html": html,
         "text": message_object.text,
         "date": str(message_object.date),
-        "from_user": getUserFromObject(message_object.from_user)
+        "from_user": getUserFromObject(message_object.from_user),
+        "chat":getChatFromObject(message_object.chat)
     }
 
     return r

@@ -26,6 +26,7 @@ import random
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+import main_anon
 import variable
 from features import aule, reviews, associazioni
 from functions.temp_state import temp_state_variable
@@ -147,6 +148,24 @@ def next_assoc_write(update, id_telegram, stato):
     return None
 
 
+def next_anon1(update, id_telegram, stato):
+
+    if update.callback_query is None:
+        return None
+
+    if stato["state"] == "0":
+        # dipende dal callback data
+        cb = str(update.callback_query.data)
+
+        main_anon.post_anonimi2(stato["values"]["data"], stato["values"]["message"]["reply_to_message"], identity=cb)
+
+        temp_state_variable.delete_state(id_telegram)
+
+        return None
+
+    return None
+
+
 def next_main(id_telegram, update):
     # noinspection PyNoneFunctionAssignment
     stato = get_state(id_telegram)
@@ -157,6 +176,8 @@ def next_main(id_telegram, update):
         return next_a1(update, id_telegram, stato)
     elif stato["module"] == 'assoc_write':
         return next_assoc_write(update, id_telegram, stato)
+    elif stato["module"] == 'anon1':
+        return next_anon1(update, id_telegram, stato)
 
     return None
 
