@@ -6,6 +6,7 @@ from json import JSONDecodeError
 from threading import Thread
 
 import requests
+import telegram
 from telegram.error import Unauthorized
 
 import variable
@@ -147,21 +148,23 @@ def is_valid(text):
 
 
 def mute_and_delete(message):
-    chat = message.chat
-    user = message.from_user.id
-    variable.updater.bot.restrict_chat_member(chat.id,
-                                              user,
-                                              until_date=int(datetime.datetime.now().timestamp()) + 900)
-    variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
+    temp_mute_and_delete(message, 900)
+    return
 
 
 def temp_mute_and_delete(message, seconds):
     chat = message.chat
     user = message.from_user.id
+    permission = telegram.ChatPermissions(can_add_web_page_previews=False,
+                                          can_send_media_messages=False,
+                                          can_send_messages=False,
+                                          can_send_other_messages=False)
     variable.updater.bot.restrict_chat_member(chat.id,
                                               user,
-                                              until_date=int(datetime.datetime.now().timestamp()) + seconds)
+                                              until_date=int(datetime.datetime.now().timestamp()) + seconds,
+                                              permissions=permission)
     variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
+    return
 
 
 def has_spam_links(text):

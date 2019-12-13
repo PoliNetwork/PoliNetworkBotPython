@@ -26,3 +26,5 @@ sub_bots/fb_messenger/fb_messenger_config.py
 functions/instagram/instagram_config.py
 
 functions/instagram/geckodriver.log
+
+salt/salt_anonimi.txt

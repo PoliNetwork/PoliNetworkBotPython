@@ -1,5 +1,7 @@
 import datetime
 
+import telegram
+
 import variable
 from config import creators, time_unit_values
 from functions import utils
@@ -50,18 +52,20 @@ def mutes_bans_handler(update, context):
             utils.send_in_private_or_in_group("Hai inserito un valore non numerico.", chat_id, message.from_user)
 
     if command in "mute":
+        permission = telegram.ChatPermissions(can_add_web_page_previews=False,
+                                              can_send_media_messages=False,
+                                              can_send_messages=False,
+                                              can_send_other_messages=False)
         bot.restrict_chat_member(chat_id, receiver, until_date=time,
-                                 can_add_web_page_previews=False,
-                                 can_send_media_messages=False,
-                                 can_send_messages=False,
-                                 can_send_other_messages=False)
+                                 permissions=permission)
         utils.send_in_private_or_in_group("Utente mutato con successo.", chat_id, message.from_user)
     elif command in "unmute":
+        permission = telegram.ChatPermissions(can_add_web_page_previews=True,
+                                              can_send_media_messages=True,
+                                              can_send_messages=True,
+                                              can_send_other_messages=True)
         bot.restrict_chat_member(chat_id, receiver,
-                                 can_add_web_page_previews=True,
-                                 can_send_media_messages=True,
-                                 can_send_messages=True,
-                                 can_send_other_messages=True)
+                                 permissions=permission)
         utils.send_in_private_or_in_group("Utente smutato con successo.", chat_id, message.from_user)
     elif command in "ban":
         bot.kick_chat_member(chat_id, receiver, until_date=time)

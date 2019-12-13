@@ -1,5 +1,7 @@
 import datetime
 
+import telegram
+
 import variable
 from config import creators
 from features import groups
@@ -151,11 +153,12 @@ def check_username_and_name(message):
 
         try:
             time = float(datetime.datetime.now().timestamp()) + seconds
+            permission = telegram.ChatPermissions(can_add_web_page_previews=False,
+                                                  can_send_media_messages=False,
+                                                  can_send_messages=False,
+                                                  can_send_other_messages=False)
             variable.updater.bot.restrict_chat_member(message.chat.id, from_user.id, until_date=time,
-                                                      can_add_web_page_previews=False,
-                                                      can_send_media_messages=False,
-                                                      can_send_messages=False,
-                                                      can_send_other_messages=False)
+                                                      permissions=permission)
         except Exception as e:
             utils.notify_owners(e)
 
