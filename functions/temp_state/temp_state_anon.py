@@ -26,36 +26,37 @@ import random
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-import variable
+import main_anon
 from features import aule, reviews, associazioni
-from functions.temp_state import temp_state_variable_main
+from functions.temp_state import  temp_state_variable_anon
+from sub_bots.anon import variable_anon
 
 
 def get_state(id_telegram):
-    for ass in temp_state_variable_main.state_dict.keys():
+    for ass in temp_state_variable_anon.state_dict.keys():
         if ass == id_telegram:
-            return temp_state_variable_main.state_dict.get(ass)
+            return temp_state_variable_anon.state_dict.get(ass)
     return None
 
 
 def overwrite_state(id_telegram, stato):
-    temp_state_variable_main.lock_state.acquire()
+    temp_state_variable_anon.lock_state.acquire()
 
-    if temp_state_variable_main.state_dict[id_telegram] is None:
+    if temp_state_variable_anon.state_dict[id_telegram] is None:
         # todo: occhio! bisogna controllare che ci sia qualcosa nel json, perché se è vuoto, è stato eliminato
-        temp_state_variable_main.lock_state.release()
+        temp_state_variable_anon.lock_state.release()
         return None
 
-    temp_state_variable_main.state_dict[id_telegram] = stato
-    temp_state_variable_main.save_file_no_lock()
-    temp_state_variable_main.lock_state.release()
+    temp_state_variable_anon.state_dict[id_telegram] = stato
+    temp_state_variable_anon.save_file_no_lock()
+    temp_state_variable_anon.lock_state.release()
     return None
 
 
 def not_supported_exception(id):
-    variable.updater.bot.send_message(chat_id=id,
+    variable_anon.updater.bot.send_message(chat_id=id,
                                       text="Questa funzione non è ancora supportata!")
-    temp_state_variable_main.delete_state(id)
+    temp_state_variable_anon.delete_state(id)
 
 
 def next_a1(update, id_telegram, stato):
@@ -72,7 +73,7 @@ def next_a1(update, id_telegram, stato):
         ]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
-        variable.updater.bot.send_message(chat_id=update.message.chat.id,
+        variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
                                           text="Scegli",
                                           reply_markup=reply_markup)
 
@@ -82,7 +83,7 @@ def next_a1(update, id_telegram, stato):
         # dipende dal callback data
         cb = str(update.callback_query.data)
         if cb == "3":
-            variable.updater.bot.send_message(chat_id=update.callback_query.message.chat.id,
+            variable_anon.updater.bot.send_message(chat_id=update.callback_query.message.chat.id,
                                               text="Scrivi il codice dell'aula (esempio: N.0.1)")
             stato["state"] = "1"
             overwrite_state(id_telegram, stato)
@@ -99,7 +100,7 @@ def next_a1(update, id_telegram, stato):
         filename = 'data/aula' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
         reviews.send_file(update, result, filename, aula_da_trovare)
 
-        temp_state_variable_main.delete_state(id_telegram)
+        temp_state_variable_anon.delete_state(id_telegram)
 
         return None
 
@@ -116,7 +117,7 @@ def next_assoc_write(update, id_telegram, stato):
         ]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
-        variable.updater.bot.send_message(chat_id=update.message.chat.id,
+        variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
                                           text="Data di pubblicazione?",
                                           reply_markup=reply_markup,
                                           parse_mode="HTML")
@@ -138,9 +139,27 @@ def next_assoc_write(update, id_telegram, stato):
                                       message_from_user, associazione_old,
                                       message=messaggio)
 
-            temp_state_variable_main.delete_state(id_telegram)
+            temp_state_variable_anon.delete_state(id_telegram)
         else:
             not_supported_exception(id_telegram)
+
+        return None
+
+    return None
+
+
+def next_anon1(update, id_telegram, stato):
+
+    if update.callback_query is None:
+        return None
+
+    if stato["state"] == "0":
+        # dipende dal callback data
+        cb = str(update.callback_query.data)
+
+        main_anon.post_anonimi2(stato["values"]["data"], stato["values"]["message"]["reply_to_message"], identity=cb)
+
+        temp_state_variable_anon.delete_state(id_telegram)
 
         return None
 
@@ -157,6 +176,8 @@ def next_main(id_telegram, update):
         return next_a1(update, id_telegram, stato)
     elif stato["module"] == 'assoc_write':
         return next_assoc_write(update, id_telegram, stato)
+    elif stato["module"] == 'anon1':
+        return next_anon1(update, id_telegram, stato)
 
     return None
 
@@ -166,17 +187,17 @@ def create_state(module, state, id_telegram, values):
     now2 = now.strftime("%m/%d/%Y %H:%M:%S %f")
     stato = {"module": module, "state": state, "values": values, "time": now2}
 
-    temp_state_variable_main.lock_state.acquire()
-    temp_state_variable_main.state_dict[id_telegram] = stato
-    temp_state_variable_main.save_file_no_lock()
-    temp_state_variable_main.lock_state.release()
+    temp_state_variable_anon.lock_state.acquire()
+    temp_state_variable_anon.state_dict[id_telegram] = stato
+    temp_state_variable_anon.save_file_no_lock()
+    temp_state_variable_anon.lock_state.release()
 
     return None
 
 
 def cancel(update, context):
     try:
-        temp_state_variable_main.delete_state(update.message.chat.id)
+        temp_state_variable_anon.delete_state(update.message.chat.id)
     except:
         pass
     return None

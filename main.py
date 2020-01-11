@@ -5,7 +5,9 @@ from telegram.ext import MessageHandler, CommandHandler, Filters, CallbackQueryH
 import main_userbot
 import variable
 from config import creators
-from features import groups, reviews, test, moderation, all_messages, materials, help_file, anonimi, recordings, \
+from features import groups, reviews, test, moderation
+from features import all_messages
+from features import materials, help_file, anonimi, recordings, \
     associazioni, aule
 from functions import utils
 from functions.temp_state import temp_state_main

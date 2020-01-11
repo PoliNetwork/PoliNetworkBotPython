@@ -6,7 +6,7 @@ from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
 from features import associazioni
-from functions.temp_state import temp_state_main
+from functions.temp_state import temp_state_anon
 from sub_bots.anon import config_anon, variable_anon
 
 owners = [5651789]  # id of @ArmeF97
@@ -109,10 +109,10 @@ def post_anonimi(update, context):
 
         valuesToSend = {"message": associazioni.messageFromObject(update.message), "data": data}
 
-        temp_state_main.create_state(module="anon1", state="0",
+        temp_state_anon.create_state(module="anon1", state="0",
                                      id_telegram=update.message.chat.id,
                                      values=valuesToSend)
-        temp_state_main.next_main(id_telegram=update.message.chat.id, update=update)
+        temp_state_anon.next_main(id_telegram=update.message.chat.id, update=update)
 
         return
 
@@ -378,7 +378,7 @@ def handler_callback2(update, context):
     except:
         a = 0
 
-    temp_state_main.callback_method(update, context)
+    temp_state_anon.callback_method(update, context)
 
     return
 
