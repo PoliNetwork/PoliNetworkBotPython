@@ -10,7 +10,7 @@ __pycache__/
 data/*
 sub_bots/anon/salt/salt_anonimi.txt
 
-sub_bots/anon/token_anon.txt
+sub_bots/anon/token_anon_old.txt
 
 policreator.session
 
@@ -30,3 +30,5 @@ functions/instagram/geckodriver.log
 salt/salt_anonimi.txt
 
 token_old.txt
+
+sub_bots/anon/token_anon.txt

@@ -8,7 +8,7 @@ import telegram.ext
 
 import variable
 from config import db_associazioni, creators
-from functions import utils
+from functions import utils, messageFromObjectClass
 from functions.temp_state import temp_state_main
 
 
@@ -294,7 +294,7 @@ def assoc_write(update, context):
                 "message_from_user": getUserFromObject(update.message.from_user),
                 "associazione": associazione,
                 "username": update.message.chat.username,
-                "message": messageFromObject(update.message),
+                "message": messageFromObjectClass.messageFromObject(update.message),
             }
             temp_state_main.create_state(module="assoc_write", state="0",
                                          id_telegram=update.message.chat.id, values=values_to_pass)
@@ -307,22 +307,6 @@ def assoc_write(update, context):
             update.message.chat.id, update.message.from_user)
 
     return None
-
-
-def getUserFromObject(message_from_user):
-    if message_from_user is None:
-        return None
-
-    lc = None
-    try:
-        lc = message_from_user.language_code
-    except:
-        pass
-
-    r = {"id": message_from_user.id, "first_name": message_from_user.first_name,
-         "last_name": message_from_user.last_name, "username": message_from_user.username,
-         "language_code": lc}
-    return r
 
 
 def delete4(associazione):
@@ -434,52 +418,6 @@ def contains_dict(associazione, param):
     return False
 
 
-def getPhotosFromObject(photo):
-    if photo is None:
-        return None
-
-    if len(photo) == 0:
-        return []
-
-    photos = []
-    for photo_s in photo:
-        photo_j = {"file_id": photo_s.file_id,
-                   "file_size": photo_s.file_size,
-                   "height": photo_s.height,
-                   "width": photo_s.width}
-        photos.append(photo_j)
-
-    return photos
-
-
-def getAudioFromObject(audio):
-    if audio is None:
-        return None
-
-    return {"file_id": audio.file_id}
-
-
-def getVideoFromObject(video):
-    if video is None:
-        return None
-
-    return {"file_id": video.file_id}
-
-
-def getVoiceFromObject(voice):
-    if voice is None:
-        return None
-
-    return {"file_id": voice.file_id}
-
-
-def getChatFromObject(chat):
-    r = {"id": chat.id, "type": chat.type}
-    return r
-
-
-
-
 def send_scheduled_messages2():
     associazioni2 = []
     for associazione in db_associazioni.messages_dict:
@@ -508,7 +446,7 @@ def send_scheduled_messages2():
                     if contains_dict(associazione, "sent") is False:
                         db_associazioni.messages_dict[associazione]['sent'] = []
 
-                    message_sent = messageFromObject(forse_inviato)
+                    message_sent = messageFromObjectClass.messageFromObject(forse_inviato)
                     message_sent["from_user"] = associazione3["from_user"]
                     db_associazioni.messages_dict[associazione]['sent'].append(message_sent)
 

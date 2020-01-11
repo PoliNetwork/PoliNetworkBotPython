@@ -8,8 +8,6 @@ if token is not None:
 
 updater = None
 
-print(str(token))
-
 try:
     updater = Updater(token, use_context=True)
 except Exception as e:
