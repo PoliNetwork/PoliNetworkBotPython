@@ -14,6 +14,7 @@ except:
     token = None
 
 if token is not None:
+    token = str(token).strip()
     updater = Updater(token, use_context=True)
 
 lock_group_list.acquire()
