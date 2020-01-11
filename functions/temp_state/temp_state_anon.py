@@ -27,8 +27,7 @@ import random
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 import main_anon
-from features import aule, reviews, associazioni
-from functions.temp_state import  temp_state_variable_anon
+from functions.temp_state import temp_state_variable_anon
 from sub_bots.anon import variable_anon
 
 
@@ -59,93 +58,7 @@ def not_supported_exception(id):
     temp_state_variable_anon.delete_state(id)
 
 
-def next_a1(update, id_telegram, stato):
-    if stato["state"] == "0":
-        keyboard = [
-            [
-                InlineKeyboardButton(text="Search classroom", callback_data="1"),
-                InlineKeyboardButton(text="Free Classroom", callback_data="2")
-            ],
-            [
-                InlineKeyboardButton(text="Occupancies of the day", callback_data="3"),
-                InlineKeyboardButton(text="Help", callback_data="4")
-            ]
-        ]
 
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
-                                          text="Scegli",
-                                          reply_markup=reply_markup)
-
-        stato["state"] = "0b"
-        overwrite_state(id_telegram, stato)
-    elif stato["state"] == "0b":
-        # dipende dal callback data
-        cb = str(update.callback_query.data)
-        if cb == "3":
-            variable_anon.updater.bot.send_message(chat_id=update.callback_query.message.chat.id,
-                                              text="Scrivi il codice dell'aula (esempio: N.0.1)")
-            stato["state"] = "1"
-            overwrite_state(id_telegram, stato)
-        else:
-            not_supported_exception(id_telegram)
-
-    elif stato["state"] == "1":
-        datetime_object = datetime.datetime.now()
-        message = update.message
-        text = message.text
-        aula_da_trovare = text
-        result = aule.f5(datetime_object.day, datetime_object.month, datetime_object.year, aula_da_trovare)
-        n = random.randint(1, 9999999)
-        filename = 'data/aula' + str(n) + "_" + str(abs(int(update.message.chat.id))) + '.html'
-        reviews.send_file(update, result, filename, aula_da_trovare)
-
-        temp_state_variable_anon.delete_state(id_telegram)
-
-        return None
-
-    return None
-
-
-def next_assoc_write(update, id_telegram, stato):
-    if stato["state"] == "0":
-        keyboard = [
-            [
-                InlineKeyboardButton(text="Metti in coda", callback_data="1"),
-                InlineKeyboardButton(text="Scegli la data", callback_data="2")
-            ]
-        ]
-
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
-                                          text="Data di pubblicazione?",
-                                          reply_markup=reply_markup,
-                                          parse_mode="HTML")
-
-        stato["state"] = "0b"
-        overwrite_state(id_telegram, stato)
-    elif stato["state"] == "0b":
-        # dipende dal callback data
-        cb = str(update.callback_query.data)
-        if cb == "1":
-
-            message_chat_id = stato["values"]["message_chat_id"]
-            message_from_user = stato["values"]["message_from_user"]
-            associazione_old = stato["values"]["associazione"]
-            username = stato["values"]["username"]
-            messaggio = stato["values"]["message"]
-
-            associazioni.assoc_write2(username, message_chat_id,
-                                      message_from_user, associazione_old,
-                                      message=messaggio)
-
-            temp_state_variable_anon.delete_state(id_telegram)
-        else:
-            not_supported_exception(id_telegram)
-
-        return None
-
-    return None
 
 
 def next_anon1(update, id_telegram, stato):
@@ -172,11 +85,7 @@ def next_main(id_telegram, update):
     if stato is None:
         return None
 
-    if stato["module"] == "a1":
-        return next_a1(update, id_telegram, stato)
-    elif stato["module"] == 'assoc_write':
-        return next_assoc_write(update, id_telegram, stato)
-    elif stato["module"] == 'anon1':
+    if stato["module"] == 'anon1':
         return next_anon1(update, id_telegram, stato)
 
     return None

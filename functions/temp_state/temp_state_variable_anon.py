@@ -3,7 +3,7 @@ import json as jsonn
 import time
 from threading import Lock, Thread
 
-import variable
+from sub_bots.anon import variable_anon
 
 state_dict = None
 lock_state = Lock()
@@ -27,7 +27,7 @@ def DeleteMessageStateThread3(s1):
     difference = datetime.datetime.now() - datetime_object
     if difference.total_seconds() > 60 * 5:
         delete_state(s1)
-        variable.updater.bot.send_message(chat_id=s1,
+        variable_anon.updater.bot.send_message(chat_id=s1,
                                           text="La tua sessione è scaduta. L'operazione che stavi facendo è stata "
                                                "annullata per tua inattività.")
 

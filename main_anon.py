@@ -5,7 +5,7 @@ import hashlib
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
-from features import associazioni
+from functions import messageFromObjectClass
 from functions.temp_state import temp_state_anon
 from sub_bots.anon import config_anon, variable_anon
 
@@ -107,7 +107,7 @@ def post_anonimi(update, context):
                                                reply_markup=reply_markup,
                                                parse_mode="HTML")
 
-        valuesToSend = {"message": associazioni.messageFromObject(update.message), "data": data}
+        valuesToSend = {"message": messageFromObjectClass.messageFromObject(update.message), "data": data}
 
         temp_state_anon.create_state(module="anon1", state="0",
                                      id_telegram=update.message.chat.id,
@@ -116,7 +116,7 @@ def post_anonimi(update, context):
 
         return
 
-    post_anonimi2(data, associazioni.messageFromObject(message.reply_to_message), identity)
+    post_anonimi2(data, messageFromObjectClass.messageFromObject(message.reply_to_message), identity)
 
 
 def forward_message_for_Approval(group_id, message):
