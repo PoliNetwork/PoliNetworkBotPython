@@ -3,7 +3,7 @@
 import hashlib
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import CommandHandler, CallbackQueryHandler
+from telegram.ext import CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 
 from functions import messageFromObjectClass
 from functions.temp_state import temp_state_anon
@@ -27,10 +27,13 @@ def send_in_private_or_in_group(text, chat_id, from_user):
 
 
 def is_an_anon_message_link(parts):
-    if len(parts) <= 2:
+    try:
+        if len(parts) <= 2:
+            return False, ""
+        if "t.me/PoliAnoniMi/" in parts[2]:
+            return True, parts[2].split("/")[-1]
+    except:
         return False, ""
-    if "t.me/PoliAnoniMi/" in parts[2]:
-        return True, parts[2].split("/")[-1]
 
 
 def forward_message(group_id, message):
@@ -42,6 +45,49 @@ def forward_message(group_id, message):
         for owner2 in owners:
             variable_anon.updater.bot.send_message(owner2, "Error forwarding message!\n\n" + e2)
     return False, None
+
+
+def post_anonimi3(update, data):
+    keyboard = [
+        [
+            InlineKeyboardButton(text="ANONIMO", callback_data="0")
+        ],
+        [
+            InlineKeyboardButton(text="IDENTITA' 1", callback_data="1")
+        ],
+        [
+            InlineKeyboardButton(text="IDENTITA' 2", callback_data="2")
+        ],
+        [
+            InlineKeyboardButton(text="IDENTITA' 3", callback_data="3")
+        ],
+        [
+            InlineKeyboardButton(text="IDENTITA' 4", callback_data="4")
+        ],
+        [
+            InlineKeyboardButton(text="IDENTITA' 5", callback_data="5")
+        ],
+        [
+            InlineKeyboardButton(text="IDENTITA' 6", callback_data="6")
+        ],
+        [
+            InlineKeyboardButton(text="IDENTITA' 7", callback_data="7")
+        ]
+
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
+                                           text="Con quale identità anonima vuoi pubblicare?",
+                                           reply_markup=reply_markup,
+                                           parse_mode="HTML")
+
+    valuesToSend = {"message": messageFromObjectClass.messageFromObject(update.message), "data": data}
+
+    temp_state_anon.create_state(module="anon1", state="0",
+                                 id_telegram=update.message.chat.id,
+                                 values=valuesToSend)
+    temp_state_anon.next_main(id_telegram=update.message.chat.id, update=update)
 
 
 def post_anonimi(update, context):
@@ -73,46 +119,7 @@ def post_anonimi(update, context):
         identity_valid = False
 
     if identity_valid is False:
-        keyboard = [
-            [
-                InlineKeyboardButton(text="ANONIMO", callback_data="0")
-            ],
-            [
-                InlineKeyboardButton(text="IDENTITA' 1", callback_data="1")
-            ],
-            [
-                InlineKeyboardButton(text="IDENTITA' 2", callback_data="2")
-            ],
-            [
-                InlineKeyboardButton(text="IDENTITA' 3", callback_data="3")
-            ],
-            [
-                InlineKeyboardButton(text="IDENTITA' 4", callback_data="4")
-            ],
-            [
-                InlineKeyboardButton(text="IDENTITA' 5", callback_data="5")
-            ],
-            [
-                InlineKeyboardButton(text="IDENTITA' 6", callback_data="6")
-            ],
-            [
-                InlineKeyboardButton(text="IDENTITA' 7", callback_data="7")
-            ]
-
-        ]
-
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
-                                               text="Con quale identità anonima vuoi pubblicare?",
-                                               reply_markup=reply_markup,
-                                               parse_mode="HTML")
-
-        valuesToSend = {"message": messageFromObjectClass.messageFromObject(update.message), "data": data}
-
-        temp_state_anon.create_state(module="anon1", state="0",
-                                     id_telegram=update.message.chat.id,
-                                     values=valuesToSend)
-        temp_state_anon.next_main(id_telegram=update.message.chat.id, update=update)
+        post_anonimi3(update, data)
 
         return
 
@@ -356,14 +363,16 @@ def handler_callback(update, data):
         reply_string = ""
 
     if option == 'Y' or option == 'U':
-        query.edit_message_text(text="Selected option: " + str(option) + reply_string + "\n" + str(link) + "\n" + "Identità: " + str(identity))
+        query.edit_message_text(
+            text="Selected option: " + str(option) + reply_string + "\n" + str(link) + "\n" + "Identità: " + str(
+                identity))
     else:
-        query.edit_message_text(text="Selected option: " + str(option) + reply_string + "\n" + "Identità: " + str(identity))
+        query.edit_message_text(
+            text="Selected option: " + str(option) + reply_string + "\n" + "Identità: " + str(identity))
     return None
 
 
 def handler_callback2(update, context):
-
     try:
         query = update.callback_query
 
@@ -418,6 +427,35 @@ def help_handler(update, context):
                                            parse_mode="HTML")
 
 
+def check_message_all(update, context):
+    message = update.message
+    if message.chat.type != "private":
+        return
+
+    keyboard = [
+        [
+            InlineKeyboardButton(text="Si", callback_data="0")
+        ],
+        [
+            InlineKeyboardButton(text="No", callback_data="1")
+        ]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    variable_anon.updater.bot.send_message(chat_id=update.message.chat.id,
+                                           text="Vuoi pubblicare questo messaggio?",
+                                           reply_markup=reply_markup,
+                                           parse_mode="HTML")
+
+    valuesToSend = {"message": messageFromObjectClass.messageFromObject(update.message)}
+
+    temp_state_anon.create_state(module="anon1", state="0t",
+                                 id_telegram=update.message.chat.id,
+                                 values=valuesToSend)
+
+    return
+
+
 config_anon.me = variable_anon.updater.bot.get_me().id
 
 dispatcher = variable_anon.updater.dispatcher
@@ -431,7 +469,7 @@ dispatcher.add_handler(CommandHandler('anon', post_anonimi))
 dispatcher.add_handler(CommandHandler('help', help_handler))
 
 # all
-
+dispatcher.add_handler(MessageHandler(Filters.all, check_message_all))
 
 dispatcher.add_handler(CallbackQueryHandler(handler_callback2))
 

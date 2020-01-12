@@ -54,25 +54,79 @@ def overwrite_state(id_telegram, stato):
 
 def not_supported_exception(id):
     variable_anon.updater.bot.send_message(chat_id=id,
-                                      text="Questa funzione non è ancora supportata!")
+                                           text="Questa funzione non è ancora supportata!")
     temp_state_variable_anon.delete_state(id)
-
-
-
 
 
 def next_anon1(update, id_telegram, stato):
 
-    if update.callback_query is None:
-        return None
-
     if stato["state"] == "0":
+
+        if update.callback_query is None:
+            return None
+
         # dipende dal callback data
         cb = str(update.callback_query.data)
 
         main_anon.post_anonimi2(stato["values"]["data"], stato["values"]["message"]["reply_to_message"], identity=cb)
 
         temp_state_variable_anon.delete_state(id_telegram)
+
+        return None
+
+    elif stato["state"] == "0t2":
+
+        if update.callback_query is None:
+            return None
+
+        # dipende dal callback data
+        cb = str(update.callback_query.data)
+
+        m2 = stato["values"]["message"]
+        main_anon.post_anonimi2(data=None, message=m2, identity=cb)
+
+        temp_state_variable_anon.delete_state(id_telegram)
+
+        return None
+
+    elif stato["state"] == "0t":
+
+        keyboard = [
+            [
+                InlineKeyboardButton(text="ANONIMO", callback_data="0")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 1", callback_data="1")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 2", callback_data="2")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 3", callback_data="3")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 4", callback_data="4")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 5", callback_data="5")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 6", callback_data="6")
+            ],
+            [
+                InlineKeyboardButton(text="IDENTITA' 7", callback_data="7")
+            ]
+
+        ]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        variable_anon.updater.bot.send_message(chat_id=stato["values"]["message"]["from_user"]["id"],
+                                               text="Con quale identità anonima vuoi pubblicare?",
+                                               reply_markup=reply_markup,
+                                               parse_mode="HTML")
+
+        stato["state"] = "0t2"
+        overwrite_state(id_telegram, stato)
 
         return None
 
