@@ -101,6 +101,7 @@ def next_anon1(update, id_telegram, stato):
             variable_anon.updater.bot.send_message(chat_id=stato["values"]["message"]["from_user"]["id"],
                                                    text="Ok, se vuoi altre info, scrivi /help",
                                                    parse_mode="HTML")
+            temp_state_variable_anon.delete_state(id_telegram)
             return
 
         keyboard = [
