@@ -32,3 +32,5 @@ salt/salt_anonimi.txt
 token_old.txt
 
 sub_bots/anon/token_anon.txt
+
+functions/instagram/instabot.config.yml
