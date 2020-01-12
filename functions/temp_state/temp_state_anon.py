@@ -91,6 +91,18 @@ def next_anon1(update, id_telegram, stato):
 
     elif stato["state"] == "0t":
 
+        if update.callback_query is None:
+            return None
+
+        # dipende dal callback data
+        cb = str(update.callback_query.data)
+
+        if cb != "0":
+            variable_anon.updater.bot.send_message(chat_id=stato["values"]["message"]["from_user"]["id"],
+                                                   text="Ok, se vuoi altre info, scrivi /help",
+                                                   parse_mode="HTML")
+            return
+
         keyboard = [
             [
                 InlineKeyboardButton(text="ANONIMO", callback_data="0")

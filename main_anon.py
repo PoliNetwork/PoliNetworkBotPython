@@ -401,6 +401,9 @@ def help_handler(update, context):
         return
 
     variable_anon.updater.bot.send_message(update.message.chat.id,
+                                           "[UPDATE!] Ora basta inviare il messaggio al bot. Il bot chiederà il resto."
+                                           "\n"
+                                           "\n"
                                            "Scrivi il messaggio che vuoi inviare.\n"
                                            "Rispondi a quel messaggio con /anon per richiederne"
                                            " la pubblicazione sul canale @PoliAnoniMi.\n"
