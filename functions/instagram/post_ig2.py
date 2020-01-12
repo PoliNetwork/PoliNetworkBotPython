@@ -1,11 +1,13 @@
-from InstagramAPI import InstagramAPI
 
 from functions.instagram import instagram_config
+from functions.instagram.InstagramAPI import PyInstagramAPI
 
-InstagramAPI = InstagramAPI(instagram_config.username, instagram_config.password)
+InstagramAPI = PyInstagramAPI(username= instagram_config.username,
+                              password=instagram_config.password,
+                              debug=False, IGDataPath='/home/arme')
 InstagramAPI.login()  # login
 
-photo_path = "C:\\Users\\Arme\\Desktop\\bianco.jpg"
+photo_path = "/home/arme/Pictures/a.jpg"
 caption = "Sample photo"
 
 try:
