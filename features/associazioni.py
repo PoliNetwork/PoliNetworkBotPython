@@ -291,7 +291,7 @@ def assoc_write(update, context):
 
             values_to_pass = {
                 "message_chat_id": update.message.chat.id,
-                "message_from_user": getUserFromObject(update.message.from_user),
+                "message_from_user": messageFromObjectClass.getUserFromObject(update.message.from_user),
                 "associazione": associazione,
                 "username": update.message.chat.username,
                 "message": messageFromObjectClass.messageFromObject(update.message),
