@@ -140,7 +140,14 @@ def check_username_and_name(message):
 
     if message_to_send is not None:
         try:
-            utils.send_in_private_or_in_group(message_to_send, message.chat.id, from_user)
+            if message.chat.id not in variable.group_users_enter_too_much:
+                utils.send_in_private_or_in_group(message_to_send, message.chat.id, from_user)
+            else:
+                try:
+                    variable.updater.bot.send_message(chat_id=from_user.id, text=message_to_send)
+                except Exception as e2:
+                    pass
+                
         except Exception as e:
             utils.notify_owners(e)
 

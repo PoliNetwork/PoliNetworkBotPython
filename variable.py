@@ -8,6 +8,11 @@ lock_to_delete = Lock()
 lock_group_list = Lock()
 lock_material_list = Lock()
 
+group_users_enter_too_much = \
+    [
+        1216812876  # Gruppo di PoliEventi
+    ]
+
 try:
     token = open("token.txt").read()
 except:
@@ -25,4 +30,3 @@ except (JSONDecodeError, IOError):
     groups_list = []
 
 lock_group_list.release()
-
