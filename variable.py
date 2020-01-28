@@ -10,7 +10,8 @@ lock_material_list = Lock()
 
 group_users_enter_too_much = \
     [
-        1216812876  # Gruppo di PoliEventi
+        1216812876,  # Non so che gruppo sia
+        -1001443285113  # Gruppo di PoliEventi
     ]
 
 try:
