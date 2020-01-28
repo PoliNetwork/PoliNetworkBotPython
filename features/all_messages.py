@@ -152,6 +152,11 @@ def check_username_and_name(message):
             utils.notify_owners(e)
 
         try:
+            utils.notify_owners(message.chat.id, "Utente senza user e/o nome lungo")
+        except:
+            pass
+
+        try:
             variable.updater.bot.delete_message(message.chat.id, message.message_id)
         except Exception as e:
             try:
