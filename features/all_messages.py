@@ -151,10 +151,11 @@ def check_username_and_name(message):
         except Exception as e:
             utils.notify_owners(e)
 
-        try:
-            utils.notify_owners(message.chat.id, "Utente senza user e/o nome lungo")
-        except:
-            pass
+        if message.chat.id not in variable.group_users_enter_too_much:
+            try:
+                utils.notify_owners(message.chat.id, "Utente senza user e/o nome lungo")
+            except:
+                pass
 
         try:
             variable.updater.bot.delete_message(message.chat.id, message.message_id)
