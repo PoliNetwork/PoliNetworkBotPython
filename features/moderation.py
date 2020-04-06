@@ -75,7 +75,7 @@ def mutes_bans_handler(update, context):
         utils.send_in_private_or_in_group("Utente sbannato con successo.", chat_id, message.from_user)
 
 
-def ban_all2(receiver):
+def ban_all2(receiver, ban_true_unban_false):
     missed_list = []
     count = 0
 
@@ -85,7 +85,14 @@ def ban_all2(receiver):
         for group in variable.groups_list:
             # variable.updater.bot.send_message(creators.owners[0], str(group['Chat']['id']) + " ban.")
             try:
-                variable.updater.bot.kick_chat_member(group['Chat']['id'], receiver)
+
+                chat_id = group['Chat']['id']
+
+                if ban_true_unban_false is True:
+                    variable.updater.bot.kick_chat_member(chat_id, receiver)
+                else:
+                    variable.updater.bot.unban_chat_member(chat_id, receiver)
+
                 count += 1
             except Exception as e1:
                 try:
@@ -106,7 +113,7 @@ def ban_all2(receiver):
                             utils.notify_owners(e4, 29)
                             pass
     except Exception as e:
-        utils.notify_owners(e, "Crash in ban " + str(30))
+        utils.notify_owners(e, "Crash in ban/unban " + str(30))
 
     if len(errors) > 0:
         for error2 in errors:
@@ -116,6 +123,13 @@ def ban_all2(receiver):
 
 
 def ban_all(update, context):
+    ban_all3(update, ban_true_unban_false=True)
+
+def unban_all(update, context):
+    ban_all3(update, ban_true_unban_false=False)
+
+def ban_all3(update, ban_true_unban_false):
+
     message = update.message
     chat = message.chat
     chat_id = chat.id
@@ -133,17 +147,17 @@ def ban_all(update, context):
 
     if receiver is None:
         utils.send_in_private_or_in_group(
-            "Non riesco a capire chi vuoi bannare", chat_id, message.from_user)
+            "Non riesco a capire chi vuoi fare", chat_id, message.from_user)
         return
 
     utils.send_in_private_or_in_group(
-        "Sto cercando di bannare " + str(receiver), chat_id, message.from_user)
+        "Sto cercando di fare " + str(receiver), chat_id, message.from_user)
 
     missed_list = None
     count = -1
 
     try:
-        missed_list, count = ban_all2(receiver)
+        missed_list, count = ban_all2(receiver, ban_true_unban_false)
     except Exception as e:
         utils.notify_owners(e)
 
@@ -151,13 +165,21 @@ def ban_all(update, context):
         size = -1
         if missed_list is not None:
             size = len(missed_list)
-        utils.send_in_private_or_in_group("Non sono riuscito a bannare " + str(receiver) + ".\n"
+        utils.send_in_private_or_in_group("Non sono riuscito a fare " + str(receiver) + ".\n"
                                           + str(count) + " " + str(size),
                                           chat_id,
                                           message.from_user)
         return
 
-    text = "Fatto! Ho bannato " + str(receiver)
+    text = "Fatto! Ho eseguito su " + str(receiver)
+    text = text + "\nOperazione: "
+
+    if ban_true_unban_false is True:
+        text = text + "BAN"
+    else:
+        text = text + "UNBAN"
+
+    text = text + "\nIn " + str(count) + " gruppi."
     if len(missed_list) > 0:
         text = text + "\nTranne in " + str(len(missed_list)) + " gruppi.\n"
         for missed in missed_list:
