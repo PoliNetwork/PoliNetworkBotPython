@@ -57,7 +57,7 @@ def check_winner(update, text):
     if not (iduser is not None and date is not None):
         do_winner(primo_element, message, text)
     else:
-        date2 = datetime.fromtimestamp(date)
+        date2 = datetime.fromtimestamp(date) + timedelta(hours=2)
         now2 = datetime.now() + timedelta(hours=2)
 
         if date2.day == now2.day and date2.month == now2.month and date2.year == now2.year:
