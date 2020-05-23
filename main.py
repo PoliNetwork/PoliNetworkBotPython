@@ -11,6 +11,7 @@ from features import materials, help_file, anonimi, recordings, \
     associazioni, aule
 from functions import utils
 from functions.temp_state import temp_state_main
+from sub_bots.primo import main_primo
 
 
 def start_handler(update, context):
@@ -95,6 +96,11 @@ thread2.start()
 variable.updater.start_polling()
 
 variable.updater.dispatcher.add_handler(CallbackQueryHandler(temp_state_main.callback_method))
+
+
+#primo bot
+
+main_primo.main_primo()
 
 # ---
 # BOT - USERBOT
