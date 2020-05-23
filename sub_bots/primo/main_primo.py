@@ -73,10 +73,16 @@ def check_winner(update, text):
                 name_winner = name_winner2
 
             bot = variable_primo.updater.bot
-            bot.send_message(message.chat.id,
-                             "Oggi è il giorno " + str(now2) + ". C'è già <a href ='tg://user?id=" + str(iduser) + "'>" +
-                             name_winner + "</a> come re " + text + "!",
-                             reply_to_message_id=message.message_id, parse_mode="HTML")
+
+            if iduser == message.from_user.id:
+                bot.send_message(message.chat.id,
+                                 "C'è già <a href ='tg://user?id=" + str(iduser) + "'>" +
+                                 name_winner + "</a> come re " + text + "!",
+                                 reply_to_message_id=message.message_id, parse_mode="HTML")
+            else:
+                bot.send_message(message.chat.id,
+                                 "Sei già il re " + text + "!",
+                                 reply_to_message_id=message.message_id, parse_mode="HTML")
         else:
             do_winner(primo_element, message, text)
 
