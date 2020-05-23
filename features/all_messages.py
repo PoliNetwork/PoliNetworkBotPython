@@ -9,7 +9,7 @@ from functions import utils
 from functions.temp_state import temp_state_main
 from functions.temp_state import temp_state_variable_main
 
-ignored_chinese = [1394018284]
+ignored_chinese = [1394018284, -1001394018284]
 
 
 def check_blacklist(message):
