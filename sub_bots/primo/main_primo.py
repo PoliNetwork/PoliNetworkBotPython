@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from sub_bots.primo import variable_primo
-from telegram.ext import MessageHandler, CommandHandler, Filters, CallbackQueryHandler
+from telegram.ext import MessageHandler, Filters
 
+from sub_bots.primo import variable_primo
 from sub_bots.primo.variable_primo import lock_primo_list
 
-words = ["primo", "secondo", "terzo", "quarto", "quinto", "kebabbaro", "foco", "obeso", "magro", "ebreo", "imperatore", "boomer"]
+words = ["primo", "secondo", "terzo", "kebabbaro", "foco", "obeso", "magro", "ebreo", "imperatore", "boomer" ,"@upkara"]
 
 
 def write_primo_list():
