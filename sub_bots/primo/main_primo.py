@@ -1,11 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from telegram.ext import MessageHandler, Filters
 
 from sub_bots.primo import variable_primo
 from sub_bots.primo.variable_primo import lock_primo_list
 
-words = ["primo", "secondo", "terzo", "kebabbaro", "foco", "obeso", "magro", "ebreo", "imperatore", "boomer", "upkara", "snitch", "fattone"]
+words = ["primo", "secondo", "terzo", "kebabbaro", "foco", "obeso", "magro", "ebreo", "imperatore", "boomer", "upkara",
+         "snitch", "fattone"]
 
 
 def write_primo_list():
@@ -26,7 +27,8 @@ def do_winner(primo_element, message, text):
     except Exception as e:
         print(e)
     lock_primo_list.release()
-    variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!", reply_to_message_id=message.message_id)
+    variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
+                                            reply_to_message_id=message.message_id)
 
 
 def check_winner(update, text):
@@ -56,7 +58,7 @@ def check_winner(update, text):
         do_winner(primo_element, message, text)
     else:
         date2 = datetime.fromtimestamp(date)
-        now2 = datetime.now()
+        now2 = datetime.now() + timedelta(hours=2)
 
         if date2.day == now2.day and date2.month == now2.month and date2.year == now2.year:
             name_winner = message.from_user.first_name
@@ -70,7 +72,12 @@ def check_winner(update, text):
             if name_winner2 is not None:
                 name_winner = name_winner2
 
-            variable_primo.updater.bot.send_message(message.chat.id, "Oggi è il giorno " + str(now2.day) + " ore  " + str(now2.hour) + " minuti " + str(now2.minute) +". C'è già <a href ='tg://user?id=" + str(iduser) + "'>"+name_winner+"</a> come re " + text + "!", reply_to_message_id=message.message_id, parse_mode="HTML")
+            bot = variable_primo.updater.bot
+            bot.send_message(message.chat.id,
+                             "Oggi è il giorno " + str(now2.day) + " ore  " + str(now2.hour) + " minuti " +
+                             str(now2.minute) + ". C'è già <a href ='tg://user?id=" + str(iduser) + "'>" +
+                             name_winner + "</a> come re " + text + "!",
+                             reply_to_message_id=message.message_id, parse_mode="HTML")
         else:
             do_winner(primo_element, message, text)
 
@@ -105,5 +112,3 @@ def check_message_primo(update, context):
 def main_primo():
     variable_primo.updater.dispatcher.add_handler(MessageHandler(Filters.all, check_message_primo))
     variable_primo.updater.start_polling()
-
-
