@@ -5,8 +5,19 @@ from telegram.ext import MessageHandler, Filters
 from sub_bots.primo import variable_primo
 from sub_bots.primo.variable_primo import lock_primo_list
 
-words = ["primo", "secondo", "terzo", "kebabbaro", "foco", "obeso", "magro", "ebreo", "imperatore", "boomer", "upkara",
-         "snitch", "fattone"]
+words = [{"word": "primo", "other": ["primo", "prima"]},
+         {"word": "secondo", "other": ["secondo", "seconda"]},
+         {"word": "terzo", "other": ["terzo", "terza"]},
+         {"word": "kebabbaro", "other": ["kebabbaro"]},
+         {"word": "foco", "other": ["foco"]},
+         {"word": "obeso", "other": ["obeso"]},
+         {"word": "magro", "other": ["magro"]},
+         {"word": "ebreo", "other": ["ebreo"]},
+         {"word": "imperatore", "other": ["imperatore"]},
+         {"word": "boomer", "other": ["boomer"]},
+         {"word": "upkara", "other": ["upkara"]},
+         {"word": "snitch", "other": ["snitch"]},
+         {"word": "fattone", "other": ["fattone"]}]
 
 
 def write_primo_list():
@@ -94,6 +105,17 @@ def check_winner(update, text):
 allowed_groups = [-1001129635578, 5651789]
 
 
+def check_if_valid(text):
+
+    for item in words:
+        item2 = item["other"]
+        for item3 in item2:
+            if text == item3:
+                return True
+
+    return False
+
+
 def check_message_primo(update, context):
     message = update.message
     chat = message.chat
@@ -110,7 +132,8 @@ def check_message_primo(update, context):
 
     text = str(text).lower()
 
-    if text in words:
+    valid = check_if_valid(text)
+    if valid:
         check_winner(update, text)
 
     return None
