@@ -95,5 +95,3 @@ def main_primo():
     variable_primo.updater.start_polling()
 
 
-if __name__ == '__main__':
-    main_primo()

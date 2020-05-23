@@ -11,7 +11,7 @@ primo_json_path = "primo.json"
 
 
 try:
-    token = open("token_primo.txt").read()
+    token = open("sub_bots/primo/token_primo.txt").read()
 except:
     token = None
 
