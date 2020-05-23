@@ -9,6 +9,8 @@ from functions import utils
 from functions.temp_state import temp_state_main
 from functions.temp_state import temp_state_variable_main
 
+ignored_chinese = [1394018284]
+
 
 def check_blacklist(message):
     chat = message.chat
@@ -90,8 +92,9 @@ def check_spam(message):
         utils.mute_and_delete(message)
         return
 
-    if utils.contains_ko_ja_chi(s_to_check):
-        utils.temp_mute_and_delete(message, 60)
+    if chat.id not in ignored_chinese:
+        if utils.contains_ko_ja_chi(s_to_check):
+            utils.temp_mute_and_delete(message, 60)
 
 
 def check_username_and_name(message):
@@ -147,7 +150,7 @@ def check_username_and_name(message):
                     variable.updater.bot.send_message(chat_id=from_user.id, text=message_to_send)
                 except Exception as e2:
                     pass
-                
+
         except Exception as e:
             utils.notify_owners(e)
 
