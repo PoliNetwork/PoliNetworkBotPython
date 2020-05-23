@@ -74,8 +74,7 @@ def check_winner(update, text):
 
             bot = variable_primo.updater.bot
             bot.send_message(message.chat.id,
-                             "Oggi è il giorno " + str(now2.day) + " ore  " + str(now2.hour) + " minuti " +
-                             str(now2.minute) + ". C'è già <a href ='tg://user?id=" + str(iduser) + "'>" +
+                             "Oggi è il giorno " + str(now2) + ". C'è già <a href ='tg://user?id=" + str(iduser) + "'>" +
                              name_winner + "</a> come re " + text + "!",
                              reply_to_message_id=message.message_id, parse_mode="HTML")
         else:
