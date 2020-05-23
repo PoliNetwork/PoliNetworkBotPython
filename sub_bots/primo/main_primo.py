@@ -74,9 +74,9 @@ def check_winner(update, text):
 
             bot = variable_primo.updater.bot
 
-            bot.send_message(message.chat.id, str(iduser) + " " + str(message.from_user.id))
+            # bot.send_message(message.chat.id, str(iduser) + " " + str(message.from_user.id))
 
-            if iduser == message.from_user.id:
+            if iduser != message.from_user.id:
                 bot.send_message(message.chat.id,
                                  "C'è già <a href ='tg://user?id=" + str(iduser) + "'>" +
                                  name_winner + "</a> come re " + text + "!",
