@@ -17,6 +17,7 @@ def do_winner(primo_element, message, text):
     lock_primo_list.acquire()
     primo_element["iduser"] = message.from_user.id
     primo_element["date"] = datetime.timestamp(datetime.now())
+    primo_element["first_name"] = message.from_user.first_name
 
     variable_primo.primo_list[text] = primo_element
 
@@ -58,7 +59,18 @@ def check_winner(update, text):
         now2 = datetime.now()
 
         if date2.day == now2.day and date2.month == now2.month and date2.year == now2.year:
-            variable_primo.updater.bot.send_message(message.chat.id, "C'è già <a href ='tg://user?id=" + str(iduser) + "'>"+message.from_user.first_name+"</a> come re " + text + "!", reply_to_message_id=message.message_id, parse_mode="HTML")
+            name_winner = message.from_user.first_name
+
+            name_winner2 = None
+            try:
+                name_winner2 = primo_element["first_name"]
+            except:
+                pass
+
+            if name_winner2 is not None:
+                name_winner = name_winner2
+
+            variable_primo.updater.bot.send_message(message.chat.id, "C'è già <a href ='tg://user?id=" + str(iduser) + "'>"+name_winner+"</a> come re " + text + "!", reply_to_message_id=message.message_id, parse_mode="HTML")
         else:
             do_winner(primo_element, message, text)
 
