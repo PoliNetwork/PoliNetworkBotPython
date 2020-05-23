@@ -5,7 +5,7 @@ from telegram.ext import MessageHandler, Filters
 from sub_bots.primo import variable_primo
 from sub_bots.primo.variable_primo import lock_primo_list
 
-words = ["primo", "secondo", "terzo", "kebabbaro", "foco", "obeso", "magro", "ebreo", "imperatore", "boomer" ,"@upkara"]
+words = ["primo", "secondo", "terzo", "kebabbaro", "foco", "obeso", "magro", "ebreo", "imperatore", "boomer", "upkara", "snitch"]
 
 
 def write_primo_list():
