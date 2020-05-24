@@ -111,9 +111,9 @@ def check_if_valid(text):
         item2 = item["other"]
         for item3 in item2:
             if text == item3:
-                return True
+                return True, item["word"]
 
-    return False
+    return False, None
 
 
 def check_message_primo(update, context):
@@ -132,8 +132,9 @@ def check_message_primo(update, context):
 
     text = str(text).lower()
 
-    valid = check_if_valid(text)
+    valid, text_new = check_if_valid(text)
     if valid:
+        text = text_new
         check_winner(update, text)
 
     return None
