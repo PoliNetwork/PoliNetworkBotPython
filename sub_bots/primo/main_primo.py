@@ -30,15 +30,43 @@ def write_primo_list():
     pass
 
 
-def check_if_already_won(primo_element, message, text):
-    # TODO: vedere se il tizio ha già vinto da qualche parte
-    return False, None
+def getProperty(item, param_to_extract):
+    r = None
+
+    try:
+        r = item[param_to_extract]
+    except:
+        pass
+
+    return r
     pass
 
 
+def check_if_already_won(primo_element, message, text):
+    # TODO: vedere se il tizio ha già vinto da qualche parte
+
+    list_counted = []
+    for key in variable_primo.primo_list:
+        iduser = getProperty(variable_primo.primo_list[key], "iduser")
+        date2 = getProperty(variable_primo.primo_list[key], "date")
+
+        if iduser is None:
+            a = 0
+        elif iduser is not None and date2 is None:
+            if iduser == message.from_user.id:
+                list_counted.append(key)
+        elif iduser is not None and date2 is not None:
+            if iduser == message.from_user.id:
+                is_different_day = check_if_different_date(date2)
+                if not is_different_day:
+                    list_counted.append(key)
+
+    return list_counted
+
+
 def do_winner(primo_element, message, text):
-    already_won_bool, already_won_item = check_if_already_won(primo_element, message, text)
-    if already_won_bool is False:
+    already_won_item = check_if_already_won(primo_element, message, text)
+    if len(already_won_item) == 0:
 
         lock_primo_list.acquire()
         primo_element["iduser"] = message.from_user.id
@@ -56,7 +84,24 @@ def do_winner(primo_element, message, text):
                                                 reply_to_message_id=message.message_id)
     else:
         # TODO: invia un messaggio "sei già il re di already_won_item"
+        r = ""
+        for item in already_won_item:
+            r = r + item + " "
+
+        variable_primo.updater.bot.send_message(message.chat.id, "Sei già re " + str(r),
+                                                reply_to_message_id=message.message_id)
+
         pass
+
+
+def check_if_different_date(date):
+    date2 = datetime.fromtimestamp(date) + timedelta(hours=2)
+    now2 = datetime.now() + timedelta(hours=2)
+
+    if date2.day == now2.day and date2.month == now2.month and date2.year == now2.year:
+        return True
+
+    return False
 
 
 def check_winner(update, text):
@@ -85,10 +130,10 @@ def check_winner(update, text):
     if not (iduser is not None and date is not None):
         do_winner(primo_element, message, text)
     else:
-        date2 = datetime.fromtimestamp(date) + timedelta(hours=2)
-        now2 = datetime.now() + timedelta(hours=2)
 
-        if date2.day == now2.day and date2.month == now2.month and date2.year == now2.year:
+        is_different_day = check_if_different_date(date)
+
+        if is_different_day:
             name_winner = message.from_user.first_name
 
             name_winner2 = None
