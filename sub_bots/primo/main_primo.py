@@ -8,16 +8,17 @@ from sub_bots.primo.variable_primo import lock_primo_list
 words = [{"word": "primo", "other": ["primo", "prima"]},
          {"word": "secondo", "other": ["secondo", "seconda"]},
          {"word": "terzo", "other": ["terzo", "terza"]},
-         {"word": "kebabbaro", "other": ["kebabbaro"]},
+         {"word": "kebabbaro", "other": ["kebabbaro", "kebabbara"]},
          {"word": "foco", "other": ["foco"]},
-         {"word": "obeso", "other": ["obeso"]},
-         {"word": "magro", "other": ["magro"]},
-         {"word": "ebreo", "other": ["ebreo"]},
-         {"word": "imperatore", "other": ["imperatore"]},
+         {"word": "obeso", "other": ["obeso", "obesa"]},
+         {"word": "magro", "other": ["magro", "magra"]},
+         {"word": "ebreo", "other": ["ebreo", "ebrea"]},
+         {"word": "imperatore", "other": ["imperatore", "imperatrice"]},
          {"word": "boomer", "other": ["boomer"]},
          {"word": "upkara", "other": ["upkara"]},
          {"word": "snitch", "other": ["snitch"]},
-         {"word": "fattone", "other": ["fattone"]}]
+         {"word": "fattone", "other": ["fattone", "fattona"]},
+         {"word": "ferruccio", "other": ["ferruccio"]}]
 
 
 def write_primo_list():
