@@ -119,7 +119,10 @@ def check_winner(update, text):
     pass
 
 
-allowed_groups = [-1001129635578, 5651789]
+allowed_groups = [
+    -1001129635578,  # gruppo cazzeggio di 2° livello
+    5651789  # @ArmeF97
+]
 
 
 def check_if_valid(text):
