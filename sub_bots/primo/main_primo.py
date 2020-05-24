@@ -31,7 +31,7 @@ def write_primo_list():
 
 
 def check_if_already_won(primo_element, message, text):
-    #TODO: vedere se il tizio ha già vinto da qualche parte
+    # TODO: vedere se il tizio ha già vinto da qualche parte
     return False, None
     pass
 
