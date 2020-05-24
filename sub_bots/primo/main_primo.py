@@ -5,20 +5,24 @@ from telegram.ext import MessageHandler, Filters
 from sub_bots.primo import variable_primo
 from sub_bots.primo.variable_primo import lock_primo_list
 
-words = [{"word": "primo", "other": ["primo", "prima"]},
-         {"word": "secondo", "other": ["secondo", "seconda"]},
-         {"word": "terzo", "other": ["terzo", "terza"]},
-         {"word": "kebabbaro", "other": ["kebabbaro", "kebabbara"]},
-         {"word": "foco", "other": ["foco"]},
-         {"word": "obeso", "other": ["obeso", "obesa"]},
-         {"word": "magro", "other": ["magro", "magra"]},
-         {"word": "ebreo", "other": ["ebreo", "ebrea"]},
-         {"word": "imperatore", "other": ["imperatore", "imperatrice"]},
-         {"word": "boomer", "other": ["boomer"]},
-         {"word": "upkara", "other": ["upkara"]},
-         {"word": "snitch", "other": ["snitch"]},
-         {"word": "fattone", "other": ["fattone", "fattona"]},
-         {"word": "ferruccio", "other": ["ferruccio"]}]
+words = [
+    {"word": "primo", "other": ["primo", "prima"]},
+    {"word": "secondo", "other": ["secondo", "seconda"]},
+    {"word": "terzo", "other": ["terzo", "terza"]},
+    {"word": "kebabbaro", "other": ["kebabbaro", "kebabbara"]},
+    {"word": "foco", "other": ["foco"]},
+    {"word": "obeso", "other": ["obeso", "obesa"]},
+    {"word": "magro", "other": ["magro", "magra"]},
+    {"word": "ebreo", "other": ["ebreo", "ebrea"]},
+    {"word": "imperatore", "other": ["imperatore", "imperatrice"]},
+    {"word": "boomer", "other": ["boomer"]},
+    {"word": "upkara", "other": ["upkara"]},
+    {"word": "snitch", "other": ["snitch"]},
+    {"word": "fattone", "other": ["fattone", "fattona"]},
+    {"word": "ferruccio", "other": ["ferruccio"]},
+    {"word": "pizzaiolo", "other": ["pizzaiolo", "pizzaiola"]},
+    {"word": "lasagna", "other": ["lasagna"]}
+]
 
 
 def write_primo_list():
@@ -26,21 +30,32 @@ def write_primo_list():
     pass
 
 
+def check_if_already_won(primo_element, message, text):
+    return False, None
+    pass
+
+
 def do_winner(primo_element, message, text):
-    lock_primo_list.acquire()
-    primo_element["iduser"] = message.from_user.id
-    primo_element["date"] = datetime.timestamp(datetime.now())
-    primo_element["first_name"] = message.from_user.first_name
+    already_won_bool, already_won_item = check_if_already_won(primo_element, message, text)
+    if already_won_bool is False:
 
-    variable_primo.primo_list[text] = primo_element
+        lock_primo_list.acquire()
+        primo_element["iduser"] = message.from_user.id
+        primo_element["date"] = datetime.timestamp(datetime.now())
+        primo_element["first_name"] = message.from_user.first_name
 
-    try:
-        write_primo_list()
-    except Exception as e:
-        print(e)
-    lock_primo_list.release()
-    variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
-                                            reply_to_message_id=message.message_id)
+        variable_primo.primo_list[text] = primo_element
+
+        try:
+            write_primo_list()
+        except Exception as e:
+            print(e)
+        lock_primo_list.release()
+        variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
+                                                reply_to_message_id=message.message_id)
+    else:
+        # TODO: invia un messaggio "sei già il re di already_won_item"
+        pass
 
 
 def check_winner(update, text):
@@ -107,7 +122,6 @@ allowed_groups = [-1001129635578, 5651789]
 
 
 def check_if_valid(text):
-
     for item in words:
         item2 = item["other"]
         for item3 in item2:
