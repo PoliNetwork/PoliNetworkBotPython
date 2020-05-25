@@ -52,7 +52,7 @@ def check_if_already_won(primo_element, message, text):
         if iduser is not None and date2 is not None:
             if iduser == message.from_user.id:
                 is_different_day = check_if_different_date(date2)
-                if not is_different_day:
+                if is_different_day:
                     list_counted.append(key)
 
     return list_counted
