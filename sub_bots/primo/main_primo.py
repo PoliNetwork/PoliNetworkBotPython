@@ -175,7 +175,7 @@ def check_if_valid(text):
 def lista_primo_status(message):
     r = ""
 
-    available_char = "✳️"
+    available_char = "✅️"
     taken_char = "🚫"
 
     for item in words:
@@ -187,12 +187,9 @@ def lista_primo_status(message):
         if iduser is None or date2 is None:
             r += available_char + " " + key + "\n"
         else:
-            if iduser == message.from_user.id:
-                is_same_day = check_if_same_date(date2)
-                if is_same_day:
-                    r += taken_char + " " + key + "\n"
-                else:
-                    r += available_char + " " + key + "\n"
+            is_same_day = check_if_same_date(date2)
+            if is_same_day:
+                r += taken_char + " " + key + "\n"
             else:
                 r += available_char + " " + key + "\n"
 
