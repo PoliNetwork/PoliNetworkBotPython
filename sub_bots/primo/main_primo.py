@@ -214,7 +214,7 @@ def check_message_primo(update, context):
 
     text = str(text).lower()
 
-    if text == "/lista_primo":
+    if text == "/lista_primo" or text == "/lista_primo@primopolibot":
         lista_primo_status(message)
         return None
 
