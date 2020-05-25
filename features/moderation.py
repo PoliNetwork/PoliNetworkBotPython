@@ -125,11 +125,12 @@ def ban_all2(receiver, ban_true_unban_false):
 def ban_all(update, context):
     ban_all3(update, ban_true_unban_false=True)
 
+
 def unban_all(update, context):
     ban_all3(update, ban_true_unban_false=False)
 
-def ban_all3(update, ban_true_unban_false):
 
+def ban_all3(update, ban_true_unban_false):
     message = update.message
     chat = message.chat
     chat_id = chat.id
