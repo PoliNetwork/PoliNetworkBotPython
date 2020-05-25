@@ -42,8 +42,6 @@ def getProperty(item, param_to_extract):
 
 
 def check_if_already_won(primo_element, message, text):
-    # TODO: vedere se il tizio ha già vinto da qualche parte
-
     list_counted = []
     for key in variable_primo.primo_list:
         iduser = getProperty(variable_primo.primo_list[key], "iduser")
@@ -77,7 +75,7 @@ def do_winner(primo_element, message, text):
         variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
                                                 reply_to_message_id=message.message_id)
     else:
-        # TODO: invia un messaggio "sei già il re di already_won_item"
+
         r = ""
         for item in already_won_item:
             r = r + item + " "
