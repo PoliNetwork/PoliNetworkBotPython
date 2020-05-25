@@ -172,6 +172,35 @@ def check_if_valid(text):
     return False, None
 
 
+def lista_primo_status(message):
+    r = ""
+
+    available_char = "✳️"
+    taken_char = "🚫"
+
+    for item in words:
+        key = item["word"]
+
+        iduser = getProperty(variable_primo.primo_list[key], "iduser")
+        date2 = getProperty(variable_primo.primo_list[key], "date")
+
+        if iduser is None or date2 is None:
+            r += available_char + " " + key + "\n"
+        else:
+            if iduser == message.from_user.id:
+                is_same_day = check_if_same_date(date2)
+                if is_same_day:
+                    r += taken_char + " " + key + "\n"
+                else:
+                    r += available_char + " " + key + "\n"
+            else:
+                r += available_char + " " + key + "\n"
+
+    bot = variable_primo.updater.bot
+    bot.send_message(message.chat.id, r, reply_to_message_id=message.message_id, parse_mode="HTML")
+    pass
+
+
 def check_message_primo(update, context):
     message = update.message
     chat = message.chat
@@ -187,6 +216,10 @@ def check_message_primo(update, context):
         return None
 
     text = str(text).lower()
+
+    if text == "/lista_primo":
+        lista_primo_status(message)
+        return None
 
     valid, text_new = check_if_valid(text)
     if valid:
