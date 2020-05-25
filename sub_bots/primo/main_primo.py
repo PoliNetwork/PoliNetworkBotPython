@@ -58,7 +58,7 @@ def check_if_already_won(primo_element, message, text):
 
 def do_winner(primo_element, message, text):
     already_won_item = check_if_already_won(primo_element, message, text)
-    if len(already_won_item) == 0:
+    if len(already_won_item) < 2:
 
         lock_primo_list.acquire()
         primo_element["iduser"] = message.from_user.id
