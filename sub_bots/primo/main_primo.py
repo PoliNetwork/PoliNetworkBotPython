@@ -13,7 +13,6 @@ words = [
     {"word": "foco", "other": ["foco"]},
     {"word": "obeso", "other": ["obeso", "obesa"]},
     {"word": "magro", "other": ["magro", "magra"]},
-    {"word": "ebreo", "other": ["ebreo", "ebrea"]},
     {"word": "imperatore", "other": ["imperatore", "imperatrice"]},
     {"word": "boomer", "other": ["boomer"]},
     {"word": "upkara", "other": ["upkara"]},
