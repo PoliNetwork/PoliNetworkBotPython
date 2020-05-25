@@ -50,12 +50,7 @@ def check_if_already_won(primo_element, message, text):
         iduser = getProperty(variable_primo.primo_list[key], "iduser")
         date2 = getProperty(variable_primo.primo_list[key], "date")
 
-        if iduser is None:
-            a = 0
-        elif iduser is not None and date2 is None:
-            if iduser == message.from_user.id:
-                list_counted.append(key)
-        elif iduser is not None and date2 is not None:
+        if iduser is not None and date2 is not None:
             if iduser == message.from_user.id:
                 is_different_day = check_if_different_date(date2)
                 if not is_different_day:
