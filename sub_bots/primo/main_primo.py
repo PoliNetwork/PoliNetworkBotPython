@@ -51,8 +51,8 @@ def check_if_already_won(primo_element, message, text):
 
         if iduser is not None and date2 is not None:
             if iduser == message.from_user.id:
-                is_different_day = check_if_different_date(date2)
-                if is_different_day:
+                is_same_day = check_if_same_date(date2)
+                if is_same_day:
                     list_counted.append(key)
 
     return list_counted
@@ -88,7 +88,7 @@ def do_winner(primo_element, message, text):
         pass
 
 
-def check_if_different_date(date):
+def check_if_same_date(date):
     date2 = datetime.fromtimestamp(date) + timedelta(hours=2)
     now2 = datetime.now() + timedelta(hours=2)
 
@@ -125,9 +125,9 @@ def check_winner(update, text):
         do_winner(primo_element, message, text)
     else:
 
-        is_different_day = check_if_different_date(date)
+        is_same_day = check_if_same_date(date)
 
-        if is_different_day:
+        if is_same_day:
             name_winner = message.from_user.first_name
 
             name_winner2 = None
