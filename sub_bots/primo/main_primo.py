@@ -56,33 +56,45 @@ def check_if_already_won(primo_element, message, text):
     return list_counted
 
 
+def do_winner2(primo_element, message, text):
+    lock_primo_list.acquire()
+    primo_element["iduser"] = message.from_user.id
+    primo_element["date"] = datetime.timestamp(datetime.now())
+    primo_element["first_name"] = message.from_user.first_name
+
+    variable_primo.primo_list[text] = primo_element
+
+    try:
+        write_primo_list()
+    except Exception as e:
+        print(e)
+    lock_primo_list.release()
+
+    if text == "upkara":
+        if message.from_user.id != 304958418: # id di @upkara
+            variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, hai soffiato il regno ad @upkara!",
+                                                    reply_to_message_id=message.message_id)
+        else
+            variable_primo.updater.bot.send_message(message.chat.id, "Mio signore, il titolo è suo 👑",
+                                                    reply_to_message_id=message.message_id)
+    else:
+        variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
+                                            reply_to_message_id=message.message_id)
+
+    pass
+
+
 def do_winner(primo_element, message, text):
     already_won_item = check_if_already_won(primo_element, message, text)
     if len(already_won_item) < 2:
-
-        lock_primo_list.acquire()
-        primo_element["iduser"] = message.from_user.id
-        primo_element["date"] = datetime.timestamp(datetime.now())
-        primo_element["first_name"] = message.from_user.first_name
-
-        variable_primo.primo_list[text] = primo_element
-
-        try:
-            write_primo_list()
-        except Exception as e:
-            print(e)
-        lock_primo_list.release()
-        variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
-                                                reply_to_message_id=message.message_id)
+        do_winner2(primo_element, message, text)
     else:
-
         r = ""
         for item in already_won_item:
             r = r + item + " "
 
         variable_primo.updater.bot.send_message(message.chat.id, "Sei già re " + str(r),
                                                 reply_to_message_id=message.message_id)
-
         pass
 
 
