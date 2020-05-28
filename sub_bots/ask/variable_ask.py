@@ -7,6 +7,9 @@ from telegram.ext import Updater
 lock_ask_state = Lock()
 
 ask_json_path = "ask.json"
+subreddit_name = "polinetworktest"
+
+flair_available = ["Immatricolazione", "Tasse", "Test di ingresso", "Altro"]
 
 try:
     token = open("sub_bots/ask/token_ask.txt").read()
