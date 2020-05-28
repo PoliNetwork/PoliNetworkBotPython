@@ -167,8 +167,15 @@ def check_command(update, text):
     pass
 
 
-def notify_choose(user_id):
+def notify_choose(user_id, repeat=True):
     set_state_to(user_id, 5)
+
+    r1 = 'Qui puoi gestire le categorie di post a cui sei iscritto. ' \
+         'Quando qualcuno pone una domanda ad una categoria ' \
+         'di post a cui sei iscritto, ti notificheremo'
+
+    if repeat is True:
+        variable_ask.updater.bot.send_message(user_id, str(r1))
 
     s1 = 'Mostra le categorie di post a cui sono iscritto'
     s2 = "Iscriviti ad una nuova categoria"
@@ -180,9 +187,7 @@ def notify_choose(user_id):
     ]
     reply_markup = InlineKeyboardMarkup(menu_main)
     variable_ask.updater.bot.send_message(user_id,
-                                          'Qui puoi gestire le categorie di post a cui sei iscritto. '
-                                          'Quando qualcuno pone una domanda ad una categoria '
-                                          'di post a cui sei iscritto, ti notificheremo',
+                                          "Cosa scegli?",
                                           reply_markup=reply_markup)
 
 
@@ -203,23 +208,16 @@ def do_state2(user_id, current_state, args, text):
             menu_main = []
             if (len_flair % 3) == 0:
                 while i < len_flair:
-                    menu_main2 = []
-                    menu_main2.append(
-                        InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(2, flairs[i + 0])))
-                    menu_main2.append(
-                        InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(2, flairs[i + 1])))
-                    menu_main2.append(
-                        InlineKeyboardButton(flairs[i + 2], callback_data=formatCallback(2, flairs[i + 2])))
+                    menu_main2 = [InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(2, flairs[i + 0])),
+                                  InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(2, flairs[i + 1])),
+                                  InlineKeyboardButton(flairs[i + 2], callback_data=formatCallback(2, flairs[i + 2]))]
                     menu_main.append(menu_main2)
                     i = i + 3
 
             elif (len_flair % 2) == 0:
                 while i < len_flair:
-                    menu_main2 = []
-                    menu_main2.append(
-                        InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(2, flairs[i + 0])))
-                    menu_main2.append(
-                        InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(2, flairs[i + 1])))
+                    menu_main2 = [InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(2, flairs[i + 0])),
+                                  InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(2, flairs[i + 1]))]
                     menu_main.append(menu_main2)
                     i = i + 2
             else:
@@ -258,7 +256,9 @@ def do_state2(user_id, current_state, args, text):
         variable_ask.lock_ask_state.release()
 
         variable_ask.updater.bot.send_message(user_id,
-                                              "Scrivi il titolo della domanda (successivamente potrai scrivere la descrizione):\n  (annulla tutto con /cancel)")
+                                              "Scrivi il titolo della domanda "
+                                              "(successivamente potrai scrivere la descrizione):"
+                                              "\n(annulla tutto con /cancel)")
         set_state_to(user_id, 3)
         return None
     elif current_state == 3:  # l'utente ha scelto il titolo e ora deve scrivere la descrizione
@@ -292,6 +292,8 @@ def do_state2(user_id, current_state, args, text):
                 if user_id in variable_ask.ask_notify_list[cat]:
                     my_list.append(cat)
 
+            notify_choose(user_id, False)
+
             if len(my_list) > 0:
 
                 my_list2 = ""
@@ -301,9 +303,9 @@ def do_state2(user_id, current_state, args, text):
                 variable_ask.updater.bot.send_message(user_id, "Lista delle categorie a cui sei iscritto: " + my_list2)
             else:
                 variable_ask.updater.bot.send_message(user_id, "Non sei iscritto a nessuna categoria!")
-            notify_choose(user_id)
 
-            pass
+            return None
+
         elif args[1] == "add":
             pass
         elif args[1] == "remove":
