@@ -45,3 +45,5 @@ sub_bots/ask/reddit_password.txt
 sub_bots/ask/reddit_secret_id.txt
 
 sub_bots/ask/token_ask.txt
+
+sub_bots/ask/ask.json

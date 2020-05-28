@@ -4,11 +4,9 @@ from threading import Lock
 
 from telegram.ext import Updater
 
-
 lock_ask_state = Lock()
 
 ask_json_path = "ask.json"
-
 
 try:
     token = open("sub_bots/ask/token_ask.txt").read()
@@ -25,14 +23,14 @@ if token is not None:
     updater = Updater(token, use_context=True)
 
 lock_ask_state.acquire()
+ask_list = {}
 try:
-    primo_read = open(ask_json_path, encoding="utf-8")
-    primo_list = json.load(primo_read)
+    ask_read = open(ask_json_path, encoding="utf-8")
+    ask_list = json.load(ask_read)
 except (JSONDecodeError, IOError):
-    primo_list = {}
+    ask_list = {}
 
 lock_ask_state.release()
-
 
 reddit_client_id = None
 reddit_secret_id = None
@@ -58,7 +56,6 @@ except:
     except:
         reddit_secret_id = None
 
-
 try:
     reddit_password = open("sub_bots/ask/reddit_password.txt").read()
 except:
@@ -70,7 +67,10 @@ except:
         reddit_password = None
 
 
-def write_primo_list2():
-    with open(ask_json_path, 'w', encoding="utf-8") as file_to_write:
-        json.dump(primo_list, file_to_write)
-    return None
+def write_ask_list2():
+    try:
+        with open(ask_json_path, 'w', encoding="utf-8") as file_to_write:
+            json.dump(ask_list, file_to_write)
+    except Exception as e:
+        return False, e
+    return True, None
