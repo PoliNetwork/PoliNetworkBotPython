@@ -23,8 +23,8 @@ def user_started(user_id):
                     "Questo è un bot di @PoliNetwork, visita il nostro sito! https://polinetwork.github.io/ \n" \
                     "\nTramite questo bot potrai porre domande e ottenere " \
                     "risposte (dai vari utenti del network) riguardo il politecnico! ❔\n"
-    start_message += "\nCi appoggiamo a reddit, r/polinetwork. Puoi scegliere di porre domande direttamente dal " \
-                     "subreddit o interagire col bot, che ti notificherà delle eventuali risposte! 🔔"
+    start_message += '\nCi appoggiamo a reddit, r/polinetwork. Puoi scegliere di porre domande direttamente dal ' \
+                     'subreddit o interagire col bot, che ti notificherà delle eventuali risposte! 🔔'
     s1 = 'Iniziamo!'
     s2 = 'Contatta gli amministratori'
     menu_main = [[InlineKeyboardButton(s1, callback_data=formatCallback(1, "start", s1))],
