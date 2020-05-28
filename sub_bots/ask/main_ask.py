@@ -187,8 +187,35 @@ def notify_choose(user_id, repeat=True):
     ]
     reply_markup = InlineKeyboardMarkup(menu_main)
     variable_ask.updater.bot.send_message(user_id,
-                                          "Cosa scegli?",
+                                          "Cosa scegli? (per tornare al menu principale premi /cancel)",
                                           reply_markup=reply_markup)
+
+
+def createMenuFlair(param_state, flairs):
+    menu_main2 = []
+    len_flair = len(flairs)
+    i = 0
+    menu_main = []
+    if (len_flair % 3) == 0:
+        while i < len_flair:
+            menu_main2 = [InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(param_state, flairs[i + 0])),
+                          InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(param_state, flairs[i + 1])),
+                          InlineKeyboardButton(flairs[i + 2], callback_data=formatCallback(param_state, flairs[i + 2]))]
+            menu_main.append(menu_main2)
+            i = i + 3
+
+    elif (len_flair % 2) == 0:
+        while i < len_flair:
+            menu_main2 = [InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(param_state, flairs[i + 0])),
+                          InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(param_state, flairs[i + 1]))]
+            menu_main.append(menu_main2)
+            i = i + 2
+    else:
+        for item2 in flairs:
+            menu_main2 = [InlineKeyboardButton(item2, callback_data=formatCallback(param_state, item2))]
+            menu_main.append(menu_main2)
+
+    return menu_main
 
 
 def do_state2(user_id, current_state, args, text):
@@ -199,31 +226,7 @@ def do_state2(user_id, current_state, args, text):
         elif args[1] == "ask":
             set_state_to(user_id, 2)
 
-            flairs = variable_ask.flair_available
-            menu_main2 = []
-
-            len_flair = len(flairs)
-
-            i = 0
-            menu_main = []
-            if (len_flair % 3) == 0:
-                while i < len_flair:
-                    menu_main2 = [InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(2, flairs[i + 0])),
-                                  InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(2, flairs[i + 1])),
-                                  InlineKeyboardButton(flairs[i + 2], callback_data=formatCallback(2, flairs[i + 2]))]
-                    menu_main.append(menu_main2)
-                    i = i + 3
-
-            elif (len_flair % 2) == 0:
-                while i < len_flair:
-                    menu_main2 = [InlineKeyboardButton(flairs[i + 0], callback_data=formatCallback(2, flairs[i + 0])),
-                                  InlineKeyboardButton(flairs[i + 1], callback_data=formatCallback(2, flairs[i + 1]))]
-                    menu_main.append(menu_main2)
-                    i = i + 2
-            else:
-                for item2 in flairs:
-                    menu_main2 = [InlineKeyboardButton(item2, callback_data=formatCallback(2, item2))]
-                    menu_main.append(menu_main2)
+            menu_main = createMenuFlair(2, variable_ask.flair_available)
 
             r1 = InlineKeyboardMarkup(menu_main)
             variable_ask.updater.bot.send_message(user_id,
@@ -296,7 +299,7 @@ def do_state2(user_id, current_state, args, text):
 
             if len(my_list) > 0:
 
-                my_list2 = ""
+                my_list2 = "\n"
                 for item in my_list:
                     my_list2 += item + "\n"
 
@@ -307,10 +310,79 @@ def do_state2(user_id, current_state, args, text):
             return None
 
         elif args[1] == "add":
-            pass
-        elif args[1] == "remove":
-            pass
+            my_list = []
+            for cat in variable_ask.ask_notify_list:
+                if user_id in variable_ask.ask_notify_list[cat]:
+                    my_list.append(cat)
 
+            to_add = []
+            for item in variable_ask.flair_available:
+                if item not in my_list:
+                    to_add.append(item)
+
+            if len(to_add) > 0:
+
+                menu_main = createMenuFlair(7, to_add)
+                reply_markup = InlineKeyboardMarkup(menu_main)
+                variable_ask.updater.bot.send_message(user_id, "Quale categoria vuoi aggiungere?",
+                                                      reply_markup=reply_markup)
+            else:
+                notify_choose(user_id)
+                variable_ask.updater.bot.send_message(user_id, "Nessuna categoria da aggiungere! Sei iscritto a tutte!")
+            return None
+        elif args[1] == "remove":
+
+            my_list = []
+            for cat in variable_ask.ask_notify_list:
+                if user_id in variable_ask.ask_notify_list[cat]:
+                    my_list.append(cat)
+
+            if len(my_list) > 0:
+                menu_main = createMenuFlair(8, my_list)
+                reply_markup = InlineKeyboardMarkup(menu_main)
+                variable_ask.updater.bot.send_message(user_id, "Quale categoria vuoi rimuovere?",
+                                                      reply_markup=reply_markup)
+            else:
+                notify_choose(user_id)
+                variable_ask.updater.bot.send_message(user_id, "Nessuna categoria da rimuovere! "
+                                                               "Non sei iscritto a nessuna!")
+
+            return None
+    elif current_state == 7:  # l'utente ha scelto quale categoria vuole aggiungere
+        variable_ask.lock_ask_notify_state.acquire()
+
+        cat = args[1]
+
+        cat2 = tryGetProperty(variable_ask.ask_notify_list, cat)
+        if cat2 is None:
+            variable_ask.ask_notify_list[cat] = []
+
+        variable_ask.ask_notify_list[cat].append(user_id)
+
+        variable_ask.write_ask_notify_list2()
+
+        variable_ask.lock_ask_notify_state.release()
+
+        notify_choose(user_id)
+        variable_ask.updater.bot.send_message(user_id, "Categoria aggiunta con successo!")
+
+    elif current_state == 8: # l'utente ha scelto quale categoria vuole rimuovere
+        variable_ask.lock_ask_notify_state.acquire()
+
+        cat = args[1]
+
+        cat2 = tryGetProperty(variable_ask.ask_notify_list, cat)
+        if cat2 is None:
+            variable_ask.ask_notify_list[cat] = []
+
+        variable_ask.ask_notify_list[cat].remove(user_id)
+
+        variable_ask.write_ask_notify_list2()
+
+        variable_ask.lock_ask_notify_state.release()
+
+        notify_choose(user_id)
+        variable_ask.updater.bot.send_message(user_id, "Categoria rimossa con successo!")
     pass
 
 
