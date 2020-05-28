@@ -307,7 +307,10 @@ def menu_actions(update, context):
 
     do_state(user_id, current_state, args, None)
 
-    query.edit_message_text(text="Hai scelto: [" + str(args[2]) + "]")
+    chosen = str(args[2])
+    if chosen is None or len(chosen ) == 0:
+        chosen = str(args[1])
+    query.edit_message_text(text="Hai scelto: [" + chosen + "]")
     pass
 
 
