@@ -5,8 +5,10 @@ from threading import Lock
 from telegram.ext import Updater
 
 lock_ask_state = Lock()
+lock_ask_notify_state = Lock()
 
 ask_json_path = "ask.json"
+ask_notify_json_path = "ask_notify.json"
 subreddit_name = "polinetworktest"
 
 flair_available = ["Immatricolazione", "Tasse", "Test di ingresso", "Altro"]
@@ -34,6 +36,16 @@ except (JSONDecodeError, IOError):
     ask_list = {}
 
 lock_ask_state.release()
+
+lock_ask_notify_state.acquire()
+ask_notify_list = {}
+try:
+    ask_notify_read = open(ask_notify_json_path, encoding="utf-8")
+    ask_notify_list = json.load(ask_notify_read)
+except (JSONDecodeError, IOError):
+    ask_notify_list = {}
+
+lock_ask_notify_state.release()
 
 reddit_client_id = None
 reddit_secret_id = None
@@ -74,6 +86,15 @@ def write_ask_list2():
     try:
         with open(ask_json_path, 'w', encoding="utf-8") as file_to_write:
             json.dump(ask_list, file_to_write)
+    except Exception as e:
+        return False, e
+    return True, None
+
+
+def write_ask_notify_list2():
+    try:
+        with open(ask_notify_json_path, 'w', encoding="utf-8") as file_to_write:
+            json.dump(ask_notify_list, file_to_write)
     except Exception as e:
         return False, e
     return True, None

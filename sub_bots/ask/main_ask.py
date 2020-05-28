@@ -167,6 +167,25 @@ def check_command(update, text):
     pass
 
 
+def notify_choose(user_id):
+    set_state_to(user_id, 5)
+
+    s1 = 'Mostra le categorie di post a cui sono iscritto'
+    s2 = "Iscriviti ad una nuova categoria"
+    s3 = "Disiscriviti da una categoria"
+    menu_main = [
+        [InlineKeyboardButton(s1, callback_data=formatCallback(6, "show", s1))],
+        [InlineKeyboardButton(s2, callback_data=formatCallback(6, "add", s2))],
+        [InlineKeyboardButton(s3, callback_data=formatCallback(6, "remove", s3))]
+    ]
+    reply_markup = InlineKeyboardMarkup(menu_main)
+    variable_ask.updater.bot.send_message(user_id,
+                                          'Qui puoi gestire le categorie di post a cui sei iscritto. '
+                                          'Quando qualcuno pone una domanda ad una categoria '
+                                          'di post a cui sei iscritto, ti notificheremo',
+                                          reply_markup=reply_markup)
+
+
 def do_state2(user_id, current_state, args, text):
     if current_state == 0:  # /ask
         if args[1] == "search":
@@ -215,8 +234,9 @@ def do_state2(user_id, current_state, args, text):
             return None
 
         elif args[1] == "notify":
-            pass
+            notify_choose(user_id)
 
+            return None
 
     elif current_state == 1:  # /start
         if args[1] == "start":
@@ -241,7 +261,7 @@ def do_state2(user_id, current_state, args, text):
                                               "Scrivi il titolo della domanda (successivamente potrai scrivere la descrizione):\n  (annulla tutto con /cancel)")
         set_state_to(user_id, 3)
         return None
-    elif current_state == 3: #l'utente ha scelto il titolo e ora deve scrivere la descrizione
+    elif current_state == 3:  # l'utente ha scelto il titolo e ora deve scrivere la descrizione
         user_state = getUserState(user_id)
         user_state["title"] = text
         variable_ask.lock_ask_state.acquire()
@@ -263,6 +283,32 @@ def do_state2(user_id, current_state, args, text):
                                               + str(url))
         user_ask(user_id)
         return None
+    elif current_state == 5:
+        notify_choose(user_id)
+    elif current_state == 6:  # l'utente ha scelto quale sotto-azione inerente alle notifiche vuole fare
+        if args[1] == "show":
+            my_list = []
+            for cat in variable_ask.ask_notify_list:
+                if user_id in variable_ask.ask_notify_list[cat]:
+                    my_list.append(cat)
+
+            if len(my_list) > 0:
+
+                my_list2 = ""
+                for item in my_list:
+                    my_list2 += item + "\n"
+
+                variable_ask.updater.bot.send_message(user_id, "Lista delle categorie a cui sei iscritto: " + my_list2)
+            else:
+                variable_ask.updater.bot.send_message(user_id, "Non sei iscritto a nessuna categoria!")
+            notify_choose(user_id)
+
+            pass
+        elif args[1] == "add":
+            pass
+        elif args[1] == "remove":
+            pass
+
     pass
 
 
