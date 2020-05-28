@@ -37,3 +37,11 @@ functions/instagram/instabot.config.yml
 sub_bots/primo/token_primo.txt
 sub_bots/primo/primo.json
 sub_bots/primo/primo.json
+
+sub_bots/ask/reddit_client_id.txt
+
+sub_bots/ask/reddit_password.txt
+
+sub_bots/ask/reddit_secret_id.txt
+
+sub_bots/ask/token_ask.txt
