@@ -215,6 +215,7 @@ def do_state2(user_id, current_state, args, text):
             return None
 
         elif args[1] == "notify":
+            pass
 
 
     elif current_state == 1:  # /start
