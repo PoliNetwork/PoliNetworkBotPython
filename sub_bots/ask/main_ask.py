@@ -12,7 +12,9 @@ global subreddit
 # stati:
 # 0 - Chiedi all'utente se vuole fare una domanda o cercare una domanda
 # 1 - Start - Chiedi all'utente che vuole fare
-# 2 - L'utente vuole fare una domanda
+# 2 - L'utente vuole fare una domanda e gli è stata presentata la lista dei flair
+# 3 - L'utente ha scelto il titolo e ora gli viene chiesta la descrizione
+# 4 - L'utente ha scelto la descrizione e il suo post viene ora pubblicato
 
 def user_started(user_id):
     set_state_to(user_id, 1)
@@ -124,14 +126,23 @@ def user_ask(user_id):
 
     s1 = 'Cerca una domanda'
     s2 = 'Fai una domanda'
-    menu_main = [[InlineKeyboardButton(s1, callback_data=formatCallback(0, "search", s1))],
-                 [InlineKeyboardButton(s2, callback_data=formatCallback(0, "ask", s2))]]
+    s3 = "Gestisci le notifiche"
+    menu_main = [
+        [InlineKeyboardButton(s1, callback_data=formatCallback(0, "search", s1))],
+        [InlineKeyboardButton(s2, callback_data=formatCallback(0, "ask", s2))],
+        [InlineKeyboardButton(s3, callback_data=formatCallback(0, "notify", s3))]
+    ]
     reply_markup = InlineKeyboardMarkup(menu_main)
     variable_ask.updater.bot.send_message(user_id,
                                           'Benvenuto! Che cosa vuoi fare? Vuoi cercare una domanda per '
                                           'vedere se è già stata posta? O vuoi porne una nuova?',
                                           reply_markup=reply_markup)
 
+    pass
+
+
+def user_cancel(user_id):
+    user_started(user_id)
     pass
 
 
@@ -146,6 +157,8 @@ def check_command(update, text):
         user_started(update.message.from_user.id)
     elif text.startswith("/help"):
         user_help(update)
+    elif text.startswith("/cancel"):
+        user_cancel(update.message.from_user.id)
     elif text.startswith("/ask"):
         user_ask(update.message.from_user.id)
     else:
@@ -196,8 +209,14 @@ def do_state2(user_id, current_state, args, text):
                     menu_main.append(menu_main2)
 
             r1 = InlineKeyboardMarkup(menu_main)
-            variable_ask.updater.bot.send_message(user_id, "Scegli la categoria della domanda", reply_markup=r1)
+            variable_ask.updater.bot.send_message(user_id,
+                                                  "Scegli la categoria della domanda \n(annulla tutto con /cancel)",
+                                                  reply_markup=r1)
             return None
+
+        elif args[1] == "notify":
+
+
     elif current_state == 1:  # /start
         if args[1] == "start":
             user_ask(user_id)
@@ -218,10 +237,10 @@ def do_state2(user_id, current_state, args, text):
         variable_ask.lock_ask_state.release()
 
         variable_ask.updater.bot.send_message(user_id,
-                                              "Scrivi il titolo della domanda (successivamente potrai scrivere la descrizione):")
+                                              "Scrivi il titolo della domanda (successivamente potrai scrivere la descrizione):\n  (annulla tutto con /cancel)")
         set_state_to(user_id, 3)
         return None
-    elif current_state == 3:
+    elif current_state == 3: #l'utente ha scelto il titolo e ora deve scrivere la descrizione
         user_state = getUserState(user_id)
         user_state["title"] = text
         variable_ask.lock_ask_state.acquire()
@@ -229,7 +248,8 @@ def do_state2(user_id, current_state, args, text):
         variable_ask.write_ask_list2()
         variable_ask.lock_ask_state.release()
 
-        variable_ask.updater.bot.send_message(user_id, "Descrivi dettagliatamente la tua domanda:")
+        variable_ask.updater.bot.send_message(user_id,
+                                              "Descrivi dettagliatamente la tua domanda: \n(annulla tutto con /cancel)")
         set_state_to(user_id, 4)
 
         return None
@@ -308,7 +328,7 @@ def menu_actions(update, context):
     do_state(user_id, current_state, args, None)
 
     chosen = str(args[2])
-    if chosen is None or len(chosen ) == 0:
+    if chosen is None or len(chosen) == 0:
         chosen = str(args[1])
     query.edit_message_text(text="Hai scelto: [" + chosen + "]")
     pass
