@@ -70,15 +70,7 @@ def formatCallback(*a):
     return r
 
 
-def send_message_ask_0(user_id):
-    s1 = 'Cerca una domanda'
-    s2 = 'Fai una domanda'
-    menu_main = [[InlineKeyboardButton(s1, callback_data=formatCallback(0, "search", s1))],
-                 [InlineKeyboardButton(s2, callback_data=formatCallback(0, "ask", s2))]]
-    reply_markup = InlineKeyboardMarkup(menu_main)
-    variable_ask.updater.bot.send_message(user_id, 'Cosa vuoi fare?', reply_markup=reply_markup)
 
-    pass
 
 
 def set_state_to(user_id, state_num):
@@ -99,7 +91,7 @@ def set_state_to(user_id, state_num):
             variable_ask.write_ask_list2()
             variable_ask.lock_ask_state.release()
         else:
-            if state != 0:
+            if state != state_num:
                 user_state["state"] = state_num
                 variable_ask.lock_ask_state.acquire()
                 variable_ask.ask_list[id] = user_state
@@ -109,7 +101,13 @@ def set_state_to(user_id, state_num):
 
 def user_ask(user_id):
     set_state_to(user_id, 0)
-    send_message_ask_0(user_id)
+    
+    s1 = 'Cerca una domanda'
+    s2 = 'Fai una domanda'
+    menu_main = [[InlineKeyboardButton(s1, callback_data=formatCallback(0, "search", s1))],
+                 [InlineKeyboardButton(s2, callback_data=formatCallback(0, "ask", s2))]]
+    reply_markup = InlineKeyboardMarkup(menu_main)
+    variable_ask.updater.bot.send_message(user_id, 'Cosa vuoi fare?', reply_markup=reply_markup)
 
     pass
 
