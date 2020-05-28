@@ -1,9 +1,8 @@
 import praw
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackQueryHandler
+from telegram.ext import MessageHandler, Filters, CallbackQueryHandler
 
 from sub_bots.ask import variable_ask
-from praw import *
 
 global reddit
 global subreddit
