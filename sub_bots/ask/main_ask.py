@@ -220,7 +220,8 @@ def createMenuFlair(param_state, flairs):
 def do_state2(user_id, current_state, args, text):
     if current_state == 0:  # /ask
         if args[1] == "search":
-            variable_ask.updater.bot.send_message(user_id, "Cosa vuoi cercare?")
+            set_state_to(user_id, 9)
+            variable_ask.updater.bot.send_message(user_id, "Cosa vuoi cercare? (annulla con /cancel)")
             return None
         elif args[1] == "ask":
             set_state_to(user_id, 2)
@@ -365,7 +366,7 @@ def do_state2(user_id, current_state, args, text):
         notify_choose(user_id)
         variable_ask.updater.bot.send_message(user_id, "Categoria aggiunta con successo!")
 
-    elif current_state == 8: # l'utente ha scelto quale categoria vuole rimuovere
+    elif current_state == 8:  # l'utente ha scelto quale categoria vuole rimuovere
         variable_ask.lock_ask_notify_state.acquire()
 
         cat = args[1]
@@ -382,6 +383,38 @@ def do_state2(user_id, current_state, args, text):
 
         notify_choose(user_id)
         variable_ask.updater.bot.send_message(user_id, "Categoria rimossa con successo!")
+    elif current_state == 9:  # l'utente ha inserito il testo da cercare
+        results = subreddit.search(text)
+
+        results2 = []
+
+        for result_item in results:
+            results2.append(result_item)
+
+        n_result = len(results2)
+
+        if n_result > 5:
+            n_result = 5
+
+        i = 0
+        s = "\n"
+
+        while i < n_result:
+            url2 = "https://www.reddit.com/r/" + variable_ask.subreddit_name + "/comments/" + results2[i].id
+            url = "<a href='" + url2 + "'>"
+            url += results2[i].title
+            url += "</a>"
+
+            s += "▫️ "
+            s += url
+            s += "\n"
+
+            i = i + 1
+
+        if n_result > 0:
+            variable_ask.updater.bot.send_message(user_id, "Ecco i risultati:\n" + s + "\n\nTorna al menu con /start", parse_mode="HTML")
+        else:
+            variable_ask.updater.bot.send_message(user_id, "Nessun risultato! (torna al menu con /start)" + s)
     pass
 
 
