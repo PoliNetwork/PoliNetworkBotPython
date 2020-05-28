@@ -70,9 +70,6 @@ def formatCallback(*a):
     return r
 
 
-
-
-
 def set_state_to(user_id, state_num):
     id = user_id
     user_state = getUserState(user_id)
@@ -101,7 +98,7 @@ def set_state_to(user_id, state_num):
 
 def user_ask(user_id):
     set_state_to(user_id, 0)
-    
+
     s1 = 'Cerca una domanda'
     s2 = 'Fai una domanda'
     menu_main = [[InlineKeyboardButton(s1, callback_data=formatCallback(0, "search", s1))],
@@ -156,12 +153,12 @@ def menu_actions(update, context):
 
     args = getArgsFromCallback(query.data)
     current_state = int(args[0])
-    if current_state == 0: #/ask
+    if current_state == 0:  # /ask
         if args[1] == "search":
             variable_ask.updater.bot.send_message(query.from_user.id, "Cosa vuoi cercare?")
         elif args[1] == "ask":
             variable_ask.updater.bot.send_message(query.from_user.id, "Cosa vuoi chiedere?")
-    elif current_state == 1: #/start
+    elif current_state == 1:  # /start
         if args[1] == "start":
             user_ask(query.from_user.id)
         elif args[1] == "contact":
