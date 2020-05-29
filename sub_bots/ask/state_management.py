@@ -1,5 +1,6 @@
 from telegram import InlineKeyboardMarkup
 
+from config.blacklist_words import blacklist_words
 from sub_bots.ask import variable_ask
 from sub_bots.ask.ask_utils import set_state_to, createMenuFlair, notify_choose, user_ask, getUserState, user_send, \
     tryGetProperty
@@ -12,6 +13,15 @@ from sub_bots.ask.ask_utils import set_state_to, createMenuFlair, notify_choose,
 # 03 - L'utente ha scelto il titolo e ora gli viene chiesta la descrizione
 # 04 - L'utente ha scelto la descrizione e il suo post viene ora pubblicato
 # 10 - L'utente ha scelto di rispondere ad un commento
+
+
+def check_if_valid_to_blacklist(text):
+    text2 = str(text).split(" ")
+    for word in text2:
+        if word in blacklist_words:
+            return False
+
+    return True
 
 
 def do_state2(user_id, current_state, args, text):
@@ -62,25 +72,43 @@ def do_state2(user_id, current_state, args, text):
         set_state_to(user_id, 3)
         return None
     elif current_state == 3:  # l'utente ha scelto il titolo e ora deve scrivere la descrizione
-        user_state = getUserState(user_id)
-        user_state["title"] = text
-        variable_ask.lock_ask_state.acquire()
-        variable_ask.ask_list[user_id] = user_state
-        variable_ask.write_ask_list2()
-        variable_ask.lock_ask_state.release()
 
-        variable_ask.updater.bot.send_message(user_id,
-                                              "Descrivi dettagliatamente la tua domanda: \n(annulla tutto con /cancel)")
-        set_state_to(user_id, 4)
+        valid_text = check_if_valid_to_blacklist(text)
+        if valid_text:
+
+            user_state = getUserState(user_id)
+            user_state["title"] = text
+            variable_ask.lock_ask_state.acquire()
+            variable_ask.ask_list[user_id] = user_state
+            variable_ask.write_ask_list2()
+            variable_ask.lock_ask_state.release()
+
+            variable_ask.updater.bot.send_message(user_id,
+                                                  "Descrivi dettagliatamente la tua domanda: \n(annulla tutto con /cancel)")
+            set_state_to(user_id, 4)
+        else:
+            variable_ask.updater.bot.send_message(user_id,
+                                                  "La tua domanda contiene delle parole che non rispetto il "
+                                                  "linguaggio consono del network. Ti invitiamo a leggere le regole "
+                                                  "del network.\n\nLa tua domanda non è stata inviata")
+            user_ask(user_id)
 
         return None
     elif current_state == 4:  # l'utente ha inserito il testo della domanda
-        url = user_send(user_id, desc=text)
-        variable_ask.updater.bot.send_message(user_id,
-                                              "La tua domanda è stata inviata con successo! "
-                                              "Riceverai eventuali update sulle risposte. "
-                                              "Ti ricordiamo che puoi seguire anche il post reddit dedicato: "
-                                              + str(url))
+
+        valid_text = check_if_valid_to_blacklist(text)
+        if valid_text:
+            url = user_send(user_id, desc=text)
+            variable_ask.updater.bot.send_message(user_id,
+                                                  "La tua domanda è stata inviata con successo! "
+                                                  "Riceverai eventuali update sulle risposte. "
+                                                  "Ti ricordiamo che puoi seguire anche il post reddit dedicato: "
+                                                  + str(url))
+        else:
+            variable_ask.updater.bot.send_message(user_id,
+                                                  "La tua domanda contiene delle parole che non rispetto il "
+                                                  "linguaggio consono del network. Ti invitiamo a leggere le regole "
+                                                  "del network.\n\nLa tua domanda non è stata inviata")
         user_ask(user_id)
         return None
     elif current_state == 5:
@@ -234,6 +262,6 @@ def do_state2(user_id, current_state, args, text):
     elif current_state == 11:  # l'utente non vuole rispondere
         user_ask(user_id)
         return None
-    elif current_state == 12: # l'utente ha scritto la sua risposta
+    elif current_state == 12:  # l'utente ha scritto la sua risposta
         a = 0
     pass
