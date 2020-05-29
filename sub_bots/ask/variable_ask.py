@@ -6,9 +6,12 @@ from telegram.ext import Updater
 
 lock_ask_state = Lock()
 lock_ask_notify_state = Lock()
+lock_watch_post = Lock()
 
 ask_json_path = "ask.json"
 ask_notify_json_path = "ask_notify.json"
+watch_post_path = "watch_post.json"
+
 subreddit_name = "polinetworktest"
 
 flair_available = ["Immatricolazione", "Tasse", "Test di ingresso", "Altro"]
@@ -36,6 +39,16 @@ except (JSONDecodeError, IOError):
     ask_list = {}
 
 lock_ask_state.release()
+
+lock_watch_post.acquire()
+watch_post_list = {}
+try:
+    watch_post_list_read = open(watch_post_path, encoding="utf-8")
+    watch_post_list = json.load(watch_post_list_read)
+except (JSONDecodeError, IOError):
+    watch_post_list = {}
+
+lock_watch_post.release()
 
 lock_ask_notify_state.acquire()
 ask_notify_list = {}
@@ -95,6 +108,15 @@ def write_ask_notify_list2():
     try:
         with open(ask_notify_json_path, 'w', encoding="utf-8") as file_to_write:
             json.dump(ask_notify_list, file_to_write)
+    except Exception as e:
+        return False, e
+    return True, None
+
+
+def write_watch_post_list2():
+    try:
+        with open(watch_post_path, 'w', encoding="utf-8") as file_to_write:
+            json.dump(watch_post_list, file_to_write)
     except Exception as e:
         return False, e
     return True, None

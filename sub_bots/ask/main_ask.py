@@ -1,3 +1,6 @@
+import threading
+import time
+
 import praw
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import MessageHandler, Filters, CallbackQueryHandler
@@ -59,6 +62,13 @@ def user_send(user_id, desc):
             post.flair.select(template_id, flair)
         except Exception as e2:
             print(e2)
+
+        variable_ask.lock_watch_post.acquire()
+        variable_ask.watch_post_list[post.id] = {}
+        variable_ask.watch_post_list[post.id]["from_tg"] = user_id
+        variable_ask.watch_post_list[post.id]["comments"] = {}
+        variable_ask.write_watch_post_list2()
+        variable_ask.lock_watch_post.release()
 
         return "https://www.reddit.com/r/" + variable_ask.subreddit_name + "/comments/" + str(post.id)
 
@@ -412,7 +422,8 @@ def do_state2(user_id, current_state, args, text):
             i = i + 1
 
         if n_result > 0:
-            variable_ask.updater.bot.send_message(user_id, "Ecco i risultati:\n" + s + "\n\nTorna al menu con /start", parse_mode="HTML")
+            variable_ask.updater.bot.send_message(user_id, "Ecco i risultati:\n" + s + "\n\nTorna al menu con /start",
+                                                  parse_mode="HTML")
         else:
             variable_ask.updater.bot.send_message(user_id, "Nessun risultato! (torna al menu con /start)" + s)
     pass
@@ -487,6 +498,51 @@ def menu_actions(update, context):
     pass
 
 
+def send_notify_new_comment(postid, missing_comment):
+    pass
+
+
+def check_comments(name):
+    while True:
+        for key in variable_ask.watch_post_list:
+            a = 0
+            submission = reddit.submission(id=key)
+            comments1 = submission.comments
+            comments2 = []
+            for item_comment in comments1:
+                comments2.append(item_comment)
+
+            missing_comment = []
+            comment_known = variable_ask.watch_post_list[key]["comments"]
+            for item_comment in comments2:
+
+                found = False
+                for item_comment2 in comment_known:
+                    if item_comment2 == item_comment.id:
+                        found = True
+                        break
+
+                if found is False:
+                    missing_comment.append(item_comment)
+
+            if len(missing_comment) > 0:
+                send_notify_new_comment(key, missing_comment)
+
+                variable_ask.lock_watch_post.acquire()
+
+                for item_comment in missing_comment:
+                    variable_ask.watch_post_list[key]["comments"][item_comment.id] = {}
+
+                variable_ask.write_watch_post_list2()
+
+                variable_ask.lock_watch_post.release()
+
+
+            a = a + 1
+
+        time.sleep(5 * 60)  # 5 minuti
+
+
 def main_ask():
     global reddit
     global subreddit
@@ -504,6 +560,10 @@ def main_ask():
     reddit.validate_on_submit = True
 
     subreddit = reddit.subreddit(variable_ask.subreddit_name)
+
+    x = threading.Thread(target=check_comments, args=(1,))
+    x.start()
+
     pass
 
 
