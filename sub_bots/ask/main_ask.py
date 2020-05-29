@@ -146,10 +146,15 @@ def send_notify_new_comment(postid, missing_comment, submission):
         s += item_comment.body
 
         s1 = "Rispondi"
-        menu_main = [[InlineKeyboardButton(s1, callback_data=formatCallback(10, item_comment.id, s1, postid))]]
+        s2 = "Non rispondere"
+        menu_main = [
+            [InlineKeyboardButton(s1, callback_data=formatCallback(10, item_comment.id, s1, postid))],
+            [InlineKeyboardButton(s2, callback_data=formatCallback(11, s2, s2))],
+                     ]
         reply_markup2 = InlineKeyboardMarkup(menu_main)
 
-        variable_ask.updater.bot.send_message(user_id, s, reply_markup=reply_markup2)
+        variable_ask.updater.bot.send_message(user_id, s)
+        variable_ask.updater.bot.send_message(user_id, "Vuoi rispondere?", reply_markup=reply_markup2)
 
     pass
 

@@ -215,7 +215,6 @@ def do_state2(user_id, current_state, args, text):
             variable_ask.updater.bot.send_message(user_id, "Nessun risultato! (torna al menu con /start)" + s)
 
     elif current_state == 10:  # l'utente vuole rispondere ad un commento
-        a = 0
 
         set_state_to(user_id, 11)
 
@@ -231,4 +230,8 @@ def do_state2(user_id, current_state, args, text):
 
         variable_ask.lock_ask_state.release()
 
+        variable_ask.updater.bot.send_message(user_id, "Inserisci il commento di risposta che vuoi dare:")
+    elif current_state == 11:  # l'utente non vuole rispondere
+        user_ask(user_id)
+        return None
     pass
