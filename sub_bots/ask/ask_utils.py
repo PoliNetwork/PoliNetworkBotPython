@@ -125,6 +125,11 @@ def user_ask(user_id):
     pass
 
 
+def getAuthor(user_id):
+    return "[nessun autore per ora]"
+    pass
+
+
 def user_send(user_id, desc):
     user_state = getUserState(user_id)
     if user_state is None:
@@ -136,6 +141,9 @@ def user_send(user_id, desc):
         return None
 
     if len(title2) > 0:
+        desc += "\n\n"
+        author = getAuthor(user_id)
+        desc += "authour: " + author
         post = variable_ask.subreddit.submit(title=title2, selftext=desc)
         flair = user_state["flair"]
         try:

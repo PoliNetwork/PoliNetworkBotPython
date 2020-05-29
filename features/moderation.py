@@ -134,7 +134,7 @@ def ban_all3(update, ban_true_unban_false):
     message = update.message
     chat = message.chat
     chat_id = chat.id
-    if chat_id not in creators.owners:  # only owners can do this command
+    if chat_id not in creators.ban_all:  # only owners can do this command
         return
 
     receiver = None
