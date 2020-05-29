@@ -25,6 +25,65 @@ flair_available = ["Immatricolazione", "Tasse", "Test di ingresso",
 flair_available.sort()
 flair_available.append("Altro")
 
+
+aggettivi = []
+try:
+    with open("sub_bots/ask/aggettivi.txt") as file_in:
+        aggettivi = []
+        for line in file_in:
+            line = str(line).strip()
+            if len(line) > 0:
+                aggettivi.append(line)
+
+except:
+    aggettivi = []
+
+    try:
+        with open("aggettivi.txt") as file_in:
+            aggettivi = []
+            for line in file_in:
+                line = str(line).strip()
+                if len(line) > 0:
+                    aggettivi.append(line)
+    except:
+        aggettivi = []
+
+
+animali = []
+try:
+    with open("sub_bots/ask/animali.txt") as file_in:
+        animali = []
+        for line in file_in:
+            line = str(line).strip()
+            if len(line) > 0:
+                animali.append(line)
+
+except:
+    animali = []
+
+    try:
+        with open("animali.txt") as file_in:
+            animali = []
+            for line in file_in:
+                line = str(line).strip()
+                if len(line) > 0:
+                    animali.append(line)
+    except:
+        animali = []
+
+
+salt_ask = 0
+try:
+    salt_ask = open("sub_bots/ask/salt_ask.txt").read()
+except:
+    salt_ask = 0
+
+    try:
+        salt_ask = open("salt_ask.txt").read()
+    except:
+        salt_ask = 0
+
+
 try:
     token = open("sub_bots/ask/token_ask.txt").read()
 except:
@@ -117,8 +176,6 @@ def clean_duplicates(list2):
 ask_list = clean_duplicates(ask_list)
 ask_notify_list = clean_duplicates(ask_notify_list)
 watch_post_list = clean_duplicates(watch_post_list)
-
-
 
 
 def write_ask_list2():

@@ -126,8 +126,20 @@ def user_ask(user_id):
 
 
 def getAuthor(user_id):
+    if len(variable_ask.aggettivi) > 0 and len(variable_ask.animali) > 0:
+
+        user_id_salted = user_id
+        try:
+            user_id_salted = user_id + int(variable_ask.salt_ask)
+        except:
+            user_id_salted = user_id
+
+        animale_index = user_id_salted % len(variable_ask.animali)
+        aggettivo_index = user_id_salted % len(variable_ask.aggettivi)
+
+        return variable_ask.animali[animale_index] + " " + variable_ask.aggettivi[aggettivo_index]
+
     return "[nessun autore per ora]"
-    pass
 
 
 def user_send(user_id, desc):
@@ -143,7 +155,7 @@ def user_send(user_id, desc):
     if len(title2) > 0:
         desc += "\n\n"
         author = getAuthor(user_id)
-        desc += "authour: " + author
+        desc += "Author: " + author
         post = variable_ask.subreddit.submit(title=title2, selftext=desc)
         flair = user_state["flair"]
         try:
