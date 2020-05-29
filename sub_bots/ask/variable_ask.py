@@ -14,7 +14,11 @@ watch_post_path = "watch_post.json"
 
 subreddit_name = "polinetworktest"
 
-flair_available = ["Immatricolazione", "Tasse", "Test di ingresso", "Altro"]
+flair_available = ["Immatricolazione", "Tasse", "Test di ingresso",
+                   "Certificazioni", "Magistrale", "Tesi",
+                   "Passaggio di corso", "Borse di studio"]
+flair_available.sort()
+flair_available.append("Altro")
 
 try:
     token = open("sub_bots/ask/token_ask.txt").read()
