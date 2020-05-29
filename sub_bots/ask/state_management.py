@@ -3,7 +3,7 @@ from telegram import InlineKeyboardMarkup
 from config.blacklist_words import blacklist_words
 from sub_bots.ask import variable_ask
 from sub_bots.ask.ask_utils import set_state_to, createMenuFlair, notify_choose, user_ask, getUserState, user_send, \
-    tryGetProperty
+    tryGetProperty, getAuthor
 
 
 # stati:
@@ -31,6 +31,10 @@ def reset_bad_char(user_id):
                                           "del network.\n\nL'operazione è stata annullata")
     user_ask(user_id)
     pass
+
+
+def addAuthor(user_id):
+    return "\n\n" + getAuthor(user_id)
 
 
 def do_state2(user_id, current_state, args, text):
@@ -273,4 +277,18 @@ def do_state2(user_id, current_state, args, text):
             reset_bad_char(user_id)
             return None
         a = 0
+
+        comment = variable_ask.reddit.comment(id=variable_ask.ask_list[user_id]["comment_id"])
+
+        text_to_send = text
+
+        text_to_send += addAuthor(user_id)
+
+        reply2 = comment.reply(text_to_send)
+
+        url = reply2.permalink
+        url = "https://www.reddit.com" + url
+
+        variable_ask.updater.bot.send_message(user_id, "Abbiamo inviato il tuo commento: " + url)
+        user_ask(user_id)
     pass
