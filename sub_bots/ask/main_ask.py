@@ -131,13 +131,24 @@ def send_notify_new_comment(postid, missing_comment, submission):
     if len(missing_comment) == 0:
         return None
 
-    user_id = variable_ask.watch_post_list[postid]["from_tg"]
+    user_id = None
+    try:
+        user_id = variable_ask.watch_post_list[postid]["from_tg"]
+    except:
+        user_id = None
+
+    if user_id is None:
+        return None
+
     title_post = submission.title
     if len(missing_comment) == 1:
-        variable_ask.updater.bot.send_message(user_id, "C'è un nuovo commento al tuo post (" + str(title_post) + ")")
+        variable_ask.updater.bot.send_message(user_id,
+                                              "C'è un nuovo commento al tuo post "
+                                              "dal titolo:\n\n" + str(title_post))
     else:
         variable_ask.updater.bot.send_message(user_id,
-                                              "Ci sono dei nuovi commenti al tuo post (" + str(title_post) + ")")
+                                              "Ci sono dei nuovi commenti al tuo post "
+                                              "dal titolo:\n\n" + str(title_post))
 
     for item_comment in missing_comment:
         a = 0
@@ -150,7 +161,7 @@ def send_notify_new_comment(postid, missing_comment, submission):
         menu_main = [
             [InlineKeyboardButton(s1, callback_data=formatCallback(10, item_comment.id, s1, postid))],
             [InlineKeyboardButton(s2, callback_data=formatCallback(11, s2, s2))],
-                     ]
+        ]
         reply_markup2 = InlineKeyboardMarkup(menu_main)
 
         variable_ask.updater.bot.send_message(user_id, s)
@@ -198,16 +209,15 @@ def check_comments(name):
 
 
 def main_ask():
-
     variable_ask.updater.dispatcher.add_handler(CallbackQueryHandler(menu_actions))
     variable_ask.updater.dispatcher.add_handler(MessageHandler(Filters.all, check_message_ask))
     variable_ask.updater.start_polling()
 
     variable_ask.reddit = praw.Reddit(client_id=variable_ask.reddit_client_id,
-                         client_secret=variable_ask.reddit_secret_id,
-                         user_agent="AskPoliNetworkBot",
-                         username="PolinetworkPostBot",
-                         password=variable_ask.reddit_password)
+                                      client_secret=variable_ask.reddit_secret_id,
+                                      user_agent="AskPoliNetworkBot",
+                                      username="PolinetworkPostBot",
+                                      password=variable_ask.reddit_password)
 
     variable_ask.reddit.validate_on_submit = True
 
