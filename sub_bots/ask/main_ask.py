@@ -505,7 +505,7 @@ def send_notify_new_comment(postid, missing_comment):
 def check_comments(name):
     while True:
         for key in variable_ask.watch_post_list:
-            a = 0
+
             submission = reddit.submission(id=key)
             comments1 = submission.comments
             comments2 = []
@@ -536,9 +536,6 @@ def check_comments(name):
                 variable_ask.write_watch_post_list2()
 
                 variable_ask.lock_watch_post.release()
-
-
-            a = a + 1
 
         time.sleep(5 * 60)  # 5 minuti
 
