@@ -5,7 +5,6 @@ from sub_bots.ask.ask_utils import set_state_to, createMenuFlair, notify_choose,
     tryGetProperty
 
 
-
 # stati:
 # 00 - Chiedi all'utente se vuole fare una domanda o cercare una domanda
 # 01 - Start - Chiedi all'utente che vuole fare
@@ -13,7 +12,6 @@ from sub_bots.ask.ask_utils import set_state_to, createMenuFlair, notify_choose,
 # 03 - L'utente ha scelto il titolo e ora gli viene chiesta la descrizione
 # 04 - L'utente ha scelto la descrizione e il suo post viene ora pubblicato
 # 10 - L'utente ha scelto di rispondere ad un commento
-
 
 
 def do_state2(user_id, current_state, args, text):
@@ -215,5 +213,22 @@ def do_state2(user_id, current_state, args, text):
                                                   parse_mode="HTML")
         else:
             variable_ask.updater.bot.send_message(user_id, "Nessun risultato! (torna al menu con /start)" + s)
-    pass
 
+    elif current_state == 10:  # l'utente vuole rispondere ad un commento
+        a = 0
+
+        set_state_to(user_id, 11)
+
+        comment_id = args[1]
+        post_id = args[3]
+
+        variable_ask.lock_ask_state.acquire()
+
+        variable_ask.ask_list[user_id]["comment_id"] = comment_id
+        variable_ask.ask_list[user_id]["post_id"] = post_id
+
+        variable_ask.write_ask_list2()
+
+        variable_ask.lock_ask_state.release()
+
+    pass
