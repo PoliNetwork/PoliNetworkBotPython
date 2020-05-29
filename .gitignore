@@ -49,3 +49,5 @@ sub_bots/ask/token_ask.txt
 sub_bots/ask/ask.json
 
 sub_bots/ask/watch_post.json
+
+sub_bots/ask/ask_notify.json
