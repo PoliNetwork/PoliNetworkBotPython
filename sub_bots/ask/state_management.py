@@ -24,6 +24,15 @@ def check_if_valid_to_blacklist(text):
     return True
 
 
+def reset_bad_char(user_id):
+    variable_ask.updater.bot.send_message(user_id,
+                                          "Ciò che hai scritto contiene delle parole che non rispettano il "
+                                          "linguaggio consono del network. Ti invitiamo a leggere le regole "
+                                          "del network.\n\nL'operazione è stata annullata")
+    user_ask(user_id)
+    pass
+
+
 def do_state2(user_id, current_state, args, text):
     if current_state == 0:  # /ask
         if args[1] == "search":
@@ -87,11 +96,8 @@ def do_state2(user_id, current_state, args, text):
                                                   "Descrivi dettagliatamente la tua domanda: \n(annulla tutto con /cancel)")
             set_state_to(user_id, 4)
         else:
-            variable_ask.updater.bot.send_message(user_id,
-                                                  "La tua domanda contiene delle parole che non rispetto il "
-                                                  "linguaggio consono del network. Ti invitiamo a leggere le regole "
-                                                  "del network.\n\nLa tua domanda non è stata inviata")
-            user_ask(user_id)
+            reset_bad_char(user_id)
+            return None
 
         return None
     elif current_state == 4:  # l'utente ha inserito il testo della domanda
@@ -105,10 +111,8 @@ def do_state2(user_id, current_state, args, text):
                                                   "Ti ricordiamo che puoi seguire anche il post reddit dedicato: "
                                                   + str(url))
         else:
-            variable_ask.updater.bot.send_message(user_id,
-                                                  "La tua domanda contiene delle parole che non rispetto il "
-                                                  "linguaggio consono del network. Ti invitiamo a leggere le regole "
-                                                  "del network.\n\nLa tua domanda non è stata inviata")
+            reset_bad_char(user_id)
+            return None
         user_ask(user_id)
         return None
     elif current_state == 5:
@@ -263,5 +267,10 @@ def do_state2(user_id, current_state, args, text):
         user_ask(user_id)
         return None
     elif current_state == 12:  # l'utente ha scritto la sua risposta
+
+        valid_text = check_if_valid_to_blacklist(text)
+        if valid_text is False:
+            reset_bad_char(user_id)
+            return None
         a = 0
     pass
