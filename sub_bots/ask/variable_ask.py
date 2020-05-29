@@ -8,6 +8,11 @@ lock_ask_state = Lock()
 lock_ask_notify_state = Lock()
 lock_watch_post = Lock()
 
+reddit = None
+subreddit = None
+
+separators_callback = "|;|"
+
 ask_json_path = "ask.json"
 ask_notify_json_path = "ask_notify.json"
 watch_post_path = "watch_post.json"
