@@ -51,3 +51,5 @@ sub_bots/ask/ask.json
 sub_bots/ask/watch_post.json
 
 sub_bots/ask/ask_notify.json
+
+sub_bots/ask/salt_ask.txt
