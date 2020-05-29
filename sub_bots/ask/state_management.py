@@ -216,7 +216,7 @@ def do_state2(user_id, current_state, args, text):
 
     elif current_state == 10:  # l'utente vuole rispondere ad un commento
 
-        set_state_to(user_id, 11)
+        set_state_to(user_id, 12)
 
         comment_id = args[1]
         post_id = args[3]
@@ -234,4 +234,6 @@ def do_state2(user_id, current_state, args, text):
     elif current_state == 11:  # l'utente non vuole rispondere
         user_ask(user_id)
         return None
+    elif current_state == 12: # l'utente ha scritto la sua risposta
+        a = 0
     pass

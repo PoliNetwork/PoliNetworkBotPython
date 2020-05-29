@@ -104,6 +104,23 @@ except:
         reddit_password = None
 
 
+def clean_duplicates(list2):
+    result = {}
+
+    for key, value in list2.items():
+        if value not in result.values():
+            result[key] = value
+
+    return result
+
+
+ask_list = clean_duplicates(ask_list)
+ask_notify_list = clean_duplicates(ask_notify_list)
+watch_post_list = clean_duplicates(watch_post_list)
+
+
+
+
 def write_ask_list2():
     try:
         with open(ask_json_path, 'w', encoding="utf-8") as file_to_write:
@@ -129,3 +146,8 @@ def write_watch_post_list2():
     except Exception as e:
         return False, e
     return True, None
+
+
+lock_ask_state.acquire()
+write_ask_list2()
+lock_ask_state.release()

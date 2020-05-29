@@ -4,12 +4,12 @@ from sub_bots.ask import variable_ask
 
 
 def set_state_to(user_id, state_num):
-    id = user_id
+    user_id = int(user_id)
     user_state = getUserState(user_id)
     if user_state is None:
         user_state = {"state": state_num}
         variable_ask.lock_ask_state.acquire()
-        variable_ask.ask_list[id] = user_state
+        variable_ask.ask_list[user_id] = user_state
         variable_ask.write_ask_list2()
         variable_ask.lock_ask_state.release()
     else:
@@ -17,14 +17,14 @@ def set_state_to(user_id, state_num):
         if state is None:
             user_state["state"] = state_num
             variable_ask.lock_ask_state.acquire()
-            variable_ask.ask_list[id] = user_state
+            variable_ask.ask_list[user_id] = user_state
             variable_ask.write_ask_list2()
             variable_ask.lock_ask_state.release()
         else:
             if state != state_num:
                 user_state["state"] = state_num
                 variable_ask.lock_ask_state.acquire()
-                variable_ask.ask_list[id] = user_state
+                variable_ask.ask_list[user_id] = user_state
                 variable_ask.write_ask_list2()
                 variable_ask.lock_ask_state.release()
 
