@@ -1,7 +1,7 @@
 
 blacklist_words = ["porcodio", "dioporco", "diocane"]
 
-blacklist_sites = ["facebook.com", "t.me", "whatsapp.com",
+blacklist_sites = ["facebook.com", "whatsapp.com",
                    "instagram.com", "bit.ly", "is.gd",
                    "amzn.to", "goo.gl", "forms.gle",
                    "docs.google.com", "discord.gg"]  # sites with potential spam

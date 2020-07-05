@@ -174,6 +174,10 @@ def has_spam_links(text):
             if word.find(banned_site) >= 0:
                 return True
 
+        if word.find("t.me") >= 0:
+            if word.find("t.me/c/") < 0:
+                return True
+
     return False
 
 
