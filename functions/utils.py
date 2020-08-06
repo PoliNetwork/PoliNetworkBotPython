@@ -148,12 +148,14 @@ def is_valid(text):
 
 
 def mute_and_delete(message):
+    if message is None:
+        return
+
     temp_mute_and_delete(message, 900)
     return
 
 
 def temp_mute_and_delete(message, seconds):
-
     if message is None:
         return
 
