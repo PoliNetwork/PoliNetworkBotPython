@@ -1,0 +1,1 @@
+script_pnb.bat >> out_log.txt 2>&1

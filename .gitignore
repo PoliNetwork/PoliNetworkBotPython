@@ -65,3 +65,5 @@ config/ass_messages.json
 config/date.json
 
 d.json
+
+out_log.txt
