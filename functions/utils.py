@@ -153,7 +153,15 @@ def mute_and_delete(message):
 
 
 def temp_mute_and_delete(message, seconds):
+
+    if message is None:
+        return
+
     chat = message.chat
+
+    if chat is None:
+        return
+
     user = message.from_user.id
     permission = telegram.ChatPermissions(can_add_web_page_previews=False,
                                           can_send_media_messages=False,

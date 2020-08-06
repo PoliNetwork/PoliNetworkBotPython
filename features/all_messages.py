@@ -76,6 +76,10 @@ def check_if_exit(message):
 
 
 def check_spam(message):
+
+    if message is None:
+        return
+
     chat = message.chat
 
     if chat.type == "private":
