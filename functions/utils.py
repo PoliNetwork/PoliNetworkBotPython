@@ -487,3 +487,17 @@ def check_date(date):
     if s_year <= f_year or (s_year - f_year) > 1:
         return False
     return True
+
+
+def getLog(update, context):
+    message = update.message
+    chat = message.chat
+    if chat.id in creators.owners:
+        try:
+            variable.updater.bot.send_document(chat_id=message.chat.id, document=open("out_log.txt", 'rb'))
+        except:
+            try:
+                variable.updater.bot.send_message(chat.id, "Eccezione out_log")
+            except:
+                pass
+            pass
