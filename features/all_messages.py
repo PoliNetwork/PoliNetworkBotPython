@@ -33,6 +33,10 @@ def find_user(new_chat_members, to_find):
 
 
 def check_if_exit(message):
+
+    if message is None:
+        return False, 10
+
     if message.new_chat_members is None or len(message.new_chat_members) == 0:
         return False, 1
 
