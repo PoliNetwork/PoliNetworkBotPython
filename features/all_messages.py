@@ -13,6 +13,9 @@ ignored_chinese = [-1001394018284]
 
 
 def check_blacklist(message):
+    if message is None:
+        return
+
     chat = message.chat
 
     if chat.type == "private":
@@ -33,7 +36,6 @@ def find_user(new_chat_members, to_find):
 
 
 def check_if_exit(message):
-
     if message is None:
         return False, 10
 
@@ -192,7 +194,6 @@ def check_if_is_exit_message_of_user(message):
 
 
 def check_for_state(update):
-
     stato = None
     try:
         stato = temp_state_variable_main.state_dict[update.message.chat.id]
@@ -208,25 +209,27 @@ def check_for_state(update):
 def check_message(update, context):
     message = update.message
 
-    to_exit, error_code = groups.try_add_group(message)
-    if to_exit is True:
-        utils.leave_chat(message.chat, 1, error_code, 0)
-        return
+    if message is not None:
 
-    to_exit, error_code2 = check_if_exit(message)
-    if to_exit is True:
-        utils.leave_chat(message.chat, 2, 0, error_code2)
-        return
+        to_exit, error_code = groups.try_add_group(message)
+        if to_exit is True:
+            utils.leave_chat(message.chat, 1, error_code, 0)
+            return
 
-    check_username_and_name(message)
-    check_blacklist(message)
+        to_exit, error_code2 = check_if_exit(message)
+        if to_exit is True:
+            utils.leave_chat(message.chat, 2, 0, error_code2)
+            return
 
-    if not creators.allowed_spam.__contains__(message.from_user.id):
-        check_spam(message)
+        check_username_and_name(message)
+        check_blacklist(message)
 
-    try:
-        check_if_is_exit_message_of_user(message)
-    except Exception as e:
-        utils.notify_owners(e)
+        if not creators.allowed_spam.__contains__(message.from_user.id):
+            check_spam(message)
+
+        try:
+            check_if_is_exit_message_of_user(message)
+        except Exception as e:
+            utils.notify_owners(e)
 
     check_for_state(update)
