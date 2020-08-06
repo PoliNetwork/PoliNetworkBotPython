@@ -67,7 +67,16 @@ def subcreator_is_present(admins):
 
 
 def try_add_group(message):
-    chat = message['chat']
+    chat = None
+
+    try:
+        chat = message['chat']
+    except:
+        chat = None
+
+    if chat is None:
+        return None, 10
+
     if chat['type'] == 'private':
         print('Received a private message.')
         return None, 1
@@ -85,7 +94,7 @@ def try_add_group(message):
 
             if subcreator_is_present(admins):
                 write_group_file(chat['id'], chat['type'], chat['title'], None, None, True, False)
-                return None, 8
+                return None, 11
             else:
                 write_group_file(chat['id'], chat['type'], chat['title'], None, None, False, False)
                 return True, 2
