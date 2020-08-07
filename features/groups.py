@@ -89,7 +89,15 @@ def try_add_group(message):
 
     if group_already_present is False:
 
-        admins = variable.updater.bot.get_chat_administrators(chat.id)
+        admins = None
+        try:
+            admins = variable.updater.bot.get_chat_administrators(chat.id)
+        except:
+            admins = None
+
+        if admins is None:
+            return None, 12
+
         if not creator_is_present(admins):
 
             if subcreator_is_present(admins):
