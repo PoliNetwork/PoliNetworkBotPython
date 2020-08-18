@@ -207,7 +207,11 @@ def lista_primo_status(message):
                 r += available_char + " " + key + "\n"
 
     bot = variable_primo.updater.bot
-    bot.send_message(message.chat.id, r, reply_to_message_id=message.message_id, parse_mode="HTML")
+    try:
+        bot.send_message(message.chat.id, r, reply_to_message_id=message.message_id, parse_mode="HTML")
+    except:
+        pass
+    
     pass
 
 

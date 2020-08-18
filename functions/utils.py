@@ -46,8 +46,11 @@ def send_in_private_or_in_group(text, group_id, user):
     user_id = user['id']
 
     try:
-        variable.updater.bot.send_message(user_id, text)
-    except Unauthorized as e:
+        try:
+            variable.updater.bot.send_message(user_id, text)
+        except Unauthorized as e:
+            success = False
+    except:
         success = False
 
     if success is True:
