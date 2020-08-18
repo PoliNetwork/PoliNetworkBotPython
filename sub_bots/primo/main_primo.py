@@ -211,7 +211,7 @@ def lista_primo_status(message):
         bot.send_message(message.chat.id, r, reply_to_message_id=message.message_id, parse_mode="HTML")
     except:
         pass
-    
+
     pass
 
 
