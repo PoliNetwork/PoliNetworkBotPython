@@ -104,7 +104,10 @@ def check_spam(message):
 
     if chat.id not in ignored_chinese:
         if utils.contains_ko_ja_chi(s_to_check):
-            utils.temp_mute_and_delete(message, 60)
+            try:
+                utils.temp_mute_and_delete(message, 60)
+            except:
+                pass
 
 
 def check_username_and_name(message):
