@@ -70,17 +70,20 @@ def do_winner2(primo_element, message, text):
         print(e)
     lock_primo_list.release()
 
-    if text == "upkara":
-        if message.from_user.id != 304958418:  # id di @upkara
-            variable_primo.updater.bot.send_message(message.chat.id,
-                                                    "Congratulazioni, hai soffiato il regno ad @upkara!",
-                                                    reply_to_message_id=message.message_id)
+    try:
+        if text == "upkara":
+            if message.from_user.id != 304958418:  # id di @upkara
+                variable_primo.updater.bot.send_message(message.chat.id,
+                                                        "Congratulazioni, hai soffiato il regno ad @upkara!",
+                                                        reply_to_message_id=message.message_id)
+            else:
+                variable_primo.updater.bot.send_message(message.chat.id, "Mio signore, il titolo è suo 👑",
+                                                        reply_to_message_id=message.message_id)
         else:
-            variable_primo.updater.bot.send_message(message.chat.id, "Mio signore, il titolo è suo 👑",
+            variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
                                                     reply_to_message_id=message.message_id)
-    else:
-        variable_primo.updater.bot.send_message(message.chat.id, "Congratulazioni, sei il re " + text + "!",
-                                                reply_to_message_id=message.message_id)
+    except:
+        pass
 
     pass
 

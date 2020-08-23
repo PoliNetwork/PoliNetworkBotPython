@@ -228,8 +228,11 @@ def check_message(update, context):
             utils.leave_chat(message.chat, 2, 0, error_code2)
             return
 
-        check_username_and_name(message)
-        check_blacklist(message)
+        try:
+            check_username_and_name(message)
+            check_blacklist(message)
+        except:
+            pass
 
         if not creators.allowed_spam.__contains__(message.from_user.id):
             check_spam(message)
