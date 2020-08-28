@@ -254,7 +254,7 @@ def check_message(update, context):
                     # text2 += " " + str(message.chat.id)
 
                     try:
-                        variable.updater.bot.send_message(chat_id=message.chat.id, text=text2)
+                        variable.updater.bot.send_message(chat_id=message.chat.id, text=text2, parse_mode="HTML")
 
                     except Exception as e2:
                         utils.notify_owners(e2, text2)
