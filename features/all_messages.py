@@ -241,14 +241,19 @@ def check_message(update, context):
         except Exception as e:
             utils.notify_owners(e)
 
-        if False:
+        if True:
             text = message.text
-            if text is not None and message.chat is not None:
+            if text is not None and message.chat is not None and message.chat.id == 1208900229:
                 text = str(text).lower()
                 if text.__contains__("piano di studi") or text.__contains__("piano studi"):
+
+                    text2 = "Ciao. Sembra tu stia chiedendo domande in merito al piano di studi. " \
+                            "PoliNetwork ti consiglia di scrivere nel gruppo dedicato, " \
+                            "<a href='https://t.me/joinchat/FNGD_0gOWoXdxdMhwUeMdw'>clicca qui</a>!"
+
                     try:
-                        variable.updater.bot.forward_message(chat_id=message.chat.id,
-                                                         from_chat_id="@pianodistudi", message_id=12)
+                        variable.updater.bot.send_message(chat_id= message.chat.id, text=text2)
+
                     except Exception as e2:
                         utils.notify_owners(e2, "piano studi")
 
