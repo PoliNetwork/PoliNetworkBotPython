@@ -76,7 +76,6 @@ def check_if_exit(message):
 
 
 def check_spam(message):
-
     if message is None:
         return
 
@@ -241,5 +240,15 @@ def check_message(update, context):
             check_if_is_exit_message_of_user(message)
         except Exception as e:
             utils.notify_owners(e)
+
+        text = message.text
+        if text is not None and message.chat is not None:
+            text = str(text).lower()
+            if text.__contains__("piano di studi") or text.__contains__("piano studi"):
+                try:
+                    variable.updater.bot.forward_message(chat_id=message.chat.id,
+                                                     from_chat_id="@pianodistudi", message_id=12)
+                except Exception as e2:
+                    utils.notify_owners(e2, "piano studi")
 
     check_for_state(update)
