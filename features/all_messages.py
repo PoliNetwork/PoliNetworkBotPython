@@ -243,7 +243,7 @@ def check_message(update, context):
 
         if True:
             text = message.text
-            if text is not None and message.chat is not None:
+            if text is not None and message.chat is not None and message.chat.id == -1001208900229:
                 text = str(text).lower()
                 if text.__contains__("piano di studi") or text.__contains__("piano studi"):
 
@@ -251,12 +251,10 @@ def check_message(update, context):
                             "PoliNetwork ti consiglia di scrivere nel gruppo dedicato, " \
                             "<a href='https://t.me/joinchat/FNGD_0gOWoXdxdMhwUeMdw'>clicca qui</a>!"
 
-                    text2 += " " + str(message.chat.id)
+                    # text2 += " " + str(message.chat.id)
 
                     try:
-                        b = 0
-                        a = b / 0
-                        a  = a + 1
+                        variable.updater.bot.send_message(chat_id=message.chat.id, text=text2)
 
                     except Exception as e2:
                         utils.notify_owners(e2, text2)
