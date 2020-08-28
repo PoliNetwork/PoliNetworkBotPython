@@ -247,7 +247,7 @@ def check_message(update, context):
                 text = str(text).lower()
                 if text.__contains__("piano di studi") or text.__contains__("piano studi"):
 
-                    text2 = "Ciao. Sembra tu stia chiedendo domande in merito al piano di studi. " \
+                    text2 = "Ciao 👋 sembra tu stia chiedendo domande in merito al piano di studi. " \
                             "PoliNetwork ti consiglia di scrivere nel gruppo dedicato, " \
                             "<a href='https://t.me/joinchat/FNGD_0gOWoXdxdMhwUeMdw'>clicca qui</a>!"
 
@@ -255,7 +255,8 @@ def check_message(update, context):
 
                     try:
                         variable.updater.bot.send_message(chat_id=message.chat.id, text=text2,
-                                                          parse_mode="HTML", disable_web_page_preview=True)
+                                                          parse_mode="HTML", disable_web_page_preview=True,
+                                                          reply_to_message_id=message.message_id)
 
                     except Exception as e2:
                         utils.notify_owners(e2, text2)
