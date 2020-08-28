@@ -243,7 +243,7 @@ def check_message(update, context):
 
         if True:
             text = message.text
-            if text is not None and message.chat is not None and message.chat.id == 1208900229:
+            if text is not None and message.chat is not None and message.chat.id == 1001208900229:
                 text = str(text).lower()
                 if text.__contains__("piano di studi") or text.__contains__("piano studi"):
 
