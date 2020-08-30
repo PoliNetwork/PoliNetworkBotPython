@@ -212,6 +212,40 @@ def check_for_state(update):
     return temp_state_main.next_main(update.message.chat.id, update=update)
 
 
+def checkTextForTriggerWords(text, message):
+    if message.chat.id not in [-1001208900229]:
+        if text.__contains__("piano di studi") \
+                or text.__contains__("piano studi") \
+                or text.__contains__("piano degli studi"):
+
+            text2 = "Ciao 👋 sembra tu stia chiedendo domande in merito al piano di studi. " \
+                    "PoliNetwork ti consiglia di scrivere nel gruppo dedicato, " \
+                    "<a href='https://t.me/joinchat/FNGD_0gOWoXdxdMhwUeMdw'>clicca qui</a>!"
+
+            try:
+                variable.updater.bot.send_message(chat_id=message.chat.id, text=text2,
+                                                  parse_mode="HTML", disable_web_page_preview=True,
+                                                  reply_to_message_id=message.message_id)
+
+            except Exception as e2:
+                utils.notify_owners(e2, text2)
+    if message.chat.id not in [-1001241129618]:
+        if text.__contains__("dsu") \
+                or text.__contains__("diritto studio universitario") \
+                or text.__contains__("diritto allo studio"):
+
+            text2 = "Ciao 👋 sembra tu stia chiedendo domande in merito al DSU. " \
+                    "PoliNetwork ti consiglia di scrivere nel gruppo dedicato, " \
+                    "<a href='https://t.me/joinchat/FNGD_xs3LIL1jKC9klPPSw'>clicca qui</a>!"
+
+            try:
+                variable.updater.bot.send_message(chat_id=message.chat.id, text=text2,
+                                                  parse_mode="HTML", disable_web_page_preview=True,
+                                                  reply_to_message_id=message.message_id)
+            except Exception as e3:
+                utils.notify_owners(e3, text2)
+
+
 def check_message(update, context):
     message = update.message
 
@@ -241,26 +275,9 @@ def check_message(update, context):
         except Exception as e:
             utils.notify_owners(e)
 
-        if True:
-            text = message.text
-            if text is not None and message.chat is not None and message.chat.id != -1001208900229:
-                text = str(text).lower()
-                if text.__contains__("piano di studi")\
-                        or text.__contains__("piano studi")\
-                        or text.__contains__("piano degli studi"):
-
-                    text2 = "Ciao 👋 sembra tu stia chiedendo domande in merito al piano di studi. " \
-                            "PoliNetwork ti consiglia di scrivere nel gruppo dedicato, " \
-                            "<a href='https://t.me/joinchat/FNGD_0gOWoXdxdMhwUeMdw'>clicca qui</a>!"
-
-                    # text2 += " " + str(message.chat.id)
-
-                    try:
-                        variable.updater.bot.send_message(chat_id=message.chat.id, text=text2,
-                                                          parse_mode="HTML", disable_web_page_preview=True,
-                                                          reply_to_message_id=message.message_id)
-
-                    except Exception as e2:
-                        utils.notify_owners(e2, text2)
+        text = message.text
+        if text is not None and message.chat is not None:
+            text = str(text).lower()
+            checkTextForTriggerWords(text, message)
 
     check_for_state(update)
