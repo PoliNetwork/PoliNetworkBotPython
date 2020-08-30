@@ -160,24 +160,35 @@ def mute_and_delete(message):
 
 def temp_mute_and_delete(message, seconds):
     if message is None:
-        return
+        return None, None
 
     chat = message.chat
 
     if chat is None:
-        return
+        return None, None
 
     user = message.from_user.id
     permission = telegram.ChatPermissions(can_add_web_page_previews=False,
                                           can_send_media_messages=False,
                                           can_send_messages=False,
                                           can_send_other_messages=False)
-    variable.updater.bot.restrict_chat_member(chat.id,
-                                              user,
-                                              until_date=int(datetime.datetime.now().timestamp()) + seconds,
-                                              permissions=permission)
-    variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
-    return
+
+    restricted = True
+    try:
+        variable.updater.bot.restrict_chat_member(chat.id,
+                                                  user,
+                                                  until_date=int(datetime.datetime.now().timestamp()) + seconds,
+                                                  permissions=permission)
+    except:
+        restricted = False
+
+    deleted = True
+    try:
+        variable.updater.bot.delete_message(chat_id=chat.id, message_id=message.message_id)
+    except:
+        deleted = False
+
+    return restricted, deleted
 
 
 def has_spam_links(text):
