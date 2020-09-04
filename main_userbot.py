@@ -46,8 +46,10 @@ def main():
     if userbot_config.api_id is not None:
         app = Client("policreator", userbot_config.api_id, userbot_config.api_hash)
 
-        @app.on_message(pyrogram.Filters.private)
         def hello(client, message):
+
+            return
+
             try:
                 app.read_history(message.chat.id)
             except Exception as e:

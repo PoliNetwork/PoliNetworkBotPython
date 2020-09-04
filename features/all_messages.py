@@ -75,6 +75,32 @@ def check_if_exit(message):
     return True, 7  # we are not admins of this group, bot should exit
 
 
+def isNotBlank(myString):
+    if myString and myString.strip():
+        # myString is not None AND myString is not empty or blank
+        return True
+    # myString is None OR myString is empty or blank
+    return False
+
+
+def admin_is_present(admins, message):
+    for admin in admins:
+        if isNotBlank(admin.user.username):
+            if admin.user.username == message.from_user.username:
+                return True
+
+    return False
+
+
+def checkIfAdmin(message):
+    if message is not None and message.chat is not None:
+        admins = variable.updater.bot.get_chat_administrators(chat_id=message.chat.id)
+        return admin_is_present(admins, message)
+    else:
+        return False
+    pass
+
+
 def check_spam(message):
     if message is None:
         return
@@ -93,6 +119,10 @@ def check_spam(message):
         s_to_check = message.caption
 
     if not s_to_check:
+        return
+
+    boolMessageFromAdmin = checkIfAdmin(message)
+    if boolMessageFromAdmin is True:
         return
 
     is_spam = utils.is_spam(s_to_check)
