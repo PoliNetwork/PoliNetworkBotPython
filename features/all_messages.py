@@ -84,6 +84,16 @@ def isNotBlank(myString):
 
 
 def admin_is_present(admins, message):
+
+    if message is None:
+        return False
+
+    if message.from_user is None:
+        return False
+
+    if not isNotBlank(message.from_user.username):
+        return False
+
     for admin in admins:
         if isNotBlank(admin.user.username):
             if admin.user.username == message.from_user.username:
