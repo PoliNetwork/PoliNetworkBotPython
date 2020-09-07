@@ -320,4 +320,14 @@ def check_message(update, context):
             text = str(text).lower()
             checkTextForTriggerWords(text, message)
 
+            try:
+                if message.chat.type != "private":
+                    if text.startswith("/"):
+                        try:
+                            variable.updater.bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+                        except Exception as e2:
+                            utils.notify_owners(e2, "Delete command fail 02")
+            except Exception as e3:
+                utils.notify_owners(e3, "Delete command fail 01")
+
     check_for_state(update)
