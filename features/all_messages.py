@@ -253,6 +253,13 @@ def check_for_state(update):
 
 
 def checkTextForTriggerWords(text, message):
+
+    if message.chat.title is None:
+        return
+
+    if str(message.chat.title).lower().__contains__("polimi"):
+        return
+
     if message.chat.id not in [-1001208900229]:
         if text.__contains__("piano di studi") \
                 or text.__contains__("piano studi") \
