@@ -11,7 +11,8 @@ ban_all = [5651789,  # @ArmeF97
 me = -1
 allowed_spam = [5651789,  # @ArmeF97
                 107050697,  # @EliaMaggioni
-                149620444  # @Raif9
+                149620444,  # @Raif9
+                777000  # telegram
                 ]
 allowed_no_username = [777000]  # telegram
 
