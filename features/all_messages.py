@@ -257,7 +257,7 @@ def checkTextForTriggerWords(text, message):
     if message.chat.title is None:
         return
 
-    if str(message.chat.title).lower().__contains__("polimi"):
+    if not str(message.chat.title).lower().__contains__("polimi"):
         return
 
     if message.chat.id not in [-1001208900229]:
