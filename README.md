@@ -1,4 +1,8 @@
-PoliNetworkBotPython
+# PoliNetworkBotPython
+
+Il bot del network è migrato qui https://github.com/PoliNetwork/PoliNetworkBot_CSharp
+
+# Vecchio readme:
 
 Usiamo gli issue di github per tracciare bug e feature request.
 Abbiamo anche un gruppo telegram.
